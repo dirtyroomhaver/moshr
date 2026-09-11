@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS moshpits (
     frozen INTEGER NOT NULL DEFAULT 0
         CHECK (frozen IN (0, 1)),
 
-    no_new_threads INTEGER NOT NULL DEFAULT 0
+    silenced INTEGER NOT NULL DEFAULT 0
         CHECK (no_new_threads IN (0, 1)),
 
     slowmode INTEGER NOT NULL DEFAULT 0
