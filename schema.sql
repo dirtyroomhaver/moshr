@@ -61,8 +61,6 @@ CREATE INDEX IF NOT EXISTS idx_users_ip_hash
 CREATE INDEX IF NOT EXISTS idx_users_cookie
     ON users(cookie);
 
-CREATE INDEX IF NOT EXISTS idx_users_last_seen
-    ON users(last_seen_at);
 
 
 -- ============================================================
@@ -75,15 +73,15 @@ CREATE TABLE IF NOT EXISTS moshpits (
     unique_id TEXT NOT NULL UNIQUE,
 
     created_at INTEGER NOT NULL DEFAULT (unixepoch()),
-    title TEXT CHECK(length(title) <= 32)
+    title TEXT CHECK(length(title) <= 32),
     rules TEXT,
     bio TEXT,
 
-    is_disabled INTEGER NOT NULL DEFAULT 0
-        CHECK (disabled IN (0, 1)),
+    dis INTEGER NOT NULL DEFAULT 0
+        CHECK (dis IN (0, 1)),
 
-    is_hidden INTEGER NOT NULL DEFAULT 0
-        CHECK (hidden IN (0, 1)),
+    hid INTEGER NOT NULL DEFAULT 0
+        CHECK (hid IN (0, 1)),
 
     max_threads INTEGER,
     max_posts INTEGER,
@@ -92,7 +90,7 @@ CREATE TABLE IF NOT EXISTS moshpits (
         CHECK (frozen IN (0, 1)),
 
     silenced INTEGER NOT NULL DEFAULT 0
-        CHECK (no_new_threads IN (0, 1)),
+        CHECK (silenced IN (0, 1)),
 
     slowmode INTEGER NOT NULL DEFAULT 0
         CHECK (slowmode IN (0, 1)),
@@ -125,11 +123,11 @@ CREATE INDEX IF NOT EXISTS idx_moshpits_unique_id
 CREATE INDEX IF NOT EXISTS idx_moshpits_author
     ON moshpits(author_id);
 
-CREATE INDEX IF NOT EXISTS idx_moshpits_hidden
-    ON moshpits(hidden);
+CREATE INDEX IF NOT EXISTS idx_moshpits_hid
+    ON moshpits(hid);
 
-CREATE INDEX IF NOT EXISTS idx_moshpits_disabled
-    ON moshpits(disabled);
+CREATE INDEX IF NOT EXISTS idx_moshpits_dis
+    ON moshpits(dis);
 
 
 -- ============================================================
@@ -139,19 +137,18 @@ CREATE INDEX IF NOT EXISTS idx_moshpits_disabled
 CREATE TABLE IF NOT EXISTS threads (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
-    thread_id TEXT NOT NULL UNIQUE,
-
     post_count INTEGER NOT NULL DEFAULT 0,
-
+    thread_text TEXT NOT NULL,
     created_at INTEGER NOT NULL DEFAULT (unixepoch()),
     updated_at INTEGER,
     bumped_at INTEGER,
-    
+    link INTEGER NOT NULL DEFAULT 0, 
+    persistent_op INTEGER NOT NULL DEFAULT 0,
     author_id INTEGER,
     board_id INTEGER NOT NULL,
 
-    hidden INTEGER NOT NULL DEFAULT 0
-        CHECK (hidden IN (0, 1)),
+    hid INTEGER NOT NULL DEFAULT 0
+        CHECK (hid IN (0, 1)),
 
     locked INTEGER NOT NULL DEFAULT 0
         CHECK (locked IN (0, 1)),
@@ -167,26 +164,26 @@ CREATE TABLE IF NOT EXISTS threads (
     unique_ips INTEGER NOT NULL DEFAULT 0,
 
     deleted_at INTEGER,
-    deleted_by INTEGER,
+    deleted_by INTEGER
 
-    FOREIGN KEY (author_id)
-        REFERENCES users(id)
-        ON DELETE SET NULL,
+    -- FOREIGN KEY (author_id)
+    --     REFERENCES users(id)
+    --     ON DELETE SET NULL,
 
-    FOREIGN KEY (board_id)
-        REFERENCES moshpits(id)
-        ON DELETE CASCADE,
+    -- FOREIGN KEY (board_id)
+    --     REFERENCES moshpits(id)
+    --     ON DELETE CASCADE,
 
-    FOREIGN KEY (deleted_by)
-        REFERENCES users(id)
-        ON DELETE SET NULL
+    -- FOREIGN KEY (deleted_by)
+    --     REFERENCES users(id)
+    --     ON DELETE SET NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_threads_board
-    ON threads(board_id);
+-- CREATE INDEX IF NOT EXISTS idx_threads_board
+--     ON threads(board_id);
 
-CREATE INDEX IF NOT EXISTS idx_threads_author
-    ON threads(author_id);
+-- CREATE INDEX IF NOT EXISTS idx_threads_author
+--     ON threads(author_id);
 
 CREATE INDEX IF NOT EXISTS idx_threads_bumped_at
     ON threads(bumped_at);
@@ -194,8 +191,8 @@ CREATE INDEX IF NOT EXISTS idx_threads_bumped_at
 CREATE INDEX IF NOT EXISTS idx_threads_created_at
     ON threads(created_at);
 
-CREATE INDEX IF NOT EXISTS idx_threads_hidden
-    ON threads(hidden);
+CREATE INDEX IF NOT EXISTS idx_threads_hid
+    ON threads(hid);
 
 CREATE INDEX IF NOT EXISTS idx_threads_deleted_at
     ON threads(deleted_at);

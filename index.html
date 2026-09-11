@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MOSHR</title>
+</head>
+
+<body>
+
+    <h1>MOSHR</h1>
+    
+    <form id="thread-form">
+
+        <textarea
+            id="thread-text"
+            name="text"
+            placeholder="Write a thread..."
+        ></textarea>
+
+        <button type="submit">
+            Post
+        </button>
+
+    </form>
+
+
+    <hr>
+
+
+    <div id="threads"></div>
+
+
+    <script>
+
+        const form = document.getElementById('thread-form');
+        const textarea = document.getElementById('thread-text');
+        const threads = document.getElementById('threads');
+
+
+        /*
+         * Submit a new thread
+         */
+        form.addEventListener('submit', async (event) => {
+
+            // Prevent the browser from reloading the page
+            event.preventDefault();
+
+            const text = textarea.value;
+
+            if (!text.trim()) {
+                return;
+            }
+
+            const response = await fetch('/api/threads', {
+                method: 'POST',
+
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+
+                body: JSON.stringify({
+                    text: text
+                })
+            });
+
+            if (!response.ok) {
+                console.error('Failed to create thread');
+                return;
+            }
+
+            // Clear the textarea
+            textarea.value = '';
+
+        });
+
+
+        /*
+         * Open SSE connection
+         */
+        const events = new EventSource('/api/events');
+
+
+        /*
+         * Receive new threads
+         */
+        events.addEventListener('new-thread', (event) => {
+
+            const thread = JSON.parse(event.data);
+
+            addThread(thread);
+
+        });
+
+
+        /*
+         * Add thread to HTML
+         */
+        function addThread(thread) {
+
+            const article = document.createElement('article');
+
+            const text = document.createElement('p');
+
+            text.textContent = thread.thread_text;
+
+            article.appendChild(text);
+
+            threads.prepend(article);
+        }
+
+    </script>
+
+</body>
+
+</html>
