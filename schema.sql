@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS moshpits (
     unique_id TEXT NOT NULL UNIQUE,
 
     created_at INTEGER NOT NULL DEFAULT (unixepoch()),
-    title TEXT CHECK(length(title) <= 32),
+    title TEXT CHECK(length(title) <= 7),
     rules TEXT,
     bio TEXT,
 
@@ -83,8 +83,8 @@ CREATE TABLE IF NOT EXISTS moshpits (
     hid INTEGER NOT NULL DEFAULT 0
         CHECK (hid IN (0, 1)),
 
-    max_threads INTEGER,
-    max_posts INTEGER,
+    max_threads INTEGER NOT NULL DEFAULT 150,
+    max_posts INTEGER NOT NULL DEFAULT 300,
 
     frozen INTEGER NOT NULL DEFAULT 0
         CHECK (frozen IN (0, 1)),
@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS threads (
     link INTEGER NOT NULL DEFAULT 0, 
     persistent_op INTEGER NOT NULL DEFAULT 0,
     author_id INTEGER,
-    board_id INTEGER NOT NULL,
+    board_id INTEGER NOT NULL DEFAULT 0,
 
     hid INTEGER NOT NULL DEFAULT 0
         CHECK (hid IN (0, 1)),

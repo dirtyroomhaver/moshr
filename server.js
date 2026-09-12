@@ -6,17 +6,18 @@ const EventEmitter = require('events');
 const app = express();
 const events = new EventEmitter();
 
+app.use(express.static(__dirname));
 app.use(express.json());
 app.get('/api', (req, res) => {
     res.redirect('/')
 })
-// Serve index.html
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 
-// SSE
+
 app.get('/api/events', (req, res) => {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
@@ -29,14 +30,14 @@ app.get('/api/events', (req, res) => {
 
     events.on('new-thread', sendThread);
 
-    // Remove listener when browser disconnects
+    
     req.on('close', () => {
         events.off('new-thread', sendThread);
     });
 });
 
 
-// Create thread
+
 app.post('/api/threads', (req, res) => {
     const text = req.body.text;
 
@@ -57,5 +58,5 @@ app.post('/api/threads', (req, res) => {
 
 
 app.listen(3000, () => {
-    console.log('MOSHR running at http://localhost:3000');
+    console.log('Running at http://localhost:3000');
 });

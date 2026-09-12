@@ -1,0 +1,314 @@
+:root {
+  /* Step 1: You MUST declare the color scheme for light-dark() to work */
+  color-scheme: light dark; 
+  
+  /* Step 2: Define tokens using light-dark(light-value, dark-value) */
+  /* --bg-color: light-dark(#f8cfcf, #11181E);
+  --text-color: light-dark(#333333, #f5f5f5);
+  --accent-color: light-dark(#789654, #c0ff84);
+  --gradient: light-dark(#bb6d6d, #000000);
+  --panel: light-dark(#d2e9a5, #233447);
+  --text: light-dark(#270505, #e3edf6);
+  --rage: light-dark(#ff0000, #ff0000); */
+
+  --bg-color: light-dark(#f8faff, #11181E);
+  --text-color: light-dark(#333333, #f5f5f5);
+  --accent-color: light-dark(#393636, #c0ff84);
+  --gradient: light-dark(#d5d5d5, #000000);
+  --panel: light-dark(#e2e2e2, #233447);
+  --text: light-dark(#232323, #e3edf6);
+  --bar: light-dark(#b7f77c, #c0ff84);
+  --rage: light-dark(#ff0000, #ff0000);
+}
+
+* {
+    margin: 0px;
+}
+
+.nav-button {
+    width: 80px;
+    margin: 5px;
+}
+.tab-nav-div {
+    background-color: var(--accent-color)
+}
+
+
+.title h2 {
+    color: var(--accent-color)
+}
+.title:hover {
+    animation: shake-1 0.15s infinite;
+}
+.navbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    height: 30px;
+    padding: 7px;
+    border-bottom: 2px solid var(--text)
+
+}
+
+.navbar-middle {
+    display: flex;
+    align-items: center;
+}
+
+.navbar div {
+    margin: 0;
+}
+
+.body {
+    display: flex;
+    justify-content: space-between;
+}
+
+.body-right {
+    width: 30vh;
+    min-width: 300;
+}
+
+
+.moshpit-name {
+    display: flex;
+    justify-content: left;
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+    padding: 7px;
+    border-bottom: 2px solid var(--text)
+}
+
+#threads {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    
+    color: var(--text);
+    margin-top: 3px;
+
+}
+
+.body {}
+
+.body-left {
+    height: 100vh;
+    overflow-y: scroll;
+    flex: 1;
+    min-width: 0;
+}
+
+.body-left::-webkit-scrollbar {
+    width: 5px;
+}
+
+.body-left::-webkit-scrollbar-thumb {
+    background: var(--panel);
+    border-radius: 4px;
+}
+
+
+
+.post-green {
+    height: 5px;
+    background-color: var(--bar);
+    margin:0;
+    padding: 0;
+    width: 40%;
+}
+.post-bar {
+    height:5px;
+    background-color: var(--text);
+    border: 1px solid #11181E
+}
+.last-post {
+    display: flex;
+    color:var(--accent-color);
+    font-weight:bold;
+}
+
+.thread {
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: var(--panel);
+    min-width: 5%;
+    border: 1px solid var(--accent-color);
+    padding: 10px;
+    margin: 7px;
+}
+
+.thread-text {
+    height: 80px;
+    overflow-y: hidden
+}
+
+.moshpit-info {
+    padding: 0px;
+    margin-top: 10px;
+    border: 1px solid var(--accent-color)
+}
+
+.info-list {
+    list-style-type: none;
+    padding: 7px 0px 7px 7px;
+}
+
+.info-list li:nth-child(even) {
+    background-color: var(--panel);
+}
+
+.tab-nav {
+    display: flex;
+    /* aligns items horizontally */
+    list-style-type: none;
+    justify-content: center;
+    gap: 10px;
+    
+    padding: 7px 0px 7px 0px;
+}
+
+.nav-list {
+    display: flex;
+    /* aligns items horizontally */
+    list-style-type: none;
+    gap: 10px;
+    justify-content: left;
+    padding: 0px;
+}
+
+body {
+    background-image: linear-gradient(var(--gradient), var(--bg-color));
+    background-size: 100% 20%;
+    background-repeat: no-repeat;
+    background-color: var(--bg-color);
+     /* background-image: linear-gradient(#000000, #11181E);
+    background-size: 100% 30%;
+    background-repeat: no-repeat;
+    background-color: #11181E; */
+    font-family: Arial, sans-serif;
+}
+
+li a {
+    text-decoration: none;
+    color: var(--accent-color);
+}
+
+.tab-nav li a {
+    color: var(--panel);
+}
+.navbar-right a {
+text-decoration: none;
+    color: var(--accent-color);
+}
+.last-post p {
+    margin-bottom: 4px 
+}
+
+
+@media (max-width: 1000px) {
+    #threads {
+        grid-template-columns: 1fr;
+    }
+}
+
+a {
+    text-decoration: none;
+    color: inherit
+}
+
+
+.thread:hover {
+     transform: scale(1.01);
+  
+}
+
+.bot-thread {
+    display: flex;
+    justify-content: space-between;
+}
+
+.thread-update {
+    width: 100vh;
+}
+
+#report {
+    margin-left: 10px;
+    background-color:var(--text);
+    color: var(--bg-color)
+}
+
+@keyframes shake-1 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(3px, 3px) rotate(5deg); }
+  50% { transform: translate(0, 0) rotate(0eg); }
+  75% { transform: translate(-3px, 3px) rotate(-5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes shake-2 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(3px, 3px) rotate(5deg); }
+  50% { transform: translate(0, 0) rotate(0eg); }
+  75% { transform: translate(-3px, 3px) rotate(-5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes shake-3 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(3px, 3px) rotate(1deg); }
+  50% { transform: translate(0, 0) rotate(0eg); }
+  75% { transform: translate(-3px, 3px) rotate(-1deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+#create-thread-box {
+    position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 450px;
+  height: 600px;
+  background: var(--panel);
+  border: 1px solid var(--accent-color);
+  overflow-x: hidden;
+}
+
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+label {
+    display: block;
+    padding: 5px 0px 0px 5px;
+}
+
+.modal-top {
+    display:flex;
+    justify-content: space-between;
+}
+
+.modal-top div p {
+    padding: 5px;
+}
+
+.modal-top div button {
+    margin: 5px;
+}
+
+.modal-input input, textarea {
+    width: 435px;
+    margin: 5px;
+    resize: none;
+}
+
