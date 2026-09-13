@@ -3,7 +3,11 @@ PRAGMA foreign_keys = ON;
 -- ============================================================
 -- SITE SETTINGS
 -- ============================================================
-
+CREATE TABLE IF NOT EXISTS cached_results (
+    cache_key TEXT PRIMARY KEY,
+    data TEXT NOT NULL,
+    updated_at INTEGER NOT NULL
+);
 CREATE TABLE IF NOT EXISTS site_settings (
     id INTEGER PRIMARY KEY CHECK (id = 1),
 
@@ -25,7 +29,9 @@ CREATE TABLE IF NOT EXISTS site_settings (
     posts_per_page INTEGER NOT NULL DEFAULT 20,
     pages INTEGER NOT NULL DEFAULT 1,
 
-    bump_limit INTEGER
+    bump_limit INTEGER,
+
+    report_cooldown INTEGER
 );
 
 INSERT OR IGNORE INTO site_settings (id)
@@ -289,7 +295,6 @@ CREATE TABLE IF NOT EXISTS reports (
 
     resolved_at INTEGER,
     resolved_by INTEGER,
-
     reason TEXT,
 
     FOREIGN KEY (reporter_id)

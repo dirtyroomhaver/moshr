@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="stylesheet.css" />
-
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <title>moshr</title>
   </head>
 
@@ -34,13 +34,12 @@
         </div>
         <a href="" id="create-thread">create new thread</a>
       </div>
-      
     </div>
-<div class="announcement">
-  <p id="announcement-text">afsafasfaf<p>
-        
-      </div>
-  
+    <div class="announcement">
+      <p id="announcement-text">afsafasfaf</p>
+      <p></p>
+    </div>
+
     <div class="body">
       <div class="body-left">
         <div id="threads">
@@ -54,21 +53,21 @@
             <div class="bot-thread">
               <div class="thread-update">
                 <div class="last-post">
-                  <p>LAST POST:&nbsp</p>
-                  <p>NOW</p>
+                  <p>last post:&nbsp</p>
+                  <p>now</p>
                 </div>
                 <div class="post-bar">
                   <div class="post-red"></div>
                   <div class="post-green"></div>
                 </div>
               </div>
-              <button id="report">Report</button>
+              <button id="report">report</button>
             </div>
           </div>
           <div class="thread">
             <div class="thread-text">
               <p>
-                This is a test. This is a test.      This is a test. This is a test.
+                This is a test. This is a test. This is a test. This is a test.
                 This is a test. This is a test. This is a test. This is a test.
                 This is a test. This is a test. This is a test. This is a test.
                 This is a test. This is a test. This is a test. This is a test.
@@ -126,20 +125,81 @@
       </div>
     </div>
     <dialog id="create-thread-box">
+       <div class="modal-top">
+          <div><p>new thread</p></div>
+          <div><button id="close-button">x</button></div>
+        </div>
       <form id="modal-form">
-        <div class="modal-top"><div><p>new thread</p></div><div><button>x</button></div></div>
-        <hr>
+       
+        <hr />
         <div>
-          <div class="modal-input"><label for="">comment</label><textarea name="text" id="thread-text" style="height: 400px; width: 96.4%;" placeholder="write "></textarea></div>
-          <hr>
-          <div class="modal-input"><label for="">moshpit (board)</label><input type="text" placeholder="if left blank your thread will go onto the homepage"></div>
-          <hr>
-          <div class="modal-input"><label for="">signature</label><input type="text" placeholder="put a secure password here to sign your post"></div>
-          <input type="hidden" name="post-text" id="post-text">
+          <div class="modal-input">
+            <label for="">comment</label
+            ><textarea
+              name="text"
+              id="thread-text"
+              style="height: 400px; width: 96.4%"
+              placeholder="write "
+            ></textarea>
+          </div>
+          <hr />
+          <div class="modal-input">
+            <label for="">moshpit (board)</label
+            ><input
+              type="text"
+              placeholder="if left blank your thread will go onto the homepage"
+            />
+          </div>
+          <hr />
+          <div class="modal-input">
+            <label for="">signature</label
+            ><input
+              type="text"
+              placeholder="put a secure password here to sign your post"
+            />
+          </div>
+          <input type="hidden" name="post-text" id="post-text" />
         </div>
       </form>
     </dialog>
-    
+    <dialog id="report-box">
+      <div class="modal-top">
+          <div><p>report</p></div>
+          <div><button id="close-button-2">x</button></div>
+        </div>
+        <hr />
+      <form id="modal-form">
+        <div>
+          <label for="">what rule was violated?</label>
+          <select name="reported_rule" id="">
+            <option value="" selected disabled hidden>
+              --please choose an option--
+            </option>
+            <option value="1">
+              1. dont post anything that violates local or US law
+            </option>
+            <option value="2">2. dont post here if you are under 18</option>
+            <option value="3">3. dont spam</option>
+            <option value="4">
+              4. dont advertise anything you get monetary gain from
+            </option>
+            <option value="5">5. dont post offtopic threads or replies</option>
+            <option value="6">6. dont troll excessively</option>
+            <option value="7">7. dont dox or raid</option>
+            <option value="8">8. dont send false reports</option>
+            <option value="9">
+              9. dont say racist, transphobic, homophobic, or religious slurs
+            </option>
+            <option value="10">10. dont link to nsfw content</option>
+            <option value="11">11. dont joke about child abuse</option>
+            <option value="12">12. dont ban evade</option>
+          </select>
+          <label for="">false reports = ban</label>
+          <button type="submit">submit</button>
+        </div>
+      </form>
+    </dialog>
+
     <!-- <form id="thread-form">
       <textarea
         id="thread-text"
@@ -156,11 +216,33 @@
       // const threads = document.getElementById('threads')
       const createThread = document.getElementById('create-thread')
       const modal = document.getElementById('create-thread-box')
-      //modal.showModal(); 
+      //modal.showModal();
 
       createThread.addEventListener('click', () => {
         event.preventDefault()
-        modal.showModal();
+        modal.showModal()
+      })
+
+      const report = document.getElementById('report')
+      const report_modal = document.getElementById('report-box')
+
+      report.addEventListener('click', () => {
+        event.preventDefault()
+        report_modal.showModal()
+      })
+const closeButton = document.getElementById('close-button')
+
+      closeButton.addEventListener('click', () => {
+        event.preventDefault()
+ 
+        modal.close()
+      })
+      const closeButton2 = document.getElementById('close-button-2')
+
+      closeButton2.addEventListener('click', () => {
+        event.preventDefault()
+        report_modal.close()
+        modal.close()
       })
       // form.addEventListener('submit', async event => {
       //   // Prevent the browser from reloading the page

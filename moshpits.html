@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="stylesheet.css" />
-
-    <title>faq - moshr</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <title>moshpits - moshr</title>
   </head>
 
   <body>
@@ -68,7 +68,7 @@
       <form id="modal-form">
         <div class="modal-top">
           <div><p>new thread</p></div>
-          <div><button>x</button></div>
+          <div><button id="close-button">x</button></div>
         </div>
         <hr />
         <div>
@@ -123,6 +123,15 @@
       createThread.addEventListener('click', () => {
         event.preventDefault()
         modal.showModal()
+      })
+
+  
+      const closeButton = document.getElementById('close-button')
+
+      closeButton.addEventListener('click', () => {
+        event.preventDefault()
+       
+        modal.close()
       })
       // form.addEventListener('submit', async event => {
       //   // Prevent the browser from reloading the page

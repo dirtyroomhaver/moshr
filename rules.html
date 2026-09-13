@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="stylesheet.css" />
-
+    <link rel="icon" type="image/png" href="/favicon.png">
     <title>rules - moshr</title>
   </head>
 
@@ -52,7 +52,7 @@
         6. dont troll excessively <br>
         7. dont dox or raid <br>
         8. dont send false reports <br>
-        9. dont say any racist, transphobic, and homophobic slurs <br>
+        9. dont say racist, transphobic, homophobic, or religious slurs <br>
         10. dont link to nsfw content <br>
         11. dont joke about child abuse <br>
         12. dont ban evade <br>
@@ -86,7 +86,7 @@
       <form id="modal-form">
         <div class="modal-top">
           <div><p>new thread</p></div>
-          <div><button>x</button></div>
+          <div><button id="close-button">x</button></div>
         </div>
         <hr />
         <div>
@@ -141,6 +141,15 @@
       createThread.addEventListener('click', () => {
         event.preventDefault()
         modal.showModal()
+      })
+
+   
+      const closeButton = document.getElementById('close-button')
+
+      closeButton.addEventListener('click', () => {
+        event.preventDefault()
+      
+        modal.close()
       })
       // form.addEventListener('submit', async event => {
       //   // Prevent the browser from reloading the page

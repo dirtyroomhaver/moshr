@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="stylesheet.css" />
-
+<link rel="icon" type="image/png" href="/favicon.png">
     <title>faq - moshr</title>
   </head>
 
@@ -45,7 +45,7 @@
         <!-- <h2 style="margin-left: 7px;margin-top: 2px;color: #d2d6dc">faq</h2> -->
         <div class="misc-text">
         <b>what is moshr?</b> <br>
-        moshr is a real-time anonymous text-only forum. you do not need an account to post here. <br> 
+        moshr is an ephemeral real-time anonymous text-only forum. you do not need an account to post here. <br> 
         <b>how do i post?</b> <br>
         to make a new thread simply click on the "create new thread" button in the top right corner. <br> to post in a thread simply click the "create new post" button at the top of the thread or click reply on someones post. <br> 
         <b>what is a moshpit?</b> <br>
@@ -86,7 +86,7 @@
       <form id="modal-form">
         <div class="modal-top">
           <div><p>new thread</p></div>
-          <div><button>x</button></div>
+          <div><button id="close-button">x</button></div>
         </div>
         <hr />
         <div>
@@ -141,6 +141,14 @@
       createThread.addEventListener('click', () => {
         event.preventDefault()
         modal.showModal()
+      })
+
+ 
+      const closeButton = document.getElementById('close-button')
+
+      closeButton.addEventListener('click', () => {
+        event.preventDefault()
+        modal.close()
       })
       // form.addEventListener('submit', async event => {
       //   // Prevent the browser from reloading the page

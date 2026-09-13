@@ -2,9 +2,9 @@
     /* Step 1: You MUST declare the color scheme for light-dark() to work */
     color-scheme: light dark;
 
-    --bg-color: light-dark(#f8faff, #171a2b);
+    --bg-color: light-dark(#f8faff, #222127);
   --accent-color: light-dark(#393736, #d2d6dc);
-  --gradient: light-dark(#d5d5d5, #0d0f1b);
+  --gradient: light-dark(#d5d5d5, #121215);
   --panel: light-dark(#ececec, #1a1a22);
   --text: light-dark(#232323, #d2d6dc);
   --bar: light-dark(#adff9d, #9cdf70);
@@ -58,7 +58,7 @@
     justify-content: space-between;
     height: 30px;
     padding: 7px;
-    border-bottom: 2px solid var(--text)
+    border-bottom: 1px solid var(--text)
 }
 
 .navbar-middle {
@@ -120,7 +120,8 @@
 
 
 .post-green {
-    height: 5px;
+    height: 4px;
+
     background-color: var(--bar);
     margin: 0;
     padding: 0;
@@ -128,7 +129,7 @@
 }
 
 .post-bar {
-    height: 5px;
+    height: 4px;
     background-color: var(--text);
     border: 1px solid #11181E
 }
@@ -147,7 +148,7 @@
     background-image: linear-gradient(var(--panel), var(--gradient));
     /* background-color: var(--panel); */
     min-width: 5%;
-    border: 2px solid var(--accent-color);
+    border: 1px solid var(--accent-color);
 
     padding: 10px;
     box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.1);
@@ -162,7 +163,7 @@
 .moshpit-info {
     padding: 0px;
     margin-top: 10px;
-    border: 2px solid var(--accent-color);
+    border: 1px solid var(--accent-color);
     background-color: var(--accent-color);
     box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.1);
 }
@@ -230,6 +231,10 @@ li a {
     #threads {
         grid-template-columns: 1fr;
     }
+
+    .body-right {
+        displaY:none;
+    }
 }
 
 a {
@@ -272,6 +277,21 @@ a {
     overflow-x: hidden;
 }
 
+#report-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 385px;
+    height: 130px;
+    background: var(--panel);
+    border: 1px solid var(--accent-color);
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+#report
+
 dialog::backdrop {
     background-color: rgba(0, 0, 0, 0.9);
 }
@@ -285,7 +305,19 @@ label {
     display: flex;
     justify-content: space-between;
 }
+.modal-form {
+    color: var(--text)
+}
 
+#modal-form div select {
+    margin: 3px;
+    padding: 0px;
+    width: 200px;
+}
+
+#modal-form div button {
+    margin: 3px;
+}
 .modal-top div p {
     padding: 5px;
 }
@@ -343,7 +375,7 @@ textarea {
 }
 
 .police {
-    background: linear-gradient(to right, #4da3ff, #b20000);
+    background: linear-gradient(to right, #5badff, #b20000);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -474,3 +506,17 @@ s {
     border: 2px solid var(--text);
     color: var(--text)
 }
+
+.schizo {
+    animation: skew-x-shaking 0.5s infinite
+}
+
+@keyframes skew-x-shaking {
+ 0% { transform: skewX(-15deg); }
+ 5% { transform: skewX(100deg); }
+ 10% { transform: skewX(-15deg); }
+ 15% { transform: skewX(15deg); }
+ 20% { transform: skewX(0deg); }
+ 100% { transform: skewX(0deg); }
+}
+

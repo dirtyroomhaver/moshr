@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="stylesheet.css" />
-
+<link rel="icon" type="image/png" href="/favicon.png">
     <title>quirks - moshr</title>
   </head>
 
@@ -55,7 +55,7 @@
             <span style="color:var(--greentext)">>I'm gay and I LOVE moshr.net</span>
           </div>
           <br />
-          typing "I'm gay" at the start of a new line gives you: <br />
+          typing "I'm gay" or "im gay" (case insensitive) at the start of a new line gives you: <br />
           <div
             style="
               background-color: var(--gradient);
@@ -67,7 +67,7 @@
             <span class="gay">I'm gay and I LOVE moshr.net</span>
           </div>
           <br />
-          typing "I'm trans" at the start of a new line gives you: <br />
+          typing "I'm trans" or "im trans" (case insensitive) at the start of a new line gives you: <br />
           <div
             style="
               background-color: var(--gradient);
@@ -77,6 +77,18 @@
             "
           >
             <span class="trans">I'm trans and I LOVE moshr.net</span>
+          </div>
+          <br />
+           typing "THE VOICES" (case insensitive) at the start of a new line gives you: <br />
+          <div
+            style="
+              background-color: var(--gradient);
+              border: 2px solid var(--accent-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class="schizo">THE VOICES ARE TELLING ME TO PLAY OSRS AGAIN!</span>
           </div>
           <br />
           typing "POLICE" at the start of a new line gives you: <br />
@@ -103,7 +115,7 @@
             <span class="rage">FAHCK I TECHED THAT THROW!</span>
           </div>
           <br />
-          typing "Faygo" anywhere in your comment gives you: <br />
+          typing "faygo" (case insensitive) anywhere in your comment gives you: <br />
           <div
             style="
               background-color: var(--gradient);
@@ -115,6 +127,8 @@
             MoM wHy DiDn'T yOu GeT tHe PiNeApPlE fAyGo?
           </div>
           <br />
+          
+         
           typing "!!!", "!!!!", or "!!!!!" at the end of a line gives you a shake effect of various strengths: <br />
           <div
             style="
@@ -370,7 +384,7 @@
       <form id="modal-form">
         <div class="modal-top">
           <div><p>new thread</p></div>
-          <div><button>x</button></div>
+          <div><button id="close-button">x</button></div>
         </div>
         <hr />
         <div>
@@ -418,7 +432,7 @@
       // const form = document.getElementById('thread-form')
       // const textarea = document.getElementById('thread-text')
       // const threads = document.getElementById('threads')
-      const createThread = document.getElementById('create-thread')
+       const createThread = document.getElementById('create-thread')
       const modal = document.getElementById('create-thread-box')
       //modal.showModal();
 
@@ -426,6 +440,19 @@
         event.preventDefault()
         modal.showModal()
       })
+
+  
+
+      const closeButton = document.getElementById('close-button')
+
+      closeButton.addEventListener('click', () => {
+        event.preventDefault()
+   
+        modal.close()
+      })
+    
+
+
       // form.addEventListener('submit', async event => {
       //   // Prevent the browser from reloading the page
       //   event.preventDefault()
