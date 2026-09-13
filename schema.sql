@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS users (
     created_at INTEGER NOT NULL DEFAULT (unixepoch()),
     banned INTEGER NOT NULL DEFAULT 0,
     ban_count INTEGER,
+    posts INTEGER NOT NULL DEFAULT 0,
     code TEXT,
     pin_hash TEXT
 );

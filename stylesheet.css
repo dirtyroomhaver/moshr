@@ -1,24 +1,23 @@
 :root {
-  /* Step 1: You MUST declare the color scheme for light-dark() to work */
-  color-scheme: light dark; 
-  
-  /* Step 2: Define tokens using light-dark(light-value, dark-value) */
-  /* --bg-color: light-dark(#f8cfcf, #11181E);
-  --text-color: light-dark(#333333, #f5f5f5);
-  --accent-color: light-dark(#789654, #c0ff84);
-  --gradient: light-dark(#bb6d6d, #000000);
-  --panel: light-dark(#d2e9a5, #233447);
-  --text: light-dark(#270505, #e3edf6);
-  --rage: light-dark(#ff0000, #ff0000); */
+    /* Step 1: You MUST declare the color scheme for light-dark() to work */
+    color-scheme: light dark;
 
-  --bg-color: light-dark(#f8faff, #11181E);
-  --text-color: light-dark(#333333, #f5f5f5);
-  --accent-color: light-dark(#393636, #c0ff84);
-  --gradient: light-dark(#d5d5d5, #000000);
-  --panel: light-dark(#e2e2e2, #233447);
-  --text: light-dark(#232323, #e3edf6);
-  --bar: light-dark(#b7f77c, #c0ff84);
-  --rage: light-dark(#ff0000, #ff0000);
+    --bg-color: light-dark(#f8faff, #171a2b);
+  --accent-color: light-dark(#393736, #d2d6dc);
+  --gradient: light-dark(#d5d5d5, #0d0f1b);
+  --panel: light-dark(#ececec, #1a1a22);
+  --text: light-dark(#232323, #d2d6dc);
+  --bar: light-dark(#adff9d, #9cdf70);
+  --rage: light-dark(#b20000, #ff0000);
+  --greentext: light-dark(#416600, #8bb444);
+    /* --bg-color: light-dark(#f8faff, #f8faff);
+    --accent-color: light-dark(#393736, #393736);
+    --gradient: light-dark(#d5d5d5, #d5d5d5);
+    --panel: light-dark(#ececec, #ececec);
+    --text: light-dark(#232323, #232323);
+    --bar: light-dark(#adff9d, #adff9d);
+    --rage: light-dark(#b20000, #b20000);
+    --greentext: light-dark(#416600, #416600); */
 }
 
 * {
@@ -29,17 +28,20 @@
     width: 80px;
     margin: 5px;
 }
-.tab-nav-div {
+
+/* .tab-nav-div {
     background-color: var(--accent-color)
-}
+} */
 
 
 .title h2 {
     color: var(--accent-color)
 }
+
 .title:hover {
-    animation: shake-1 0.15s infinite;
+    animation: shake-2 0.15s infinite;
 }
+
 .navbar-left {
     display: flex;
     align-items: center;
@@ -57,7 +59,6 @@
     height: 30px;
     padding: 7px;
     border-bottom: 2px solid var(--text)
-
 }
 
 .navbar-middle {
@@ -92,7 +93,7 @@
 #threads {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    
+
     color: var(--text);
     margin-top: 3px;
 
@@ -121,19 +122,21 @@
 .post-green {
     height: 5px;
     background-color: var(--bar);
-    margin:0;
+    margin: 0;
     padding: 0;
     width: 40%;
 }
+
 .post-bar {
-    height:5px;
+    height: 5px;
     background-color: var(--text);
     border: 1px solid #11181E
 }
+
 .last-post {
     display: flex;
-    color:var(--accent-color);
-    font-weight:bold;
+    color: var(--accent-color);
+    font-weight: bold;
 }
 
 .thread {
@@ -141,10 +144,13 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background-color: var(--panel);
+    background-image: linear-gradient(var(--panel), var(--gradient));
+    /* background-color: var(--panel); */
     min-width: 5%;
-    border: 1px solid var(--accent-color);
+    border: 2px solid var(--accent-color);
+
     padding: 10px;
+    box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.1);
     margin: 7px;
 }
 
@@ -156,17 +162,19 @@
 .moshpit-info {
     padding: 0px;
     margin-top: 10px;
-    border: 1px solid var(--accent-color)
+    border: 2px solid var(--accent-color);
+    background-color: var(--accent-color);
+    box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.1);
 }
 
 .info-list {
     list-style-type: none;
     padding: 7px 0px 7px 7px;
+    background-image: linear-gradient(var(--panel), var(--gradient));
+
 }
 
-.info-list li:nth-child(even) {
-    background-color: var(--panel);
-}
+
 
 .tab-nav {
     display: flex;
@@ -174,7 +182,7 @@
     list-style-type: none;
     justify-content: center;
     gap: 10px;
-    
+
     padding: 7px 0px 7px 0px;
 }
 
@@ -192,7 +200,7 @@ body {
     background-size: 100% 20%;
     background-repeat: no-repeat;
     background-color: var(--bg-color);
-     /* background-image: linear-gradient(#000000, #11181E);
+    /* background-image: linear-gradient(#000000, #11181E);
     background-size: 100% 30%;
     background-repeat: no-repeat;
     background-color: #11181E; */
@@ -207,12 +215,14 @@ li a {
 .tab-nav li a {
     color: var(--panel);
 }
+
 .navbar-right a {
-text-decoration: none;
+    text-decoration: none;
     color: var(--accent-color);
 }
+
 .last-post p {
-    margin-bottom: 4px 
+    margin-bottom: 4px
 }
 
 
@@ -229,8 +239,8 @@ a {
 
 
 .thread:hover {
-     transform: scale(1.01);
-  
+    transform: scale(1.01);
+
 }
 
 .bot-thread {
@@ -244,48 +254,26 @@ a {
 
 #report {
     margin-left: 10px;
-    background-color:var(--text);
+    background-color: var(--text);
     color: var(--bg-color)
 }
 
-@keyframes shake-1 {
-  0% { transform: translate(0, 0) rotate(0deg); }
-  25% { transform: translate(3px, 3px) rotate(5deg); }
-  50% { transform: translate(0, 0) rotate(0eg); }
-  75% { transform: translate(-3px, 3px) rotate(-5deg); }
-  100% { transform: translate(0, 0) rotate(0deg); }
-}
 
-@keyframes shake-2 {
-  0% { transform: translate(0, 0) rotate(0deg); }
-  25% { transform: translate(3px, 3px) rotate(5deg); }
-  50% { transform: translate(0, 0) rotate(0eg); }
-  75% { transform: translate(-3px, 3px) rotate(-5deg); }
-  100% { transform: translate(0, 0) rotate(0deg); }
-}
-
-@keyframes shake-3 {
-  0% { transform: translate(0, 0) rotate(0deg); }
-  25% { transform: translate(3px, 3px) rotate(1deg); }
-  50% { transform: translate(0, 0) rotate(0eg); }
-  75% { transform: translate(-3px, 3px) rotate(-1deg); }
-  100% { transform: translate(0, 0) rotate(0deg); }
-}
 
 #create-thread-box {
     position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 450px;
-  height: 600px;
-  background: var(--panel);
-  border: 1px solid var(--accent-color);
-  overflow-x: hidden;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 450px;
+    height: 600px;
+    background: var(--panel);
+    border: 1px solid var(--accent-color);
+    overflow-x: hidden;
 }
 
 dialog::backdrop {
-  background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(0, 0, 0, 0.9);
 }
 
 label {
@@ -294,7 +282,7 @@ label {
 }
 
 .modal-top {
-    display:flex;
+    display: flex;
     justify-content: space-between;
 }
 
@@ -306,9 +294,183 @@ label {
     margin: 5px;
 }
 
-.modal-input input, textarea {
+.modal-input input,
+textarea {
     width: 435px;
     margin: 5px;
     resize: none;
 }
 
+.announcement {
+    display: none;
+    justify-content: center;
+    margin-top: 9px;
+    color: var(--rage);
+    font-weight: bold;
+}
+
+.misc-text {
+    padding: 0px 7px 7px 7px;
+    color: var(--text);
+    margin-top: 5px;
+}
+
+.tab-nav p {
+    color: var(--panel)
+}
+
+.nav-list p {
+    color: var(--text)
+}
+
+
+.gay {
+    background: linear-gradient(to right, #6666ff, #0099ff, #00ff00,#fff200, #ff3399, #6666ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: rainbow_animation 0.75s infinite;
+    background-size: 400% 100%;
+}
+
+.trans {
+    background: linear-gradient(to right, #5badff, #ffffff, #f581ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: rainbow_animation 0.5s infinite;
+    background-size: 400% 100%;
+}
+
+.police {
+    background: linear-gradient(to right, #4da3ff, #b20000);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: rainbow_animation 0.2s infinite;
+    background-size: 400% 100%;
+}
+
+.rage {
+    color: var(--rage)
+}
+
+@keyframes rainbow_animation {
+
+    0%,
+    100% {
+        background-position: 0 0;
+    }
+
+    50% {
+        background-position: 100% 0;
+    }
+}
+
+.shake-1 {
+    animation: shake-1 0.1s infinite;
+}
+
+.shake-2 {
+    animation: shake-2 0.15s infinite;
+}
+
+@keyframes shake-1 {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    25% {
+        transform: translate(2px, 1px) rotate(0.3deg);
+    }
+
+    50% {
+        transform: translate(0, 0) rotate(0eg);
+    }
+
+    75% {
+        transform: translate(1px, -1px) rotate(-0.2deg);
+    }
+
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
+
+@keyframes shake-2 {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    25% {
+        transform: translate(-3px, -3px) rotate(-0.5deg);
+    }
+
+    50% {
+        transform: translate(0, 0) rotate(0eg);
+    }
+
+    75% {
+        transform: translate(3px, -3px) rotate(0.5deg);
+    }
+
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
+
+span {
+    display: block
+}
+.vert {
+    animation: vertical-shaking 0.25s infinite
+}
+@keyframes vertical-shaking {
+  0% { transform: translateY(0) }
+  25% { transform: translateY(2px) }
+  50% { transform: translateY(-2px) }
+  75% { transform: translateY(2px) }
+  100% { transform: translateY(0) }
+}
+
+@keyframes horizontal-shaking {
+  0% { transform: translateX(0) }
+  25% { transform: translateX(2px) }
+  50% { transform: translateX(-2px) }
+  75% { transform: translateX(2px) }
+  100% { transform: translateX(0) }
+}
+.hori {
+    animation: horizontal-shaking 0.25s infinite
+}
+
+.glow {
+     animation: glow 0.3s ease-in-out infinite alternate;
+     color: var(--text)
+}
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 5px #9beb97, 0 0 10px #9beb97, 0 0 15px #1be600;
+  }
+  to {
+    text-shadow: 0 0 10px #9beb97, 0 0 15px #1be600, 0 0 20px #1be600;
+  }
+}
+
+
+s:hover {
+    color: white
+}
+s {
+    color: #000;
+    background: #000;
+    text-decoration: none;
+}
+
+.code {
+    white-space: pre-wrap;
+    margin-top: 4px;
+    background-color: var(--gradient);
+    border: 2px solid var(--text);
+    color: var(--text)
+}

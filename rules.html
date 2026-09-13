@@ -12,15 +12,15 @@
     <div class="navbar">
       <div class="navbar-left">
         <ul class="nav-list">
-          <li><a href="">home</a></li>
-          |
-          <li><a href="">rules</a></li>
-          |
-          <li><a href="">faq</a></li>
-          |
-          <li><a href="">quirks</a></li>
-          |
-          <li><a href="">moshpits</a></li>
+          <li><a href="/moshr">home</a></li>
+          <p>|</p>
+          <li><a href="/moshr/rules.html">rules</a></li>
+          <p>|</p>
+          <li><a href="/moshr/faq.html">faq</a></li>
+          <p>|</p>
+          <li><a href="/moshr/quirks.html">quirks</a></li>
+          <p>|</p>
+          <li><a href="/moshr/moshpits.html">moshpits</a></li>
         </ul>
       </div>
       <div class="navbar-middle">
@@ -30,83 +30,44 @@
       </div>
       <div class="navbar-right">
         <div class="search">
-          <input type="text" id="search-bar" />
+          <input type="text" id="search-bar"/>
         </div>
         <a href="" id="create-thread">create new thread</a>
       </div>
     </div>
+    <div class="announcement">
+      <p id="announcement-text">afsafasfaf</p>
+      <p></p>
+    </div>
 
-  
     <div class="body">
       <div class="body-left">
-        <div id="threads">
-          <div class="thread">
-            <div>
-              <p>
-                This is a test. This is a test. This is a test. This is a test.
-                This is a test. This is a test.
-              </p>
-            </div>
-            <div class="bot-thread">
-              <div class="thread-update">
-                <div class="last-post">
-                  <p>LAST POST:&nbsp</p>
-                  <p>NOW</p>
-                </div>
-                <div class="post-bar">
-                  <div class="post-red"></div>
-                  <div class="post-green"></div>
-                </div>
-              </div>
-              <button id="report">Report</button>
-            </div>
-          </div>
-          <div class="thread">
-            <div class="thread-text">
-              <p>
-                This is a test. This is a test. This is a test. This is a test.
-                This is a test. This is a test. This is a test. This is a test.
-                This is a test. This is a test. This is a test. This is a test.
-                This is a test. This is a test. This is a test. This is a test.
-                This is a test. This is a test. This is a test. This is a test.
-                This is a test. This is a test. This is a test. This is a
-                test.This is a test. This is a test. This is a test. This is a
-                test. This is a test. This is a test.This is a test. This is a
-                test. This is a test. This is a test. This is a test. This is a
-                test.This is a test. This is a test. This is a test. This is a
-                test. This is a test. This is a test.This is a test. This is a
-                test. This is a test. This is a test. This is a test. This is a
-                test.This is a test. This is a test. This is a test. This is a
-                test. This is a test. This is a test.This is a test. This is a
-                test. This is a test. This is a test. This is a test. This is a
-                test.yays
-              </p>
-            </div>
-
-            <div class="bot-thread">
-              <div class="thread-update">
-                <div class="last-post">
-                  <p>LAST POST:&nbsp</p>
-                  <p>NOW</p>
-                </div>
-                <div class="post-bar">
-                  <div class="post-red"></div>
-                  <div class="post-green"></div>
-                </div>
-              </div>
-              <button id="report">Report</button>
-            </div>
-          </div>
+        <!-- <h2 style="margin-left: 7px;margin-top: 2px;">rules</h2> -->
+        <div class="misc-text">
+        1. dont post anything that violates local or US law <br>
+        2. dont post here if you are under 18 <br>
+        3. dont spam <br>
+        4. dont advertise anything you get monetary gain from<br>
+        5. dont post offtopic threads or replies <br>
+        6. dont troll excessively <br>
+        7. dont dox or raid <br>
+        8. dont send false reports <br>
+        9. dont say any racist, transphobic, and homophobic slurs <br>
+        10. dont link to nsfw content <br>
+        11. dont joke about child abuse <br>
+        12. dont ban evade <br>
+        <b>just use common sense and you will be fine</b> <br>  
         </div>
+       
       </div>
       <div class="body-right">
         <div class="moshpit-info">
           <div class="tab-nav-div">
             <ul class="tab-nav">
               <li><a href="">trending</a></li>
-              |
+              <p>|</p>
               <li><a href="">popular</a></li>
-              |
+              <p>|</p>
               <li><a href="">recent</a></li>
             </ul>
           </div>
@@ -123,19 +84,42 @@
     </div>
     <dialog id="create-thread-box">
       <form id="modal-form">
-        <div class="modal-top"><div><p>new thread</p></div><div><button>x</button></div></div>
-        <hr>
+        <div class="modal-top">
+          <div><p>new thread</p></div>
+          <div><button>x</button></div>
+        </div>
+        <hr />
         <div>
-          <div class="modal-input"><label for="">comment</label><textarea name="text" id="thread-text" style="height: 400px; width: 96.4%;" placeholder="write "></textarea></div>
-          <hr>
-          <div class="modal-input"><label for="">moshpit (board)</label><input type="text" placeholder="if left blank your thread will go onto the homepage"></div>
-          <hr>
-          <div class="modal-input"><label for="">signature</label><input type="text" placeholder="put a secure password here to sign your post"></div>
-          <input type="hidden" name="post-text" id="post-text">
+          <div class="modal-input">
+            <label for="">comment</label
+            ><textarea
+              name="text"
+              id="thread-text"
+              style="height: 400px; width: 96.4%"
+              placeholder="write "
+            ></textarea>
+          </div>
+          <hr />
+          <div class="modal-input">
+            <label for="">moshpit (board)</label
+            ><input
+              type="text"
+              placeholder="if left blank your thread will go onto the homepage"
+            />
+          </div>
+          <hr />
+          <div class="modal-input">
+            <label for="">signature</label
+            ><input
+              type="text"
+              placeholder="put a secure password here to sign your post"
+            />
+          </div>
+          <input type="hidden" name="post-text" id="post-text" />
         </div>
       </form>
     </dialog>
-    
+
     <!-- <form id="thread-form">
       <textarea
         id="thread-text"
@@ -152,11 +136,11 @@
       // const threads = document.getElementById('threads')
       const createThread = document.getElementById('create-thread')
       const modal = document.getElementById('create-thread-box')
-      //modal.showModal(); 
+      //modal.showModal();
 
       createThread.addEventListener('click', () => {
         event.preventDefault()
-        modal.showModal();
+        modal.showModal()
       })
       // form.addEventListener('submit', async event => {
       //   // Prevent the browser from reloading the page
