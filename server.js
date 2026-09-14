@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const { createThread } = require('./db');
 const EventEmitter = require('events');
+const argon2 = require("argon2");
 
 const app = express();
 const events = new EventEmitter();
@@ -13,7 +14,9 @@ app.get('/api', (req, res) => {
 })
 
 app.get('/', (req, res) => {
+    
     res.sendFile(path.join(__dirname, 'index.html'));
+    
 });
 
 
@@ -57,6 +60,7 @@ app.post('/api/threads', (req, res) => {
 });
 
 
-app.listen(3000, () => {
+app.listen(3000, async () => {
     console.log('Running at http://localhost:3000');
+    
 });

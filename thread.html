@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>thread - moshr</title>
+    <link rel="stylesheet" href="stylesheet.css" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="robots" content="noindex, follow" />
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="navbar-left">
+        <ul class="nav-list">
+          <li><a href="/moshr">home</a></li>
+          <p>|</p>
+          <li><a href="/moshr/rules.html">rules</a></li>
+          <p>|</p>
+          <li><a href="/moshr/faq.html">faq</a></li>
+          <p>|</p>
+          <li><a href="/moshr/quirks.html">quirks</a></li>
+          <p>|</p>
+          <li><a href="/moshr/moshpits.html">moshpits</a></li>
+        </ul>
+      </div>
+      <div class="navbar-middle">
+        <div class="title">
+          <h2>\m/(- _ -)\m/</h2>
+        </div>
+      </div>
+      <div class="navbar-right">
+        
+        <a href="" id="create-thread">create new thread</a>
+      </div>
+    </div>
+    <div class="announcement">
+      <p id="announcement-text">afsafasfaf</p>
+      <p></p>
+    </div>
+
+    <div class="body-thread">
+    <div>return | bottom</div>
+        
+      <div class="post">
+        <div class="post-header">
+          <div style="display: flex; justify-content: space-between">
+            <div style="display: flex">
+              <p>#1 |&nbsp</p>
+              <p>anonymous&nbsp|&nbsp</p>
+              <p>9/13/25 17:00:00</p>
+            </div>
+            <div style="display: flex">
+                
+              <a href="">reply </a>&nbsp|&nbsp<a href="">report</a>
+            </div>
+          </div>
+        </div>
+        <div
+          style="min-height: 80px; background-color: var(--panel); padding: 7px"
+        >
+          <span class="shake-1"><p>yo yo yo</p></span>
+        </div>
+      </div>
+      <div class="post">
+        <div class="post-header">
+          <div style="display: flex; justify-content: space-between">
+            <div style="display: flex">
+              <p>#2 |&nbsp</p>
+              <p>anonymous&nbsp|&nbsp</p>
+              <p>9/13/25 17:00:00</p>
+            </div>
+            <div style="display: flex">
+                <div><a href="">info</a>&nbsp|&nbsp</div>
+                <div><a href="">gun</a>&nbsp|&nbsp</div>
+                <div><a href="">ban</a>&nbsp|&nbsp</div>
+                <div><a href="">shoot</a>&nbsp|&nbsp</div>
+              <a href="" id="reply">reply</a>&nbsp|&nbsp<a href="" id="report_a"
+                >report</a
+              >
+            </div>
+          </div>
+        </div>
+        <div
+          style="min-height: 80px; background-color: var(--panel); padding: 7px"
+        >
+          <span class="schizo"
+            ><span class="shake-1"><p>yo yo yo</p></span></span
+          >
+        </div>
+        <div style="background-image: linear-gradient(var(--panel), var(--gradient));;border-top: 1px solid var(--text)"><ul class="post-replies"><li>#1</li><li>#2</li></ul></div>
+      </div>
+    </div>
+    <dialog id="create-thread-box">
+      <form id="modal-form">
+        <div class="modal-top">
+          <div><p>new thread</p></div>
+          <div><button id="close-button">x</button></div>
+        </div>
+        <hr />
+        <div>
+          <div class="modal-input">
+            <label for="">comment</label
+            ><textarea
+              name="text"
+              id="thread-text"
+              style="height: 400px; width: 96.4%"
+            ></textarea>
+          </div>
+          <hr />
+          <div class="modal-input">
+            <label for="">moshpit (board)</label
+            ><input
+              type="text"
+              placeholder="if left blank your thread will go onto the homepage"
+            />
+          </div>
+          <hr />
+          <div class="modal-input">
+            <label for="">signature</label
+            ><input
+              type="text"
+              placeholder="put a secure password here to sign your post"
+            />
+          </div>
+          <input type="hidden" name="post-text" id="post-text" />
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="report-box">
+      <div class="modal-top">
+        <div><p>report</p></div>
+        <div><button id="close-button-2">x</button></div>
+      </div>
+      <hr />
+      <form id="modal-form">
+        <div>
+          <label for="">what rule was violated?</label>
+          <select name="reported_rule" id="">
+            <option value="" selected disabled hidden>
+              --please choose an option--
+            </option>
+            <option value="1">
+              1. dont post anything that violates local or US law
+            </option>
+            <option value="2">2. dont post here if you are under 18</option>
+            <option value="3">3. dont spam</option>
+            <option value="4">
+              4. dont advertise anything you get monetary gain from
+            </option>
+            <option value="5">5. dont post offtopic threads or replies</option>
+            <option value="6">6. dont dox or raid</option>
+            <option value="7">7. dont send false reports</option>
+            <option value="8">8. dont link to nsfw content</option>
+            <option value="9">9. dont joke about child abuse</option>
+            <option value="10">10. dont ban evade</option>
+          </select>
+          <label for="">false reports = ban</label>
+          <button type="submit">submit</button>
+        </div>
+      </form>
+    </dialog>
+    <div id="myPopup" class="popup hidden">
+      <div id="myPopupHeader" class="popup-header">
+        <p>reply</p>
+        <button id="close-button">x</button>
+      </div>
+      <div style="background-color:var(--panel); padding: 3px;" >
+        <form action="">
+            <label for=""></label>
+            <textarea name="" id="reply-textarea"></textarea>
+            <div>
+
+                <div> <label for="" style="margin: 0px 0px 0px -5px;">signature</label>
+            <input type="text" placeholder="put a secure password here to sign your post" style="width: 100%"></div>
+            <div style="display: flex; justify-content: right;margin-top: 5px;"><button>submit</button></div>
+            </div>
+           
+        </form>
+      </div>
+    </div>
+    <!-- <form id="thread-form">
+      <textarea
+        id="thread-text"
+        name="text"
+        placeholder="Write a thread..."
+      ></textarea>
+
+      <button type="submit">Post</button>
+    </form> -->
+
+    <script>
+      // const form = document.getElementById('thread-form')
+      // const textarea = document.getElementById('thread-text')
+      // const threads = document.getElementById('threads')
+      const createThread = document.getElementById('create-thread')
+      const modal = document.getElementById('create-thread-box')
+      //modal.showModal();
+
+      createThread.addEventListener('click', () => {
+        event.preventDefault()
+        modal.showModal()
+      })
+
+      const report = document.getElementById('report_a')
+      const report_modal = document.getElementById('report-box')
+
+      report.addEventListener('click', () => {
+        event.preventDefault()
+        report_modal.showModal()
+      })
+
+      const closeButton = document.getElementById('close-button')
+
+      closeButton.addEventListener('click', () => {
+        event.preventDefault()
+        modal.close()
+      })
+
+      const closeButton2 = document.getElementById('close-button-2')
+
+      closeButton2.addEventListener('click', () => {
+        event.preventDefault()
+        report_modal.close()
+      })
+
+      const reply = document.getElementById('reply')
+      const popup = document.getElementById('myPopup')
+      reply.addEventListener('click', () => {
+        event.preventDefault()
+        popup.classList.toggle('hidden')
+      })
+
+      makeElementMovable(document.getElementById('myPopup'))
+
+      function makeElementMovable(element) {
+        let pos1 = 0,
+          pos2 = 0,
+          pos3 = 0,
+          pos4 = 0
+
+        // If a header element exists, use it to drag; otherwise, move from anywhere inside the element
+        const header = document.getElementById(element.id + 'Header')
+        if (header) {
+          header.onmousedown = dragMouseDown
+        } else {
+          element.onmousedown = dragMouseDown
+        }
+
+        function dragMouseDown(e) {
+          e = e || window.event
+          e.preventDefault()
+          // Get the initial mouse cursor position
+          pos3 = e.clientX
+          pos4 = e.clientY
+
+          // Bind move and stop events to the document
+          document.onmousemove = elementDrag
+          document.onmouseup = closeDragElement
+        }
+
+        function elementDrag(e) {
+          e = e || window.event
+          e.preventDefault()
+          // Calculate the new cursor position shifts
+          pos1 = pos3 - e.clientX
+          pos2 = pos4 - e.clientY
+          pos3 = e.clientX
+          pos4 = e.clientY
+
+          // Set the element's new position coordinates
+          element.style.top = element.offsetTop - pos2 + 'px'
+          element.style.left = element.offsetLeft - pos1 + 'px'
+        }
+
+        function closeDragElement() {
+          // Stop moving when mouse button is released
+          document.onmousemove = null
+          document.onmouseup = null
+        }
+      }
+      // form.addEventListener('submit', async event => {
+      //   // Prevent the browser from reloading the page
+      //   event.preventDefault()
+
+      //   const text = textarea.value
+
+      //   if (!text.trim()) {
+      //     return
+      //   }
+
+      //   const response = await fetch('/api/threads', {
+      //     method: 'POST',
+
+      //     headers: {
+      //       'Content-Type': 'application/json'
+      //     },
+
+      //     body: JSON.stringify({
+      //       text: text
+      //     })
+      //   })
+
+      //   if (!response.ok) {
+      //     console.error('Failed to create thread')
+      //     return
+      //   }
+
+      //   textarea.value = ''
+      // })
+
+      // const events = new EventSource('/api/events')
+
+      // events.addEventListener('new-thread', event => {
+      //   const thread = JSON.parse(event.data)
+
+      //   addThread(thread)
+      // })
+
+      // function addThread(thread) {
+      //   const article = document.createElement('article')
+
+      //   const text = document.createElement('p')
+
+      //   text.textContent = thread.thread_text
+
+      //   article.appendChild(text)
+
+      //   threads.prepend(article)
+      // }
+    </script>
+  </body>
+</html>

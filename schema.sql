@@ -53,11 +53,12 @@ CREATE TABLE IF NOT EXISTS users (
 
     country TEXT,
     country_name TEXT,
-    user_role TEXT,
+    user_role TEXT DEFAULT 'user',
     created_at INTEGER NOT NULL DEFAULT (unixepoch()),
     banned INTEGER NOT NULL DEFAULT 0,
-    ban_count INTEGER,
+    ban_count INTEGER DEFAULT 0,
     posts INTEGER NOT NULL DEFAULT 0,
+    gun INTEGER NOT NULL DEFAULT 0,
     code TEXT,
     pin_hash TEXT
 );
@@ -67,8 +68,6 @@ CREATE INDEX IF NOT EXISTS idx_users_ip_hash
 
 CREATE INDEX IF NOT EXISTS idx_users_cookie
     ON users(cookie);
-
-
 
 -- ============================================================
 -- MOSHPITS / BOARDS
@@ -171,26 +170,26 @@ CREATE TABLE IF NOT EXISTS threads (
     unique_ips INTEGER NOT NULL DEFAULT 0,
 
     deleted_at INTEGER,
-    deleted_by INTEGER
+    deleted_by INTEGER,
 
-    -- FOREIGN KEY (author_id)
-    --     REFERENCES users(id)
-    --     ON DELETE SET NULL,
+    FOREIGN KEY (author_id)
+        REFERENCES users(id)
+        ON DELETE SET NULL,
 
-    -- FOREIGN KEY (board_id)
-    --     REFERENCES moshpits(id)
-    --     ON DELETE CASCADE,
+    FOREIGN KEY (board_id)
+        REFERENCES moshpits(id)
+        ON DELETE CASCADE,
 
-    -- FOREIGN KEY (deleted_by)
-    --     REFERENCES users(id)
-    --     ON DELETE SET NULL
+    FOREIGN KEY (deleted_by)
+        REFERENCES users(id)
+        ON DELETE SET NULL
 );
 
--- CREATE INDEX IF NOT EXISTS idx_threads_board
---     ON threads(board_id);
+CREATE INDEX IF NOT EXISTS idx_threads_board
+    ON threads(board_id);
 
--- CREATE INDEX IF NOT EXISTS idx_threads_author
---     ON threads(author_id);
+CREATE INDEX IF NOT EXISTS idx_threads_author
+    ON threads(author_id);
 
 CREATE INDEX IF NOT EXISTS idx_threads_bumped_at
     ON threads(bumped_at);

@@ -26,6 +26,8 @@ function createThread(text) {
     `).get(text);
 }
 
+
+
 // Create tables/indexes
 const schema = fs.readFileSync(schemaPath, 'utf8');
 db.exec(schema);

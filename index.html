@@ -29,10 +29,10 @@
         </div>
       </div>
       <div class="navbar-right">
-        <div class="search">
+         <div class="search">
           <input type="text" id="search-bar" />
         </div>
-        <a href="" id="create-thread">create new thread</a>
+        <a href="" id="create-thread">| create new thread</a>
       </div>
     </div>
     <div class="announcement">
@@ -43,11 +43,11 @@
     <div class="body">
       <div class="body-left">
         <div id="threads">
-          <div class="thread">
-            <div>
-              <p>
-                This is a test. This is a test. This is a test. This is a test.
-                This is a test. This is a test.
+          
+          <div class="thread" onclick="window.location.href='/moshr/thread.html'">
+            <div class="thread-text">
+              <p class="thread-index-text">
+                This is a test. 
               </p>
             </div>
             <div class="bot-thread">
@@ -61,43 +61,28 @@
                   <div class="post-green"></div>
                 </div>
               </div>
-              <button id="report">report</button>
+              
             </div>
           </div>
-          <div class="thread">
+          
+          <div class="thread" onclick="window.location.href='/moshr/thread.html'">
             <div class="thread-text">
-              <p>
-                This is a test. This is a test. This is a test. This is a test.
-                This is a test. This is a test. This is a test. This is a test.
-                This is a test. This is a test. This is a test. This is a test.
-                This is a test. This is a test. This is a test. This is a test.
-                This is a test. This is a test. This is a test. This is a test.
-                This is a test. This is a test. This is a test. This is a
-                test.This is a test. This is a test. This is a test. This is a
-                test. This is a test. This is a test.This is a test. This is a
-                test. This is a test. This is a test. This is a test. This is a
-                test.This is a test. This is a test. This is a test. This is a
-                test. This is a test. This is a test.This is a test. This is a
-                test. This is a test. This is a test. This is a test. This is a
-                test.This is a test. This is a test. This is a test. This is a
-                test. This is a test. This is a test.This is a test. This is a
-                test. This is a test. This is a test. This is a test. This is a
-                test.yays
+              <p class="thread-index-text">
+                This is a test. 
               </p>
             </div>
-
             <div class="bot-thread">
               <div class="thread-update">
                 <div class="last-post">
-                  <p>LAST POST:&nbsp</p>
-                  <p>NOW</p>
+                  <p>last post:&nbsp</p>
+                  <p>now</p>
                 </div>
                 <div class="post-bar">
                   <div class="post-red"></div>
                   <div class="post-green"></div>
                 </div>
               </div>
-              <button id="report">Report</button>
+              
             </div>
           </div>
         </div>
@@ -139,7 +124,7 @@
               name="text"
               id="thread-text"
               style="height: 400px; width: 96.4%"
-              placeholder="write "
+   
             ></textarea>
           </div>
           <hr />
@@ -162,43 +147,7 @@
         </div>
       </form>
     </dialog>
-    <dialog id="report-box">
-      <div class="modal-top">
-          <div><p>report</p></div>
-          <div><button id="close-button-2">x</button></div>
-        </div>
-        <hr />
-      <form id="modal-form">
-        <div>
-          <label for="">what rule was violated?</label>
-          <select name="reported_rule" id="">
-            <option value="" selected disabled hidden>
-              --please choose an option--
-            </option>
-            <option value="1">
-              1. dont post anything that violates local or US law
-            </option>
-            <option value="2">2. dont post here if you are under 18</option>
-            <option value="3">3. dont spam</option>
-            <option value="4">
-              4. dont advertise anything you get monetary gain from
-            </option>
-            <option value="5">5. dont post offtopic threads or replies</option>
-            <option value="6">6. dont troll excessively</option>
-            <option value="7">7. dont dox or raid</option>
-            <option value="8">8. dont send false reports</option>
-            <option value="9">
-              9. dont say racist, transphobic, homophobic, or religious slurs
-            </option>
-            <option value="10">10. dont link to nsfw content</option>
-            <option value="11">11. dont joke about child abuse</option>
-            <option value="12">12. dont ban evade</option>
-          </select>
-          <label for="">false reports = ban</label>
-          <button type="submit">submit</button>
-        </div>
-      </form>
-    </dialog>
+    
 
     <!-- <form id="thread-form">
       <textarea
