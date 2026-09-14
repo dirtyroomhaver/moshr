@@ -5,7 +5,9 @@ PRAGMA foreign_keys = ON;
 -- ============================================================
 CREATE TABLE IF NOT EXISTS cached_results (
     cache_key TEXT PRIMARY KEY,
-    data TEXT NOT NULL,
+    trending TEXT NOT NULL,
+    popular TEXT NOT NULL,
+    recent TEXT NOT NULL,
     updated_at INTEGER NOT NULL
 );
 CREATE TABLE IF NOT EXISTS site_settings (
@@ -15,7 +17,7 @@ CREATE TABLE IF NOT EXISTS site_settings (
     max_posts INTEGER,
 
     frozen INTEGER NOT NULL DEFAULT 0 CHECK (frozen IN (0, 1)),
-    no_new_threads INTEGER NOT NULL DEFAULT 0 CHECK (no_new_threads IN (0, 1)),
+    silenced INTEGER NOT NULL DEFAULT 0 CHECK (silenced IN (0, 1)),
 
     slowmode INTEGER NOT NULL DEFAULT 0 CHECK (slowmode IN (0, 1)),
     slowmode_timer INTEGER,
@@ -25,9 +27,6 @@ CREATE TABLE IF NOT EXISTS site_settings (
 
     post_cooldown_thread INTEGER,
     post_cooldown_post INTEGER,
-
-    posts_per_page INTEGER NOT NULL DEFAULT 20,
-    pages INTEGER NOT NULL DEFAULT 1,
 
     bump_limit INTEGER,
 
@@ -53,12 +52,17 @@ CREATE TABLE IF NOT EXISTS users (
 
     country TEXT,
     country_name TEXT,
-    user_role TEXT DEFAULT 'user',
+    is_owner INTEGER NOT NULL DEFAULT 0,
+    is_admin INTEGER NOT NULL DEFAULT 0,
+    is_mod INTEGER NOT NULL DEFAULT 0,
+    is_janitor INTEGER NOT NULL DEFAULT 0,
+    is_vip INTEGER NOT NULL DEFAULT 0,
+
     created_at INTEGER NOT NULL DEFAULT (unixepoch()),
     banned INTEGER NOT NULL DEFAULT 0,
     ban_count INTEGER DEFAULT 0,
     posts INTEGER NOT NULL DEFAULT 0,
-    gun INTEGER NOT NULL DEFAULT 0,
+    has_gun INTEGER NOT NULL DEFAULT 0,
     code TEXT,
     pin_hash TEXT
 );
@@ -284,14 +288,14 @@ CREATE TABLE IF NOT EXISTS reports (
 
     reporter_id INTEGER,
     post_id INTEGER NOT NULL,
-
-    time INTEGER NOT NULL DEFAULT (unixepoch()),
+    violator_id INTEGER NOT NULL,
+    report_time INTEGER NOT NULL DEFAULT (unixepoch()),
 
     rule_broken TEXT,
 
-    status TEXT NOT NULL DEFAULT 'pending'
+    report_status TEXT NOT NULL DEFAULT 'pending'
         CHECK (status IN ('pending', 'reviewing', 'resolved', 'dismissed')),
-
+    ban_count INTEGER,
     resolved_at INTEGER,
     resolved_by INTEGER,
     reason TEXT,
@@ -299,7 +303,9 @@ CREATE TABLE IF NOT EXISTS reports (
     FOREIGN KEY (reporter_id)
         REFERENCES users(id)
         ON DELETE SET NULL,
-
+ FOREIGN KEY (ban_count)
+        REFERENCES users(ban_count)
+        ON DELETE SET NULL,
     FOREIGN KEY (post_id)
         REFERENCES posts(id)
         ON DELETE CASCADE,
@@ -393,14 +399,14 @@ CREATE TABLE IF NOT EXISTS appeals (
     ban_id INTEGER NOT NULL,
 
     post_id INTEGER,
-    ip_hash TEXT,
+    ip TEXT,
 
     created_at INTEGER NOT NULL DEFAULT (unixepoch()),
     updated_at INTEGER,
-
+    ban_count INTEGER,
     reason TEXT,
 
-    status TEXT NOT NULL DEFAULT 'pending'
+    appeal_status TEXT NOT NULL DEFAULT 'pending'
         CHECK (status IN ('pending', 'reviewing', 'approved', 'denied')),
 
     reviewed_at INTEGER,
@@ -419,7 +425,9 @@ CREATE TABLE IF NOT EXISTS appeals (
     FOREIGN KEY (post_id)
         REFERENCES posts(id)
         ON DELETE SET NULL,
-
+ FOREIGN KEY (ban_count)
+        REFERENCES users(ban_count)
+        ON DELETE SET NULL,
     FOREIGN KEY (reviewed_by)
         REFERENCES users(id)
         ON DELETE SET NULL
@@ -466,7 +474,7 @@ CREATE TABLE IF NOT EXISTS moderation_actions (
     FOREIGN KEY (moderator_id)
         REFERENCES users(id)
         ON DELETE CASCADE,
-
+   
     FOREIGN KEY (board_id)
         REFERENCES moshpits(id)
         ON DELETE SET NULL,

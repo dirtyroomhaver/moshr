@@ -9,159 +9,18 @@
     <meta name="robots" content="noindex, follow">
 </head>
 <body>
-    <div class="navbar">
-      <div class="navbar-left">
-        <ul class="nav-list">
-          <li><a href="/moshr">home</a></li>
-          <p>|</p>
-          <li><a href="/moshr/rules.html">rules</a></li>
-          <p>|</p>
-          <li><a href="/moshr/faq.html">faq</a></li>
-          <p>|</p>
-          <li><a href="/moshr/quirks.html">quirks</a></li>
-          <p>|</p>
-          <li><a href="/moshr/moshpits.html">moshpits</a></li>
-        </ul>
-      </div>
-      <div class="navbar-middle">
-        <div class="title">
-          <h2>\m/(- _ -)\m/</h2>
-        </div>
-      </div>
-      <div class="navbar-right">
-         
-        <a href="" id="create-thread">create new thread</a>
-      </div>
-    </div>
-    <div class="announcement">
-      <p id="announcement-text">afsafasfaf</p>
-      <p></p>
-    </div>
-
     <div class="body">
       <!-- <h2 style="margin-left: 7px;margin-top: 2px;color: #d2d6dc">faq</h2> -->
-      <div class="body-left" style="padding: 0px 5px 0px 10px">
-      
+      <div class="body-admin">
+        <div >
+            <form action="">
+                <input type="text" placeholder="username">
+                <input type="text" placeholder="password">
+                <button type="submit">login</button>
+            </form>
+        </div>
       </div>
     </div>
-    <dialog id="create-thread-box">
-      <form id="modal-form">
-        <div class="modal-top">
-          <div><p>new thread</p></div>
-          <div><button id="close-button">x</button></div>
-        </div>
-        <hr />
-        <div>
-          <div class="modal-input">
-            <label for="">comment</label
-            ><textarea
-              name="text"
-              id="thread-text"
-              style="height: 400px; width: 96.4%"
-              placeholder="write "
-            ></textarea>
-          </div>
-          <hr />
-          <div class="modal-input">
-            <label for="">moshpit (board)</label
-            ><input
-              type="text"
-              placeholder="if left blank your thread will go onto the homepage"
-            />
-          </div>
-          <hr />
-          <div class="modal-input">
-            <label for="">signature</label
-            ><input
-              type="text"
-              placeholder="put a secure password here to sign your post"
-            />
-          </div>
-          <input type="hidden" name="post-text" id="post-text" />
-        </div>
-      </form>
-    </dialog>
-
-    <!-- <form id="thread-form">
-      <textarea
-        id="thread-text"
-        name="text"
-        placeholder="Write a thread..."
-      ></textarea>
-
-      <button type="submit">Post</button>
-    </form> -->
-
-    <script>
-      // const form = document.getElementById('thread-form')
-      // const textarea = document.getElementById('thread-text')
-      // const threads = document.getElementById('threads')
-      const createThread = document.getElementById('create-thread')
-      const modal = document.getElementById('create-thread-box')
-      //modal.showModal();
-
-      createThread.addEventListener('click', () => {
-        event.preventDefault()
-        modal.showModal()
-      })
-
-  
-      const closeButton = document.getElementById('close-button')
-
-      closeButton.addEventListener('click', () => {
-        event.preventDefault()
-       
-        modal.close()
-      })
-      // form.addEventListener('submit', async event => {
-      //   // Prevent the browser from reloading the page
-      //   event.preventDefault()
-
-      //   const text = textarea.value
-
-      //   if (!text.trim()) {
-      //     return
-      //   }
-
-      //   const response = await fetch('/api/threads', {
-      //     method: 'POST',
-
-      //     headers: {
-      //       'Content-Type': 'application/json'
-      //     },
-
-      //     body: JSON.stringify({
-      //       text: text
-      //     })
-      //   })
-
-      //   if (!response.ok) {
-      //     console.error('Failed to create thread')
-      //     return
-      //   }
-
-      //   textarea.value = ''
-      // })
-
-      // const events = new EventSource('/api/events')
-
-      // events.addEventListener('new-thread', event => {
-      //   const thread = JSON.parse(event.data)
-
-      //   addThread(thread)
-      // })
-
-      // function addThread(thread) {
-      //   const article = document.createElement('article')
-
-      //   const text = document.createElement('p')
-
-      //   text.textContent = thread.thread_text
-
-      //   article.appendChild(text)
-
-      //   threads.prepend(article)
-      // }
-    </script>
+    
   </body>
 </html>

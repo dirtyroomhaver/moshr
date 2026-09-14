@@ -7,10 +7,15 @@
     "rebuild": "^0.1.2"
   },
   "devDependencies": {
-    "cross-env": "^10.1.0"
+    "cross-env": "^10.1.0",
+    "nodemon": "^3.1.14"
   },
   "allowScripts": {
     "argon2@0.45.1": true,
     "better-sqlite3@13.0.3": true
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   }
 }
