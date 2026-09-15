@@ -18,13 +18,6 @@ const db = new Database(dbPath)
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
 db.pragma('busy_timeout = 5000');
-function createThread(text) {
-    return db.prepare(`
-        INSERT INTO threads (thread_text)
-        VALUES (?)
-        RETURNING *
-    `).get(text);
-}
 
 
 
@@ -33,5 +26,5 @@ const schema = fs.readFileSync(schemaPath, 'utf8');
 db.exec(schema);
 
 module.exports = {
-  db, createThread
+    db
 }

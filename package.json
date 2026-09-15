@@ -1,8 +1,11 @@
 {
   "dependencies": {
+    "@maxmind/geoip2-node": "^7.1.0",
     "argon2": "^0.45.1",
     "better-sqlite3": "^13.0.3",
+    "cookie-parser": "^1.4.7",
     "express": "^5.2.1",
+    "geolite2-city": "^1.0.98",
     "node-gyp": "^13.0.2",
     "rebuild": "^0.1.2"
   },
@@ -12,7 +15,8 @@
   },
   "allowScripts": {
     "argon2@0.45.1": true,
-    "better-sqlite3@13.0.3": true
+    "better-sqlite3@13.0.3": true,
+    "fsevents@2.3.3": true
   },
   "scripts": {
     "start": "node server.js",

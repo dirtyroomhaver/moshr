@@ -1,28 +1,104 @@
+/* =========================================================
+   1. THEME / VARIABLES
+   ========================================================= */
+
 :root {
-    /* Step 1: You MUST declare the color scheme for light-dark() to work */
     color-scheme: light dark;
+
 
     --bg-color: light-dark(#f8faff, #222127);
     --accent-color: light-dark(#393736, #d2d6dc);
-    --gradient: light-dark(#d5d5d5, #121215);
+    --gradient: light-dark(#d5d5d5, #0b0b0e);
     --panel: light-dark(#ececec, #1a1a22);
     --text: light-dark(#232323, #d2d6dc);
-    --bar: light-dark(#adff9d, #9cdf70);
+    --bar: light-dark(#adff9d, #adff9d);
     --rage: light-dark(#b20000, #ff0000);
     --greentext: light-dark(#416600, #8bb444);
-    /* --bg-color: light-dark(#f8faff, #f8faff);
-    --accent-color: light-dark(#393736, #393736);
-    --gradient: light-dark(#d5d5d5, #d5d5d5);
-    --panel: light-dark(#ececec, #ececec);
-    --text: light-dark(#232323, #232323);
-    --bar: light-dark(#adff9d, #adff9d);
-    --rage: light-dark(#b20000, #b20000);
-    --greentext: light-dark(#416600, #416600); */
+    --back: light-dark(#d5d5d5, #8b8b8b);
+    --border-color: light-dark( #232323, #acacac);
+    --e: light-dark(#ececec, #d2d6dc);
+    --ee: light-dark(#d5d5d5, #acacac);
+    --mt:light-dark(#232323, #222127);
 }
 
+
+/* =========================================================
+   2. RESET / GLOBAL
+   ========================================================= */
+
 * {
-    margin: 0px;
+    margin: 0;
     box-sizing: border-box;
+}
+
+body {
+    background-image: linear-gradient(var(--gradient),
+            var(--bg-color));
+    background-size: 100% 20%;
+    background-repeat: no-repeat;
+    background-color: var(--bg-color);
+
+    font-family: Arial, sans-serif;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    padding-inline-start: 0;
+}
+
+span {
+    display: block;
+}
+
+table,
+th,
+td {
+    border: 1px solid black;
+}
+
+
+/* =========================================================
+   3. NAVIGATION
+   ========================================================= */
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    height: 40px;
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+}
+
+.navbar div {
+    margin: 0;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-middle {
+    display: flex;
+    position: absolute;
+
+    left: 50%;
+    transform: translateX(-50%);
+
+    justify-self: center;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 7px;
 }
 
 .nav-button {
@@ -30,259 +106,12 @@
     margin: 5px;
 }
 
-/* .tab-nav-div {
-    background-color: var(--accent-color)
-} */
-.navbar-middle {
-      justify-self: center;
-}
-
 .title h2 {
-    color: var(--accent-color)
+    color: var(--accent-color);
 }
 
 .title:hover {
     animation: shake-2 0.15s infinite;
-}
-
-.navbar-left {
-    display: flex;
-    align-items: center;
-  
-}
-.navbar-middle {
-    display: flex;
-    position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  
-}
-.navbar-right {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-
-}
-
-.navbar {
-     display: flex;
-  align-items: center;
-  justify-content: space-between;
-    height: 30px;
-    padding: 7px;
-    border-bottom: 1px solid var(--text);
-    position: sticky;
-}
-
-
-
-.navbar div {
-    margin: 0;
-}
-
-.body {
-    display: flex;
-    justify-content: space-between;
-}
-
-.body-thread {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100vh;
-    padding-top: 5px;
-
-}
-
-.body-right {
-    width: 30vh;
-    min-width: 300;
-}
-
-.post {
-    border: 1px solid var(--text);
-    margin-bottom: 5px;
-    color: var(--text)
-}
-
-.moshpit-name {
-    display: flex;
-    justify-content: left;
-    background-color: var(--accent-color);
-    color: var(--bg-color);
-    padding: 7px;
-    border-bottom: 2px solid var(--text)
-}
-
-#threads {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-
-    color: var(--text);
-    margin-top: 3px;
-
-}
-
-.body {}
-
-.body-left {
-    height: 100vh;
-    overflow-y: scroll;
-    flex: 1;
-    min-width: 0;
-}
-.body-admin {
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    
-}
-.body-left::-webkit-scrollbar {
-    width: 5px;
-}
-
-.body-left::-webkit-scrollbar-thumb {
-    background: var(--panel);
-    border-radius: 4px;
-}
-
-
-
-.post-green {
-    height: 4px;
-
-    background-color: var(--bar);
-    margin: 0;
-    padding: 0;
-    width: 40%;
-}
-
-.thread-index-text {
-    padding: 7px;
-}
-
-.post-bar {
-    height: 4px;
-    background-color: var(--text);
-    border-top: 1px solid var(--accent-color);
-
-    box-sizing: content-box;
-}
-
-.last-post {
-    display: flex;
-    color: var(--accent-color);
-    font-weight: bold;
-    padding: 0px 0px 0px 7px;
-    
-}
-table, th, td {
-  border:1px solid black;
-}
-.thread {
-    height: 120px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background-image: linear-gradient(var(--panel), var(--gradient));
-    /* background-color: var(--panel); */
-    min-width: 5%;
-    border: 1px solid var(--accent-color);
-
-    box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.1);
-    margin: 7px;
-}
-
-.post-header {
-    width: 50vw;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background-image: linear-gradient(var(--panel), var(--gradient));
-    /* background-color: var(--panel); */
-    border-bottom: 1px solid var(--accent-color);
-
-    padding: 5px;
-    box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.1);
-    margin: 0px;
-}
-
-.thread-text {
-    height: 80px;
-    overflow-y: hidden
-}
-
-.moshpit-info {
-    padding: 0px;
-    margin-top: 10px;
-    border: 1px solid var(--accent-color);
-    background-color: var(--accent-color);
-    box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.1);
-}
-
-.info-list {
-    list-style-type: none;
-    padding: 7px 0px 7px 7px;
-    background-image: linear-gradient(var(--panel), var(--gradient));
-
-}
-
-ul {
-    padding-inline-start: 0px;
-}
-
-.tab-nav {
-    display: flex;
-    /* aligns items horizontally */
-    list-style-type: none;
-    justify-content: center;
-    gap: 10px;
-
-    padding: 7px 0px 7px 0px;
-}
-.post-replies {
-    display: flex;
-    /* aligns items horizontally */
-    list-style-type: none;
-    justify-content: start;
-    gap: 5px;
-    margin: 0px 5px 0px 5px;
-    padding-top: 2px;
-    
-}
-.nav-list {
-    display: flex;
-    /* aligns items horizontally */
-    list-style-type: none;
-    gap: 10px;
-    justify-content: left;
-    padding: 0px;
-}
-.search input {
-    width: 10vw;
-}
-body {
-    background-image: linear-gradient(var(--gradient), var(--bg-color));
-    background-size: 100% 20%;
-    background-repeat: no-repeat;
-    background-color: var(--bg-color);
-    /* background-image: linear-gradient(#000000, #11181E);
-    background-size: 100% 30%;
-    background-repeat: no-repeat;
-    background-color: #11181E; */
-    font-family: Arial, sans-serif;
-}
-
-li a {
-    text-decoration: none;
-    color: var(--accent-color);
-}
-
-.tab-nav li a {
-    color: var(--panel);
 }
 
 .navbar-right a {
@@ -290,35 +119,139 @@ li a {
     color: var(--accent-color);
 }
 
-.last-post p {
-    margin-bottom: 4px
+.nav-list {
+    display: flex;
+    list-style-type: none;
+    gap: 10px;
+    justify-content: left;
+    padding: 0;
+}
+
+.nav-list p {
+    color: var(--text);
 }
 
 
-@media (max-width: 1000px) {
-    #threads {
-        grid-template-columns: 1fr;
-    }
+/* =========================================================
+   4. TABS
+   ========================================================= */
 
-    .body-right {
-        displaY: none;
-    }
-
-    .post-header {
-        width: 98vw;
-        min-width: 370px;
-    }
+.tab-nav {
+    display: flex;
+    list-style-type: none;
+    justify-content: center;
+    gap: 10px;
+    padding: 7px 0;
 }
 
-a {
-    text-decoration: none;
-    color: inherit
+.tab-nav p {
+    color: var(--text);
 }
 
+.tab-nav li a {
+    color: var(--text);
+}
+
+.tab-nav-div {
+    background-image: linear-gradient(var(--panel),var(--gradient) );
+    border-bottom: 1px solid var(--border-color)
+}
+
+/* =========================================================
+   5. PAGE LAYOUT
+   ========================================================= */
+
+.body {
+    display: flex;
+    justify-content: space-between;
+}
+
+.body-left {
+    height: 100vh;
+    overflow-y: scroll;
+    flex: 1;
+    min-width: 0;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for Firefox */
+    scrollbar-width: none;
+
+    /* Hide scrollbar for IE and legacy Edge */
+    -ms-overflow-style: none;  
+}
+
+.body-right {
+    width: 30vh;
+    min-width: 300px;
+}
+
+.body-thread {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    height: 100vh;
+    padding-top: 5px;
+}
+
+.body-admin {
+    height: 100vh;
+    width: 100vw;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+/* =========================================================
+   6. THREAD INDEX
+   ========================================================= */
+
+#threads {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+    color: var(--text);
+    margin-top: 3px;
+}
+
+.thread {
+    height: 120px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    background-image:
+        linear-gradient(var(--panel), var(--gradient));
+
+    min-width: 5%;
+
+    border: 1px solid var(--border-color);
+
+    box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.1);
+
+    margin: 7px;
+}
 
 .thread:hover {
-    transform: scale(1.01);
+    transform: scale(1.003);
+}
 
+.thread-text {
+    height: 80px;
+    overflow-y: hidden;
+}
+
+.thread-index-text {
+    padding: 7px;
+}
+
+.thread-update {
+    width: 100%;
 }
 
 .bot-thread {
@@ -326,68 +259,150 @@ a {
     justify-content: space-between;
 }
 
-.thread-update {
-    width: 100%;
+
+/* =========================================================
+   7. POSTS
+   ========================================================= */
+
+.post {
+    border: 1px solid var(--text);
+    margin-bottom: 5px;
+    color: var(--text);
+    max-width: 1000px;
+    box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.2);
+   
 }
 
-#report {
-    margin-left: 10px;
-    background-color: var(--text);
-    color: var(--bg-color)
+.post-header {
+    width: 50vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    background-image:
+        linear-gradient(var(--panel), var(--gradient));
+
+    border-bottom: 1px solid var(--accent-color);
+
+    padding: 5px;
+
+    box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.1);
+
+    margin: 0;
+}
+
+.post-replies {
+    display: flex;
+    list-style-type: none;
+    justify-content: start;
+
+    gap: 5px;
+    margin: 0 5px;
+    padding-top: 2px;
+}
+
+.post-green {
+    height: 4px;
+
+    background-image:
+        linear-gradient(var(--bar), var(--gradient));
+
+    margin: 0;
+    padding: 0;
+    width: 40%;
+}
+
+.post-bar {
+    height: 4px;
+
+    background-image:
+        linear-gradient(var(--back), var(--text));
+    border-top: 1px solid var(--accent-color);
+
+    box-sizing: content-box;
+}
+
+.last-post {
+    display: flex;
+
+    color: var(--accent-color);
+    font-weight: bold;
+
+    padding: 0 0 0 7px;
+}
+
+.last-post p {
+    margin-bottom: 4px;
 }
 
 
+/* =========================================================
+   8. THREAD / SITE INFO
+   ========================================================= */
 
-#create-thread-box {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -70%);
-    width: 450px;
-    height: 615px;
-    background: var(--panel);
-    border: 1px solid var(--accent-color);
-    overflow-x: hidden;
+.moshpit-name {
+    display: flex;
+    justify-content: left;
+
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+
+    padding: 7px;
+    border-bottom: 2px solid var(--border-color);
 }
 
-#report-box {
-    position: fixed;
-    left: 50%;
-    transform: translate(-50%, 50%);
-    width: 385px;
-    height: 170px;
-    background: var(--panel);
-    border: 1px solid var(--accent-color);
-    overflow-x: hidden;
-    overflow-y: hidden;
+.moshpit-info {
+    padding: 0;
+    margin-top: 10px;
+
+    border: 1px solid var(--border-color);
+    background-color: var(--accent-color);
+
+    box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.1);
 }
 
-#report dialog::backdrop {
-    background-color: rgba(0, 0, 0, 0.9);
+.info-list {
+    list-style-type: none;
+
+    padding: 7px 0 7px 7px;
+
+    background-image:
+        linear-gradient(var(--e), var(--ee));
+    color: var(--mt)
 }
+
+.misc-text {
+    padding: 0 7px 7px;
+    color: var(--text);
+    margin-top: 5px;
+}
+
+
+/* =========================================================
+   9. SEARCH
+   ========================================================= */
+
+.search input {
+    width: 10vw;
+}
+
+
+/* =========================================================
+   10. FORMS / MODALS
+   ========================================================= */
 
 label {
     display: block;
-    padding: 5px 0px 0px 5px;
+    padding: 5px 0 0 5px;
+}
+
+.modal-form {
+    color: var(--text);
 }
 
 .modal-top {
     display: flex;
     justify-content: space-between;
-}
-
-.modal-form {
-    color: var(--text)
-}
-
-#modal-form div select {
-    margin: 3px;
-    padding: 0px;
-    width: 200px;
-}
-
-#modal-form div button {
-    margin: 3px;
 }
 
 .modal-top div p {
@@ -407,63 +422,247 @@ label {
 .modal-input input {
     width: 97%;
 }
+
 #reply-textarea {
     margin: 0px;
     width: 100%;
     height: 80px;
 }
+
+#modal-form div select {
+    margin: 3px;
+    padding: 0;
+    width: 200px;
+}
+
+#modal-form div button {
+    margin: 3px;
+}
+
+
+/* =========================================================
+   11. CREATE THREAD / REPORT MODALS
+   ========================================================= */
+
+#create-thread-box {
+    position: fixed;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -70%);
+
+    width: 450px;
+    height: 615px;
+
+    background: var(--panel);
+    border: 1px solid var(--accent-color);
+
+    overflow-x: hidden;
+}
+
+#report-box {
+    position: fixed;
+
+    left: 50%;
+
+    transform: translate(-50%, 50%);
+
+    width: 385px;
+    height: 170px;
+
+    background: var(--panel);
+    border: 1px solid var(--accent-color);
+
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+#report dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+#report {
+    margin-left: 10px;
+
+    background-color: var(--text);
+    color: var(--bg-color);
+}
+
 .announcement {
     display: none;
     justify-content: center;
+
     margin-top: 9px;
+
     color: var(--rage);
     font-weight: bold;
 }
 
-.misc-text {
-    padding: 0px 7px 7px 7px;
+
+/* =========================================================
+   12. POPUPS
+   ========================================================= */
+
+.popup {
+    position: absolute;
+
+    z-index: 1000;
+
+    background-color: var(--panel);
+    border: 1px solid var(--accent-color);
+
+    min-width: 300px;
+
+    top: 30%;
+    left: 40%;
+}
+
+.hidden {
+    display: none;
+}
+
+.popup-header {
+    padding: 5px;
+
+    cursor: move;
+
+    background-image:
+        linear-gradient(var(--panel), var(--gradient));
+
     color: var(--text);
-    margin-top: 5px;
+    font-weight: bold;
+
+    user-select: none;
+
+    height: 30px;
+
+    display: flex;
+    justify-content: space-between;
 }
 
-.tab-nav p {
-    color: var(--panel)
+.popup-body {
+    padding: 20px;
+    color: var(--text);
 }
 
-.nav-list p {
-    color: var(--text)
+
+/* =========================================================
+   13. CODE
+   ========================================================= */
+
+.code {
+    white-space: pre-wrap;
+    width: fit-content;
+    margin-top: 4px;
+    padding: 10px;
+    background-image:
+        linear-gradient(var(--panel), var(--gradient));
+    border: 1px solid var(--border-color);
+
+    color: var(--text);
 }
 
+
+/* =========================================================
+   14. SPECIAL TEXT
+   ========================================================= */
+
+.rage {
+    color: var(--rage);
+}
 
 .gay {
-    background: linear-gradient(to right, #6666ff, #0099ff, #00ff00, #fff200, #ff3399, #6666ff);
+    background:
+        linear-gradient(to right,
+            #6666ff,
+            #0099ff,
+            #00ff00,
+            #fff200,
+            #ff3399,
+            #6666ff);
+
     -webkit-background-clip: text;
     background-clip: text;
+
     color: transparent;
+
     animation: rainbow_animation 0.5s infinite;
+
     background-size: 400% 100%;
 }
 
 .trans {
-    background: linear-gradient(to right, #5badff, #ffffff, #f581ff);
+    background:
+        linear-gradient(to right,
+            #5badff,
+            #ffffff,
+            #f581ff);
+
     -webkit-background-clip: text;
     background-clip: text;
+
     color: transparent;
+
     animation: rainbow_animation 0.35s infinite;
+
     background-size: 400% 100%;
 }
 
 .police {
-    background: linear-gradient(to right, #5badff, #b20000);
+    background:
+        linear-gradient(to right,
+            #5badff,
+            #b20000);
+
     -webkit-background-clip: text;
     background-clip: text;
+
     color: transparent;
+
     animation: rainbow_animation 0.2s infinite;
+
     background-size: 400% 100%;
 }
 
-.rage {
-    color: var(--rage)
+s {
+    color: #000;
+    background: #000;
+    text-decoration: none;
+}
+
+s:hover {
+    color: white;
+}
+
+
+/* =========================================================
+   15. ANIMATIONS
+   ========================================================= */
+
+.shake-1 {
+    animation: shake-1 0.1s infinite;
+}
+
+.shake-2 {
+    animation: shake-2 0.15s infinite;
+}
+
+.vert {
+    animation: vertical-shaking 0.25s infinite;
+}
+
+.hori {
+    animation: horizontal-shaking 0.25s infinite;
+}
+
+.schizo {
+    animation: skew-x-shaking 0.5s infinite;
+}
+
+.glow {
+    animation: glow 0.3s ease-in-out infinite alternate;
+    color: var(--text);
 }
 
 @keyframes rainbow_animation {
@@ -478,14 +677,6 @@ label {
     }
 }
 
-.shake-1 {
-    animation: shake-1 0.1s infinite;
-}
-
-.shake-2 {
-    animation: shake-2 0.15s infinite;
-}
-
 @keyframes shake-1 {
     0% {
         transform: translate(0, 0) rotate(0deg);
@@ -496,7 +687,7 @@ label {
     }
 
     50% {
-        transform: translate(0, 0) rotate(0eg);
+        transform: translate(0, 0) rotate(0deg);
     }
 
     75% {
@@ -518,7 +709,7 @@ label {
     }
 
     50% {
-        transform: translate(0, 0) rotate(0eg);
+        transform: translate(0, 0) rotate(0deg);
     }
 
     75% {
@@ -530,98 +721,48 @@ label {
     }
 }
 
-span {
-    display: block
-}
-
-.vert {
-    animation: vertical-shaking 0.25s infinite
-}
-
 @keyframes vertical-shaking {
     0% {
-        transform: translateY(0)
+        transform: translateY(0);
     }
 
     25% {
-        transform: translateY(2px)
+        transform: translateY(2px);
     }
 
     50% {
-        transform: translateY(-2px)
+        transform: translateY(-2px);
     }
 
     75% {
-        transform: translateY(2px)
+        transform: translateY(2px);
     }
 
     100% {
-        transform: translateY(0)
+        transform: translateY(0);
     }
 }
 
 @keyframes horizontal-shaking {
     0% {
-        transform: translateX(0)
+        transform: translateX(0);
     }
 
     25% {
-        transform: translateX(2px)
+        transform: translateX(2px);
     }
 
     50% {
-        transform: translateX(-2px)
+        transform: translateX(-2px);
     }
 
     75% {
-        transform: translateX(2px)
+        transform: translateX(2px);
     }
 
     100% {
-        transform: translateX(0)
+        transform: translateX(0);
     }
-}
-
-.hori {
-    animation: horizontal-shaking 0.25s infinite
-}
-
-.glow {
-    animation: glow 0.3s ease-in-out infinite alternate;
-    color: var(--text)
-}
-
-@-webkit-keyframes glow {
-    from {
-        text-shadow: 0 0 5px #9beb97, 0 0 10px #9beb97, 0 0 15px #1be600;
-    }
-
-    to {
-        text-shadow: 0 0 10px #9beb97, 0 0 15px #1be600, 0 0 20px #1be600;
-    }
-}
-
-
-s:hover {
-    color: white
-}
-
-s {
-    color: #000;
-    background: #000;
-    text-decoration: none;
-}
-
-.code {
-    white-space: pre-wrap;
-    margin-top: 4px;
-    background-color: var(--gradient);
-    border: 1px solid var(--text);
-    color: var(--text)
-}
-
-.schizo {
-    animation: skew-x-shaking 0.5s infinite
 }
 
 @keyframes skew-x-shaking {
@@ -650,37 +791,47 @@ s {
     }
 }
 
-.popup {
-    position: absolute;
-    z-index: 1000;
-    background-color: var(--panel);
-    border: 1px solid var(--accent-color);
-    min-width: 300px;
-    /* Center initially */
-    top: 30%;
-    left: 40%;
-    
-}
-.hidden {
-    display: none;
-}
-/* The Header used to drag the window */
-.popup-header {
-    padding: 5px;
-    cursor: move;
-    /* Changes cursor to a moving hand */
-    background-image: linear-gradient(var(--panel), var(--gradient));
-    color: var(--text);
-    font-weight: bold;
-    user-select: none;
-    height: 30px;
-    display: flex;
-    justify-content: space-between;
-    /* Prevents text highlighting while dragging */
+@-webkit-keyframes glow {
+    from {
+        text-shadow:
+            0 0 5px #9beb97,
+            0 0 10px #9beb97,
+            0 0 15px #1be600;
+    }
+
+    to {
+        text-shadow:
+            0 0 10px #9beb97,
+            0 0 15px #1be600,
+            0 0 20px #1be600;
+    }
 }
 
-/* Pop-up Body Content */
-.popup-body {
-    padding: 20px;
-    color: var(--text);
+
+/* =========================================================
+   16. RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    #threads {
+        grid-template-columns: 1fr;
+    }
+
+    .body-right {
+        display: none;
+    }
+
+    .post-header {
+        width: 98vw;
+        min-width: 370px;
+    }
+
+    .extra-post {
+        width: 98vw;
+    }
+}
+
+.extra-post {
+    width: 50vw;
 }

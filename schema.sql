@@ -45,13 +45,11 @@ CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
     ip TEXT,
-    ip_hash TEXT,
 
-    cookie TEXT NOT NULL UNIQUE,
-    user_agent_hash TEXT,
+    session_id TEXT NOT NULL UNIQUE,
 
     country TEXT,
-    country_name TEXT,
+
     is_owner INTEGER NOT NULL DEFAULT 0,
     is_admin INTEGER NOT NULL DEFAULT 0,
     is_mod INTEGER NOT NULL DEFAULT 0,
@@ -62,16 +60,17 @@ CREATE TABLE IF NOT EXISTS users (
     banned INTEGER NOT NULL DEFAULT 0,
     ban_count INTEGER DEFAULT 0,
     posts INTEGER NOT NULL DEFAULT 0,
-    has_gun INTEGER NOT NULL DEFAULT 0,
     code TEXT,
     pin_hash TEXT
 );
 
-CREATE INDEX IF NOT EXISTS idx_users_ip_hash
-    ON users(ip_hash);
+CREATE INDEX IF NOT EXISTS idx_users_ip
+    ON users(ip);
 
-CREATE INDEX IF NOT EXISTS idx_users_cookie
-    ON users(cookie);
+CREATE INDEX IF NOT EXISTS idx_users_session_id
+    ON users(session_id);
+
+
 
 -- ============================================================
 -- MOSHPITS / BOARDS
@@ -138,7 +137,17 @@ CREATE INDEX IF NOT EXISTS idx_moshpits_hid
 
 CREATE INDEX IF NOT EXISTS idx_moshpits_dis
     ON moshpits(dis);
+-- ============================================================
+-- -shot
+-- ============================================================
+CREATE TABLE IF NOT EXISTS shot {
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    time_shot INTEGER NOT NULL DEFAULT (unixepoch()),
+    thread_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    recover INTEGER NOT NULL DEFAULT (unixepoch() + 60 * 60)
 
+}
 
 -- ============================================================
 -- THREADS
@@ -152,8 +161,6 @@ CREATE TABLE IF NOT EXISTS threads (
     created_at INTEGER NOT NULL DEFAULT (unixepoch()),
     updated_at INTEGER,
     bumped_at INTEGER,
-    link INTEGER NOT NULL DEFAULT 0, 
-    persistent_op INTEGER NOT NULL DEFAULT 0,
     author_id INTEGER,
     board_id INTEGER NOT NULL DEFAULT 0,
 
@@ -223,20 +230,14 @@ CREATE TABLE IF NOT EXISTS posts (
     created_at INTEGER NOT NULL DEFAULT (unixepoch()),
     updated_at INTEGER,
 
-    hidden INTEGER NOT NULL DEFAULT 0
-        CHECK (hidden IN (0, 1)),
+    hid INTEGER NOT NULL DEFAULT 0
+        CHECK (hid IN (0, 1)),
 
     deleted_at INTEGER,
     deleted_by INTEGER,
 
-    ip_hash TEXT,
-    user_agent_hash TEXT,
-
+    shot INTEGER NOT NULL DEFAULT 0, 
     country TEXT,
-    country_name TEXT,
-    flag TEXT,
-
-    poster_id TEXT,
 
     gems INTEGER NOT NULL DEFAULT 0,
 
@@ -294,7 +295,7 @@ CREATE TABLE IF NOT EXISTS reports (
     rule_broken TEXT,
 
     report_status TEXT NOT NULL DEFAULT 'pending'
-        CHECK (status IN ('pending', 'reviewing', 'resolved', 'dismissed')),
+        CHECK (report_status IN ('pending', 'reviewing', 'resolved', 'dismissed')),
     ban_count INTEGER,
     resolved_at INTEGER,
     resolved_by INTEGER,
@@ -303,9 +304,7 @@ CREATE TABLE IF NOT EXISTS reports (
     FOREIGN KEY (reporter_id)
         REFERENCES users(id)
         ON DELETE SET NULL,
- FOREIGN KEY (ban_count)
-        REFERENCES users(ban_count)
-        ON DELETE SET NULL,
+
     FOREIGN KEY (post_id)
         REFERENCES posts(id)
         ON DELETE CASCADE,
@@ -321,11 +320,11 @@ CREATE INDEX IF NOT EXISTS idx_reports_post
 CREATE INDEX IF NOT EXISTS idx_reports_reporter
     ON reports(reporter_id);
 
-CREATE INDEX IF NOT EXISTS idx_reports_status
-    ON reports(status);
+CREATE INDEX IF NOT EXISTS idx_reports_report_status
+    ON reports(report_status);
 
-CREATE INDEX IF NOT EXISTS idx_reports_time
-    ON reports(time);
+CREATE INDEX IF NOT EXISTS idx_reports_report_time
+    ON reports(report_time);
 
 
 -- ============================================================
@@ -407,7 +406,7 @@ CREATE TABLE IF NOT EXISTS appeals (
     reason TEXT,
 
     appeal_status TEXT NOT NULL DEFAULT 'pending'
-        CHECK (status IN ('pending', 'reviewing', 'approved', 'denied')),
+        CHECK (appeal_status IN ('pending', 'reviewing', 'approved', 'denied')),
 
     reviewed_at INTEGER,
     reviewed_by INTEGER,
@@ -425,9 +424,7 @@ CREATE TABLE IF NOT EXISTS appeals (
     FOREIGN KEY (post_id)
         REFERENCES posts(id)
         ON DELETE SET NULL,
- FOREIGN KEY (ban_count)
-        REFERENCES users(ban_count)
-        ON DELETE SET NULL,
+
     FOREIGN KEY (reviewed_by)
         REFERENCES users(id)
         ON DELETE SET NULL
@@ -442,8 +439,8 @@ CREATE INDEX IF NOT EXISTS idx_appeals_ban
 CREATE INDEX IF NOT EXISTS idx_appeals_post
     ON appeals(post_id);
 
-CREATE INDEX IF NOT EXISTS idx_appeals_status
-    ON appeals(status);
+CREATE INDEX IF NOT EXISTS idx_appeals_appeal_status
+    ON appeals(appeal_status);
 
 
 -- ============================================================
