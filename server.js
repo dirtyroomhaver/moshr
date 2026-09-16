@@ -3,12 +3,23 @@ const path = require('path')
 const crypto = require('crypto')
 const cookieParser = require('cookie-parser')
 const EventEmitter = require('events')
-const { getUser, createUser, banUser, createThread } = require('./db-queries')
+const {
+  getUser,
+  createUser,
+  banUser,
+  createThread,
+  getThread,
+  getThreads,
+  getPopularMoshpits,
+  getTrendingMoshpits,
+  getRecentMoshpits,
+  getOrCreateMoshpit
+} = require('./db-queries')
 const { Reader } = require('@maxmind/geoip2-node')
 
 const app = express()
 const events = new EventEmitter()
-
+app.set('view engine', 'ejs')
 // -------------------------
 // Middleware
 // -------------------------
@@ -78,8 +89,17 @@ app.get('/api', (req, res) => {
   res.redirect('/')
 })
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'))
+app.get('/', async (req, res) => {
+  const threads = await getThreads('moshpit');
+  const trending = await getTrendingMoshpits()
+  console.log(trending[0])
+  const popular = await getPopularMoshpits()
+  const recent = await getRecentMoshpits()
+  if (!threads || !trending || !popular || !recent) {
+    return res.status(404).send('No threads found, make one?');
+  }
+
+  res.render('index', { threads, trending, popular, recent });
 })
 
 app.get('/quirks', (req, res) => {
@@ -102,6 +122,33 @@ app.get('/thread', (req, res) => {
   res.sendFile(path.join(__dirname, 'thread.html'))
 })
 
+app.get('/:moshpit', async (req, res) => {
+  const { moshpit } = req.params;
+
+  const threads = await getThreads(moshpit);
+  const trending = await getTrendingMoshpits()
+  console.log(trending)
+  const popular = await getPopularMoshpits()
+  const recent = await getRecentMoshpits()
+
+  if (!threads || !trending) {
+    return res.status(404).send('No threads found, make one?');
+  }
+
+  res.render('index', { threads, trending, popular, recent });
+})
+
+app.get('/:moshpit/:thread_id', async (req, res) => {
+  const { thread_id } = req.params;
+
+  const thread = await getThread(thread_id);
+
+  if (!thread) {
+    return res.status(404).send('Thread not found');
+  }
+
+  res.render('thread', { thread });
+})
 // -------------------------
 // Server-Sent Events
 // -------------------------
@@ -127,20 +174,42 @@ app.get('/api/events', (req, res) => {
 // API routes
 // -------------------------
 
-app.post('/api/threads', (req, res) => {
+app.post('/api/create/thread', (req, res) => {
   const text = req.body.text
-
+  let moshpit = req.body.moshpit
   if (!text || !text.trim()) {
     return res.status(400).json({
       error: 'Thread cannot be empty'
     })
   }
 
-  const thread = createThread(text.trim())
+  if (!moshpit) {
+    moshpit = 'moshpit' 
+  }
+  const user = getUser(req.sessionId)
+  moshpit = getOrCreateMoshpit(moshpit, user.id)
+  console.log(moshpit)
+  if (user) {
+    const now = new Date().toISOString()
+  
+    const thread = createThread(
+      user.id,
+      moshpit.title,
+      text.trim(),
+      now,
+      now
+    )
+    // res.json(thread)
+    return res.json({
+    threadId: thread.id,
+    moshpit: moshpit
+  })
+  }
 
-  events.emit('new-thread', thread)
-
-  res.json(thread)
+  // events.emit('new-thread', thread)
+  res.status(400).json({
+    error: 'Error'
+  })
 })
 
 // -------------------------

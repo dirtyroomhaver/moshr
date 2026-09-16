@@ -79,10 +79,8 @@ CREATE INDEX IF NOT EXISTS idx_users_session_id
 CREATE TABLE IF NOT EXISTS moshpits (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
-    unique_id TEXT NOT NULL UNIQUE,
-
     created_at INTEGER NOT NULL DEFAULT (unixepoch()),
-    title TEXT CHECK(length(title) <= 7),
+    title TEXT NOT NULL UNIQUE CHECK(length(title) <= 7),
     rules TEXT,
     bio TEXT,
 
@@ -126,8 +124,8 @@ CREATE TABLE IF NOT EXISTS moshpits (
         ON DELETE SET NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_moshpits_unique_id
-    ON moshpits(unique_id);
+CREATE INDEX IF NOT EXISTS idx_moshpits_title
+    ON moshpits(title);
 
 CREATE INDEX IF NOT EXISTS idx_moshpits_author
     ON moshpits(author_id);
@@ -140,14 +138,14 @@ CREATE INDEX IF NOT EXISTS idx_moshpits_dis
 -- ============================================================
 -- -shot
 -- ============================================================
-CREATE TABLE IF NOT EXISTS shot {
+CREATE TABLE IF NOT EXISTS shot (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     time_shot INTEGER NOT NULL DEFAULT (unixepoch()),
     thread_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
-    recover INTEGER NOT NULL DEFAULT (unixepoch() + 60 * 60)
+    recover_at INTEGER NOT NULL 
 
-}
+);
 
 -- ============================================================
 -- THREADS
@@ -162,8 +160,9 @@ CREATE TABLE IF NOT EXISTS threads (
     updated_at INTEGER,
     bumped_at INTEGER,
     author_id INTEGER,
-    board_id INTEGER NOT NULL DEFAULT 0,
-
+    moshpit TEXT NOT NULL,
+    country TEXT,
+    ip TEXT,
     hid INTEGER NOT NULL DEFAULT 0
         CHECK (hid IN (0, 1)),
 
@@ -174,11 +173,11 @@ CREATE TABLE IF NOT EXISTS threads (
 
     sticky INTEGER NOT NULL DEFAULT 0
         CHECK (sticky IN (0, 1)),
-
+    shot INTEGER NOT NULL DEFAULT 0,
     bump_limit_enabled INTEGER NOT NULL DEFAULT 0
         CHECK (bump_limit_enabled IN (0, 1)),
 
-    unique_ips INTEGER NOT NULL DEFAULT 0,
+    unique_ips INTEGER NOT NULL DEFAULT 1,
 
     deleted_at INTEGER,
     deleted_by INTEGER,
@@ -187,17 +186,17 @@ CREATE TABLE IF NOT EXISTS threads (
         REFERENCES users(id)
         ON DELETE SET NULL,
 
-    FOREIGN KEY (board_id)
-        REFERENCES moshpits(id)
-        ON DELETE CASCADE,
+    -- FOREIGN KEY (board_id)
+    --     REFERENCES moshpits(id)
+    --     ON DELETE CASCADE,
 
     FOREIGN KEY (deleted_by)
         REFERENCES users(id)
         ON DELETE SET NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_threads_board
-    ON threads(board_id);
+CREATE INDEX IF NOT EXISTS idx_threads_moshpit
+    ON threads(moshpit);
 
 CREATE INDEX IF NOT EXISTS idx_threads_author
     ON threads(author_id);
@@ -223,10 +222,10 @@ CREATE TABLE IF NOT EXISTS posts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
     author_id INTEGER,
-
+    ip TEXT,
     thread_id INTEGER NOT NULL,
     board_id INTEGER NOT NULL,
-
+    post_number INTEGER NOT NULL, 
     created_at INTEGER NOT NULL DEFAULT (unixepoch()),
     updated_at INTEGER,
 
@@ -270,14 +269,11 @@ CREATE INDEX IF NOT EXISTS idx_posts_author
 CREATE INDEX IF NOT EXISTS idx_posts_created_at
     ON posts(created_at);
 
-CREATE INDEX IF NOT EXISTS idx_posts_ip_hash
-    ON posts(ip_hash);
 
 CREATE INDEX IF NOT EXISTS idx_posts_deleted_at
     ON posts(deleted_at);
 
-CREATE INDEX IF NOT EXISTS idx_posts_poster_id
-    ON posts(poster_id);
+
 
 
 -- ============================================================
@@ -335,7 +331,7 @@ CREATE TABLE IF NOT EXISTS bans (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
     user_id INTEGER,
-    ip_hash TEXT,
+    ip TEXT,
 
     board_id INTEGER,
     post_id INTEGER,
@@ -371,8 +367,8 @@ CREATE TABLE IF NOT EXISTS bans (
 CREATE INDEX IF NOT EXISTS idx_bans_user
     ON bans(user_id);
 
-CREATE INDEX IF NOT EXISTS idx_bans_ip_hash
-    ON bans(ip_hash);
+CREATE INDEX IF NOT EXISTS idx_bans_ip
+    ON bans(ip);
 
 CREATE INDEX IF NOT EXISTS idx_bans_board
     ON bans(board_id);

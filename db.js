@@ -25,6 +25,10 @@ db.pragma('busy_timeout = 5000');
 const schema = fs.readFileSync(schemaPath, 'utf8');
 db.exec(schema);
 
+db.prepare(`
+  INSERT OR IGNORE INTO moshpits (title)
+  VALUES (?)
+`).run('moshpit')
 module.exports = {
     db
 }

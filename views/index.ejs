@@ -2,8 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+   
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="stylesheet.css" />
+    <link rel="stylesheet" href="/../stylesheet.css" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <title>moshr</title>
   </head>
@@ -25,7 +27,13 @@
       </div>
       <div class="navbar-middle">
         <div class="title" >
-          <h2>\m/(- _ -)\m/</h2>
+          <h2><% 
+          if (!threads[0]) {
+            %> <%= '[ moshpit ]'%> <%
+          } else {
+            %> <%= threads[0].moshpit %> <%
+          }
+              %></h2>
         </div>
       </div>
       <div class="navbar-right">
@@ -43,48 +51,30 @@
     <div class="body">
       <div class="body-left">
         <div id="threads">
-          
-          <div class="thread" onclick="window.location.href='/thread'">
+          <% 
+            
+            threads.forEach(thread => {  %>
+          <div class="thread" onclick="window.location.href='/<%= thread.moshpit %>/<%= thread.id %>'">
             <div class="thread-text">
               <p class="thread-index-text">
-                This is afddd test. 
+                <%= thread.thread_text %> 
               </p>
             </div>
             <div class="bot-thread">
               <div class="thread-update">
                 <div class="last-post">
                   <p>last post:&nbsp</p>
-                  <p>now</p>
+                  <p><%= thread.updated_at %></p>
                 </div>
                 <div class="post-bar">
-                  <div class="post-red"></div>
-                  <div class="post-green"></div>
+                  <div class="post-green" style="width: <%= Math.min(thread.post_count / 3, 100) %>%" ></div>
                 </div>
               </div>
               
             </div>
-          </div>
+        </div> <% }) %>
           
-          <div class="thread" onclick="window.location.href='/thread'">
-            <div class="thread-text">
-              <p class="thread-index-text">
-                This is a test. 
-              </p>
-            </div>
-            <div class="bot-thread">
-              <div class="thread-update">
-                <div class="last-post">
-                  <p>last post:&nbsp</p>
-                  <p>now</p>
-                </div>
-                <div class="post-bar">
-                  <div class="post-red"></div>
-                  <div class="post-green"></div>
-                </div>
-              </div>
-              
-            </div>
-          </div>
+          
         </div>
       </div>
       <div class="body-right">
@@ -92,18 +82,14 @@
           <div class="tab-nav-div">
             <ul class="tab-nav">
               <li><a href="">trending</a></li>
-              <p>|</p>
-              <li><a href="">popular</a></li>
-              <p>|</p>
-              <li><a href="">recent</a></li>
             </ul>
           </div>
           <div>
             <ul class="info-list">
-              <li><a href="">1. /MOSHPIT/</a></li>
-              <li><a href="">1. /MOSHPIT/</a></li>
-              <li><a href="">1. /MOSHPIT/</a></li>
-              <li><a href="">1. /MOSHPIT/</a></li>
+                <% 
+                 trending.forEach(moshpit => { %>
+              <li><a href="/<%= moshpit.title %>/"><%= moshpit.title %></a></li>
+                    <% }) %>
             </ul>
           </div>
         </div>
@@ -127,40 +113,68 @@
    
             ></textarea>
           </div>
-          <hr />
+         
           <div class="modal-input">
             <label for="">moshpit (board)</label
             ><input
               type="text"
+              name="moshpit"
               placeholder="if left blank your thread will go onto the homepage"
             />
           </div>
-          <hr />
+          
           <div class="modal-input">
             <label for="">signature</label
             ><input
               type="text"
               placeholder="put a secure password here to sign your post"
             />
-          </div>
+          </div >
+          <div><button type="submit" id="button-thread">submit</button></div>
           <input type="hidden" name="post-text" id="post-text" />
         </div>
       </form>
     </dialog>
     
 
-    <!-- <form id="thread-form">
-      <textarea
-        id="thread-text"
-        name="text"
-        placeholder="Write a thread..."
-      ></textarea>
 
-      <button type="submit">Post</button>
-    </form> -->
 
     <script>
-      
+      const createThreadForm = document.getElementById('modal-form')
+      const buttonThreadForm = document.getElementById('button-thread')
+
+      createThreadForm.addEventListener('submit', async event => {
+        // Prevent the browser from reloading the page
+        event.preventDefault()
+        const text = textarea.value
+        const moshpit =  document.querySelector('input[name="moshpit"]').value
+        if (!text.trim()) {
+          return
+        }
+
+        const response = await fetch('/api/create/thread', {
+          method: 'POST',
+
+          headers: {
+            'Content-Type': 'application/json'
+          },
+
+          body: JSON.stringify({
+            text: text,
+            moshpit: moshpit
+          })
+        })
+
+        if (!response.ok) {
+          console.error('Failed to create thread')
+          return
+        }
+
+        const data = await response.json()
+        window.location.href = `/${data.moshpit}/${data.threadId}`
+      })
+
+
       const createThread = document.getElementById('create-thread')
       const modal = document.getElementById('create-thread-box')
       //modal.showModal();
@@ -184,35 +198,35 @@ const closeButton = document.getElementById('close-button')
       const threadForm = document.getElementById('modal-form')
       const textarea = document.getElementById('thread-text')
       // const threads = document.getElementById('threads')
-      threadForm.addEventListener('submit', async event => {
-        // Prevent the browser from reloading the page
-        event.preventDefault()
+      // threadForm.addEventListener('submit', async event => {
+      //   // Prevent the browser from reloading the page
+      //   event.preventDefault()
 
-        const text = textarea.value
+      //   const text = textarea.value
 
-        if (!text.trim()) {
-          return
-        }
+      //   if (!text.trim()) {
+      //     return
+      //   }
 
-        const response = await fetch('/api/threads', {
-          method: 'POST',
+      //   const response = await fetch('/api/threads', {
+      //     method: 'POST',
 
-          headers: {
-            'Content-Type': 'application/json'
-          },
+      //     headers: {
+      //       'Content-Type': 'application/json'
+      //     },
 
-          body: JSON.stringify({
-            text: text
-          })
-        })
+      //     body: JSON.stringify({
+      //       text: text
+      //     })
+      //   })
 
-        if (!response.ok) {
-          console.error('Failed to create thread')
-          return
-        }
+      //   if (!response.ok) {
+      //     console.error('Failed to create thread')
+      //     return
+      //   }
 
-        textarea.value = ''
-      })
+      //   textarea.value = ''
+      // })
 
       // const events = new EventSource('/api/events')
 

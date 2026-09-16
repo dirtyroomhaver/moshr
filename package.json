@@ -4,6 +4,7 @@
     "argon2": "^0.45.1",
     "better-sqlite3": "^13.0.3",
     "cookie-parser": "^1.4.7",
+    "ejs": "^6.0.1",
     "express": "^5.2.1",
     "geolite2-city": "^1.0.98",
     "node-gyp": "^13.0.2",
