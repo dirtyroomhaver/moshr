@@ -125,6 +125,7 @@ td {
     gap: 10px;
     justify-content: left;
     padding: 0;
+    color: var(--text)
 }
 
 .nav-list p {
@@ -263,7 +264,8 @@ td {
 
 .thread-options {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
     width: 50vw;
 }
 /* =========================================================

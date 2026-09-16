@@ -40,11 +40,12 @@
 
     <div class="body-thread">
       <div class="thread-options" style="color: var(--text)">
-        <div>
+        <div style="padding: 5px 0px 12px 0px;">
           <a href="/<%= thread.moshpit %>/">return&nbsp</a>|
-          <a href="">bottom</a>
+          <a href="">bottom&nbsp</a>|
+          <a href="" class="reply-button" data-thread-id="">reply</a>
         </div>
-        <div><a href="" class="reply-button">reply</a></div>
+       
       </div>
 
       <div class="post">
@@ -53,7 +54,7 @@
             <div style="display: flex">
               <p>@OP |&nbsp</p>
               <p>anonymous (Italy) |&nbsp</p>
-              <p>9/13/25 17:00:00</p>
+              <p itemprop="">9/13/25 17:00:00</p>
             </div>
             <div style="display: flex">
               <!-- <div><a href="">info</a>&nbsp|&nbsp</div>
@@ -62,7 +63,8 @@
               <div><a href="">shoot</a>&nbsp|&nbsp</div>
               <div><a href="">delete</a>&nbsp|&nbsp</div>
               <div><a href="">hide</a>&nbsp|&nbsp</div> -->
-              <a href="" class="reply-button" data-thread-id="123">reply</a>&nbsp|&nbsp<a
+              <!--  thread.forEach((thread, index) => { %> index %>}) %> -->
+              <a href="" class="reply-button" data-thread-id="1">reply</a>&nbsp|&nbsp<a
                 href=""
                 id="report_a"
                 >report</a
@@ -178,7 +180,7 @@
       </div>
       <div style="background-color: var(--panel); padding: 3px">
         <form action="">
-          <label for=""></label>
+         
           <textarea name="" id="reply-textarea"></textarea>
           <div>
             <div>
@@ -214,7 +216,7 @@
       const modal = document.getElementById('create-thread-box')
       //modal.showModal();
 
-      createThread.addEventListener('click', () => {
+      createThread.addEventListener('click', (event) => {
         event.preventDefault()
         modal.showModal()
       })
@@ -222,37 +224,31 @@
       const report = document.getElementById('report_a')
       const report_modal = document.getElementById('report-box')
 
-      report.addEventListener('click', () => {
+      report.addEventListener('click', (event) => {
         event.preventDefault()
         report_modal.showModal()
       })
 const closeButton = document.getElementById('close-button')
 
-      closeButton.addEventListener('click', () => {
+      closeButton.addEventListener('click', (event) => {
         event.preventDefault()
         modal.close()
       })
 
       const closeButton2 = document.getElementById('close-button-2')
 
-      closeButton2.addEventListener('click', () => {
+      closeButton2.addEventListener('click', (event) => {
         event.preventDefault()
         report_modal.close()
       })
 
 
       const popup = document.getElementById('myPopup')
-      
-      document.querySelectorAll('.reply-button').forEach(a => {
-  a.addEventListener('click', (event) => {
-    event.preventDefault()
-    popup.classList.remove('hidden')
-   
-  })
-})
-      const closeButton3 = document.getElementById('close-button3')
       const areatext = document.getElementById('reply-textarea')
-      closeButton3.addEventListener('click', () => {
+     
+      const closeButton3 = document.getElementById('close-button3')
+
+      closeButton3.addEventListener('click', (event) => {
         event.preventDefault()
         
 areatext.value = ''
@@ -261,7 +257,17 @@ areatext.style.height = ''
         popup.classList.toggle('hidden')
       })
       makeElementMovable(document.getElementById('myPopup'))
-
+       document.querySelectorAll('.reply-button').forEach(a => {
+  a.addEventListener('click', (event) => {
+    event.preventDefault()
+    
+    areatext.value += a.dataset.threadId ? '@' + a.dataset.threadId + '\n' : ''
+    
+    popup.classList.remove('hidden')
+    areatext.focus()
+   
+  })
+})
       function makeElementMovable(element) {
         let pos1 = 0,
           pos2 = 0,
