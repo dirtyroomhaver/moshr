@@ -13,7 +13,11 @@ const {
   getPopularMoshpits,
   getTrendingMoshpits,
   getRecentMoshpits,
-  getOrCreateMoshpit
+  getOrCreateMoshpit,
+  createPost,
+  getPosts,
+  getLastPost,
+  updatePostCount
 } = require('./db-queries')
 const { Reader } = require('@maxmind/geoip2-node')
 
@@ -80,7 +84,39 @@ app.use(async (req, res, next) => {
 // -------------------------
 
 app.use(express.static(__dirname))
+// -------------------------
+// Server-Sent Events
+// -------------------------
 
+app.get('/api/events', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream')
+  res.setHeader('Cache-Control', 'no-cache')
+  res.setHeader('Connection', 'keep-alive')
+
+  const threadId = req.query.thread_id
+
+  console.log('SSE connection for thread:', threadId)
+
+  const sendPost = post => {
+    // Only send this post to clients watching this thread
+    if (String(post.thread_id) !== String(threadId)) {
+      return
+    }
+
+    res.write(`event: new-post\n`)
+    res.write(`data: ${JSON.stringify(post)}\n\n`)
+  }
+
+  events.on('new-post', sendPost)
+
+  // Tell the browser that the connection is alive
+  res.write(`: connected\n\n`)
+
+  req.on('close', () => {
+    console.log('SSE connection closed:', threadId)
+    events.off('new-post', sendPost)
+  })
+})
 // -------------------------
 // Page routes
 // -------------------------
@@ -90,20 +126,19 @@ app.get('/api', (req, res) => {
 })
 
 app.get('/', async (req, res) => {
-  const threads = await getThreads('moshpit');
+  const threads = await getThreads('moshpit')
   const trending = await getTrendingMoshpits()
-  console.log(trending[0])
   const popular = await getPopularMoshpits()
   const recent = await getRecentMoshpits()
   if (!threads || !trending || !popular || !recent) {
-    return res.status(404).send('No threads found, make one?');
+    return res.status(404).send('No threads found, make one?')
   }
-
-  res.render('index', { threads, trending, popular, recent });
+  const moshpit = 'moshpit'
+  res.render('index', { threads, moshpit, trending, popular, recent })
 })
 
 app.get('/quirks', (req, res) => {
-  res.sendFile(path.join(__dirname, 'quirks.html'))
+  res.render('quirks', {})
 })
 
 app.get('/faq', (req, res) => {
@@ -123,56 +158,105 @@ app.get('/thread', (req, res) => {
 })
 
 app.get('/:moshpit', async (req, res) => {
-  const { moshpit } = req.params;
+  const { moshpit } = req.params
 
-  const threads = await getThreads(moshpit);
+  const threads = await getThreads(moshpit)
   const trending = await getTrendingMoshpits()
-  console.log(trending)
+
   const popular = await getPopularMoshpits()
   const recent = await getRecentMoshpits()
 
   if (!threads || !trending) {
-    return res.status(404).send('No threads found, make one?');
+    return res.status(404).send('No threads found, make one?')
   }
 
-  res.render('index', { threads, trending, popular, recent });
+  res.render('index', { threads, moshpit, trending, popular, recent })
 })
 
 app.get('/:moshpit/:thread_id', async (req, res) => {
-  const { thread_id } = req.params;
+  const { thread_id } = req.params
 
-  const thread = await getThread(thread_id);
+  const thread = await getThread(thread_id)
 
   if (!thread) {
-    return res.status(404).send('Thread not found');
+    return res.status(404).send('Thread not found')
   }
-
-  res.render('thread', { thread });
-})
-// -------------------------
-// Server-Sent Events
-// -------------------------
-
-app.get('/api/events', (req, res) => {
-  res.setHeader('Content-Type', 'text/event-stream')
-  res.setHeader('Cache-Control', 'no-cache')
-  res.setHeader('Connection', 'keep-alive')
-
-  const sendThread = thread => {
-    res.write(`event: new-thread\n`)
-    res.write(`data: ${JSON.stringify(thread)}\n\n`)
-  }
-
-  events.on('new-thread', sendThread)
-
-  req.on('close', () => {
-    events.off('new-thread', sendThread)
-  })
+  const posts = await getPosts(thread_id)
+  res.render( 'thread', {thread, posts })
 })
 
 // -------------------------
 // API routes
 // -------------------------
+app.post('/api/create/post', async (req, res, next) => {
+  try {
+    const text = req.body.text
+    const thread_id = req.body.thread_id
+
+    if (!text || !text.trim()) {
+      return res.status(400).json({
+        error: 'Post cannot be empty'
+      })
+    }
+
+    if (!thread_id) {
+      return res.status(400).json({
+        error: 'thread_id cannot be empty'
+      })
+    }
+
+    const user = getUser(req.sessionId)
+
+    if (!user) {
+      return res.status(400).json({
+        error: 'User not found'
+      })
+    }
+
+    const moshpit = getOrCreateMoshpit(
+      req.body.moshpit,
+      user.id
+    )
+
+    if (!moshpit) {
+      return res.status(400).json({
+        error: 'moshpit cannot be empty'
+      })
+    }
+
+    const now = new Date().toISOString()
+
+    const reader = await Reader.open('./GeoLite2-City.mmdb')
+    const response = reader.city('162.204.244.204')
+
+    const lastPost = getLastPost(thread_id)
+
+    const post_number = (lastPost?.post_number ?? 0) + 1
+
+    const post = createPost(
+      user.id,
+      '162.204.244.204',
+      thread_id,
+      moshpit.id,
+      text,
+      post_number,
+      response.country.names.en,
+      now,
+      text
+    )
+
+    updatePostCount(thread_id)
+
+    // Send the newly-created post through SSE
+    events.emit('new-post', post)
+
+    // Respond to the POST request
+    return res.json(post)
+
+  } catch (error) {
+    next(error)
+  }
+})
 
 app.post('/api/create/thread', (req, res) => {
   const text = req.body.text
@@ -184,26 +268,27 @@ app.post('/api/create/thread', (req, res) => {
   }
 
   if (!moshpit) {
-    moshpit = 'moshpit' 
+    moshpit = 'moshpit'
   }
   const user = getUser(req.sessionId)
   moshpit = getOrCreateMoshpit(moshpit, user.id)
-  console.log(moshpit)
+
   if (user) {
     const now = new Date().toISOString()
-  
+
     const thread = createThread(
       user.id,
       moshpit.title,
-      text.trim(),
+      text,
       now,
-      now
+      now,
+      moshpit.id
     )
     // res.json(thread)
     return res.json({
-    threadId: thread.id,
-    moshpit: moshpit
-  })
+      threadId: thread.id,
+      moshpit: moshpit
+    })
   }
 
   // events.emit('new-thread', thread)

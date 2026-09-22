@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="stylesheet.css" />
 <link rel="icon" type="image/png" href="/favicon.png">
-    <title>quirks - moshr</title><meta http-equiv="Content-Security-Policy" content="default-src 'self';">
-  </head>
+    <title>quirks - moshr</title>
 
   <body>
     <div class="navbar">
@@ -39,7 +38,9 @@
     </div>
 
     <div class="body">
+      
       <div class="body-left">
+        
         <div class="misc-text">
             typing ">" at the start of a new line colors your text green: <br />
           <div
@@ -148,7 +149,7 @@
               margin-top: 5px;
             "
           >
-            <span class="shake-1">SHAWTY IN LOVE WITH THE MEAT!!!</span>
+            <span class="shake-1">HARDROCK FOR PRESIDENT LIL BABY I'M WIT IT, IF I MEET THE PRESDIENT I'M STILL GON BE SIPPING!!!</span>
           </div>
           <br />
           <div
@@ -159,7 +160,7 @@
               margin-top: 5px;
             "
           >
-            <span class="shake-1"><b>SHAWTY IN LOVE WITH THE MEAT!!!!</b></span>
+            <span class="shake-1"><b>HARDROCK FOR PRESIDENT LIL BABY I'M WIT IT, IF I MEET THE PRESDIENT I'M STILL GON BE SIPPING!!!!</b></span>
           </div>
           <br />
           <div
@@ -170,7 +171,7 @@
               margin-top: 5px;
             "
           >
-            <span class="shake-1"><h2>SHAWTY IN LOVE WITH THE MEAT!!!!!</h2></span>
+            <span class="shake-1"><h2>HARDROCK FOR PRESIDENT LIL BABY I'M WIT IT, IF I MEET THE PRESDIENT I'M STILL GON BE SIPPING!!!!!</h2></span>
           </div>
           <br />
           typing "?!?", "?!?!", or "?!?!?" at the end of a line gives you a shake effect of various strengths: <br />
@@ -277,18 +278,8 @@
             <span class=""><h2><i>Aniki.....</h2></i></span>
           </div>
           <br />
-          typing "\m/" gives you: <br />
-          <div
-            style="
-               background-image: linear-gradient(var(--panel), var(--gradient));
-              border: 1px solid var(--border-color);
-              padding: 5px;
-              margin-top: 5px;
-            "
-          >
-            <span class="vert">\m/</span>
-          </div>
-          <br />
+        
+      
            adding "{{{ x }}}" around a selection of text gives you glowing text: <br />
           <div
             style="
@@ -347,11 +338,11 @@ int main() {
       </div>
     </div>
     <dialog id="create-thread-box">
+      <div class="modal-top">
+        <div><p>new thread</p></div>
+        <div><button id="close-button">x</button></div>
+      </div>
       <form id="modal-form">
-        <div class="modal-top">
-          <div><p>new thread</p></div>
-          <div><button id="close-button">x</button></div>
-        </div>
         <hr />
         <div>
           <div class="modal-input">
@@ -360,18 +351,18 @@ int main() {
               name="text"
               id="thread-text"
               style="height: 400px; width: 96.4%"
-              placeholder="write "
             ></textarea>
           </div>
-          <hr />
+
           <div class="modal-input">
             <label for="">moshpit (board)</label
             ><input
               type="text"
+              name="moshpit"
               placeholder="if left blank your thread will go onto the homepage"
             />
           </div>
-          <hr />
+
           <div class="modal-input">
             <label for="">signature</label
             ><input
@@ -379,11 +370,11 @@ int main() {
               placeholder="put a secure password here to sign your post"
             />
           </div>
+          <div><button type="submit" id="button-thread">submit</button></div>
           <input type="hidden" name="post-text" id="post-text" />
         </div>
       </form>
     </dialog>
-
     <!-- <form id="thread-form">
       <textarea
         id="thread-text"
@@ -395,10 +386,41 @@ int main() {
     </form> -->
 
     <script>
-      // const form = document.getElementById('thread-form')
-      // const textarea = document.getElementById('thread-text')
-      // const threads = document.getElementById('threads')
-       const createThread = document.getElementById('create-thread')
+      const createThreadForm = document.getElementById('modal-form')
+      const buttonThreadForm = document.getElementById('button-thread')
+      const textarea = document.getElementById('thread-text')
+      createThreadForm.addEventListener('submit', async event => {
+        // Prevent the browser from reloading the page
+        event.preventDefault()
+        const text = textarea.value
+        const moshpit = document.querySelector('input[name="moshpit"]').value
+        if (!text.trim()) {
+          return
+        }
+
+        const response = await fetch('/api/create/thread', {
+          method: 'POST',
+
+          headers: {
+            'Content-Type': 'application/json'
+          },
+
+          body: JSON.stringify({
+            text: text,
+            moshpit: moshpit
+          })
+        })
+
+        if (!response.ok) {
+          console.error('Failed to create thread')
+          return
+        }
+
+        const data = await response.json()
+        window.location.href = `/${data.moshpit.title}/${data.threadId}`
+      })
+
+  const createThread = document.getElementById('create-thread')
       const modal = document.getElementById('create-thread-box')
       //modal.showModal();
 
@@ -407,13 +429,11 @@ int main() {
         modal.showModal()
       })
 
-  
-
       const closeButton = document.getElementById('close-button')
 
       closeButton.addEventListener('click', () => {
         event.preventDefault()
-   
+
         modal.close()
       })
     

@@ -60,7 +60,12 @@ td {
     border: 1px solid black;
 }
 
-
+html {
+  scroll-behavior: smooth;
+}
+p {
+    white-space: pre-wrap;
+}
 /* =========================================================
    3. NAVIGATION
    ========================================================= */
@@ -166,7 +171,10 @@ td {
     display: flex;
     justify-content: space-between;
 }
-
+.anchor {
+  overflow-anchor: auto;
+  height: 1px;
+}
 .body-left {
     height: 100vh;
     overflow-y: scroll;
@@ -232,7 +240,7 @@ td {
     min-width: 5%;
 
     border: 1px solid var(--border-color);
-
+overflow: hidden;
     box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.1);
 
     margin: 7px;
@@ -267,6 +275,11 @@ td {
     align-items: center;
     justify-content: center;
     width: 50vw;
+    color: var(--text)
+}
+
+.options-div {
+    padding: 5px 0px 12px 0px;
 }
 /* =========================================================
    7. POSTS
@@ -277,6 +290,7 @@ td {
     margin-bottom: 5px;
     color: var(--text);
     box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.2);
+    width: 100%;
    
 }
 
@@ -306,6 +320,11 @@ td {
     margin: 0 5px;
     padding-top: 2px;
 }
+.post-container {
+  overflow-y: auto;
+  overflow-anchor: auto;
+}
+
 
 .post-green {
     height: 4px;
@@ -316,6 +335,11 @@ td {
     margin: 0;
     padding: 0;
 
+}
+
+.post-body { 
+    white-space: pre-wrap;
+    line-height: 1.4;
 }
 
 .post-bar {
@@ -339,6 +363,15 @@ td {
 
 .last-post p {
     margin-bottom: 4px;
+}
+
+.bold {
+    font-weight:bold;
+    
+}
+
+.italic {
+    font-style: italic;
 }
 
 
@@ -711,7 +744,7 @@ s:hover {
     }
 
     25% {
-        transform: translate(-3px, -3px) rotate(-0.5deg);
+        transform: translate(-1px, 1px) rotate(-0.5deg);
     }
 
     50% {
@@ -719,7 +752,7 @@ s:hover {
     }
 
     75% {
-        transform: translate(3px, -3px) rotate(0.5deg);
+        transform: translate(1px, -1px) rotate(0.5deg);
     }
 
     100% {

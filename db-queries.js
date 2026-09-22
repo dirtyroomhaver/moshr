@@ -1,5 +1,51 @@
 const { db } = require('./db')
 // -------------------------
+// POSTS
+// -------------------------
+function createPost (
+  author_id,
+  ip,
+  thread_id,
+  board_id,
+  comment,
+  post_number,
+  country,
+  updated_at,
+  original_comment
+) {
+  return db
+    .prepare(
+      `
+        INSERT INTO posts (author_id, ip, thread_id, board_id, comment, post_number, country, updated_at, original_comment)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        RETURNING *
+    `
+    )
+    .get(
+      author_id,
+      ip,
+      thread_id,
+      board_id,
+      comment,
+      post_number,
+      country,
+      updated_at,
+      original_comment
+    )
+}
+
+function getPosts(thread_id) {
+  return db.prepare(`
+    SELECT * FROM posts WHERE thread_id = ? ORDER BY post_number ASC
+    `).all(thread_id)
+}
+
+function getLastPost(thread_id) {
+  return db.prepare(`
+    SELECT * FROM posts WHERE thread_id = ? ORDER BY post_number DESC LIMIT 1
+    `).get(thread_id)
+}
+// -------------------------
 // USER
 // -------------------------
 function getUser (cookie) {
@@ -38,18 +84,24 @@ function banUser (text) {
 // -------------------------
 // THREADS
 // -------------------------
-function createThread (a, b, c, d, e) {
+
+function updatePostCount(thread_id) {
+  db.prepare(`
+      UPDATE threads SET post_count = post_count + 1 WHERE id = ?
+    `).run(thread_id)
+}
+function createThread (a, b, c, d, e, board_id) {
   return db
     .prepare(
       `
         INSERT INTO threads (author_id, 
         moshpit, thread_text, 
-        updated_at, bumped_at)
-        VALUES (?, ?, ?, ?, ?)
+        updated_at, bumped_at, board_id)
+        VALUES (?, ?, ?, ?, ?, ?)
         RETURNING *
     `
     )
-    .get(a, b, c, d, e)
+    .get(a, b, c, d, e, board_id)
 }
 
 function getThread (id) {
@@ -115,7 +167,8 @@ SELECT
       LIMIT 100;
     `
     )
-    .all() }
+    .all()
+}
 
 function getPopularMoshpits () {
   return db
@@ -154,16 +207,20 @@ SELECT
     .all()
 }
 
-function getOrCreateMoshpit(moshpit, user) {
-let mosh = db.prepare(`SELECT * FROM moshpits WHERE title = ?`).get(moshpit)
+function getOrCreateMoshpit (moshpit, user) {
+  let mosh = db.prepare(`SELECT * FROM moshpits WHERE title = ?`).get(moshpit)
 
   if (mosh) {
     return mosh
   } else {
-    const newmosh = db.prepare(`
+    const newmosh = db
+      .prepare(
+        `
       INSERT INTO moshpits (title, author_id) VALUES (?, ?)
-      `).run(moshpit, user)
-      mosh = db.prepare(`SELECT * FROM moshpits WHERE title = ?`).get(moshpit)
+      `
+      )
+      .run(moshpit, user)
+    mosh = db.prepare(`SELECT * FROM moshpits WHERE title = ?`).get(moshpit)
     return mosh
   }
 }
@@ -177,5 +234,9 @@ module.exports = {
   getPopularMoshpits,
   getTrendingMoshpits,
   getRecentMoshpits,
-  getOrCreateMoshpit
+  getOrCreateMoshpit,
+  createPost,
+  getPosts,
+  getLastPost,
+  updatePostCount
 }

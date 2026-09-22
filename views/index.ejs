@@ -2,7 +2,6 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-   
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/../stylesheet.css" />
@@ -26,18 +25,30 @@
         </ul>
       </div>
       <div class="navbar-middle">
-        <div class="title" >
-          <h2><% 
-          if (!threads[0]) {
-            %> <%= '[ moshpit ]'%> <%
-          } else {
-            %> <%= threads[0].moshpit %> <%
-          }
-              %></h2>
+        <div class="title">
+          <% if (!threads[0] && moshpit.length <= 7) { %>
+
+          <h2 onclick="window.location.href='/<%= moshpit %>/'">
+            [ <%= moshpit %> ]
+          </h2>
+
+          <% } else if (threads[0]) { %>
+
+          <h2 onclick="window.location.href='/<%= moshpit %>/'">
+            [ <%= moshpit %> ]
+          </h2>
+
+          <% } else { %>
+
+          <script>
+            window.location.replace('/')
+          </script>
+
+          <% } %>
         </div>
       </div>
       <div class="navbar-right">
-         <div class="search">
+        <div class="search">
           <input type="text" id="search-bar" />
         </div>
         <a href="" id="create-thread">| create new thread</a>
@@ -51,14 +62,13 @@
     <div class="body">
       <div class="body-left">
         <div id="threads">
-          <% 
-            
-            threads.forEach(thread => {  %>
-          <div class="thread" onclick="window.location.href='/<%= thread.moshpit %>/<%= thread.id %>'">
+          <% threads.forEach(thread => { %>
+          <div
+            class="thread"
+            onclick="window.location.href='/<%= thread.moshpit %>/<%= thread.id %>'"
+          >
             <div class="thread-text">
-              <p class="thread-index-text">
-                <%= thread.thread_text %> 
-              </p>
+              <p class="thread-index-text"><%= thread.thread_text %></p>
             </div>
             <div class="bot-thread">
               <div class="thread-update">
@@ -67,14 +77,15 @@
                   <p><%= thread.updated_at %></p>
                 </div>
                 <div class="post-bar">
-                  <div class="post-green" style="width: <%= Math.min(thread.post_count / 3, 100) %>%" ></div>
+                  <div
+                    class="post-green"
+                    style="width: <%= Math.min(thread.post_count / 3, 100) %>%"
+                  ></div>
                 </div>
               </div>
-              
             </div>
-        </div> <% }) %>
-          
-          
+          </div>
+          <% }) %>
         </div>
       </div>
       <div class="body-right">
@@ -86,22 +97,20 @@
           </div>
           <div>
             <ul class="info-list">
-                <% 
-                 trending.forEach(moshpit => { %>
+              <% trending.forEach(moshpit => { %>
               <li><a href="/<%= moshpit.title %>/"><%= moshpit.title %></a></li>
-                    <% }) %>
+              <% }) %>
             </ul>
           </div>
         </div>
       </div>
     </div>
     <dialog id="create-thread-box">
-       <div class="modal-top">
-          <div><p>new thread</p></div>
-          <div><button id="close-button">x</button></div>
-        </div>
+      <div class="modal-top">
+        <div><p>new thread</p></div>
+        <div><button id="close-button">x</button></div>
+      </div>
       <form id="modal-form">
-       
         <hr />
         <div>
           <div class="modal-input">
@@ -110,10 +119,9 @@
               name="text"
               id="thread-text"
               style="height: 400px; width: 96.4%"
-   
             ></textarea>
           </div>
-         
+
           <div class="modal-input">
             <label for="">moshpit (board)</label
             ><input
@@ -122,22 +130,19 @@
               placeholder="if left blank your thread will go onto the homepage"
             />
           </div>
-          
+
           <div class="modal-input">
             <label for="">signature</label
             ><input
               type="text"
               placeholder="put a secure password here to sign your post"
             />
-          </div >
+          </div>
           <div><button type="submit" id="button-thread">submit</button></div>
           <input type="hidden" name="post-text" id="post-text" />
         </div>
       </form>
     </dialog>
-    
-
-
 
     <script>
       const createThreadForm = document.getElementById('modal-form')
@@ -147,7 +152,7 @@
         // Prevent the browser from reloading the page
         event.preventDefault()
         const text = textarea.value
-        const moshpit =  document.querySelector('input[name="moshpit"]').value
+        const moshpit = document.querySelector('input[name="moshpit"]').value
         if (!text.trim()) {
           return
         }
@@ -171,9 +176,8 @@
         }
 
         const data = await response.json()
-        window.location.href = `/${data.moshpit}/${data.threadId}`
+        window.location.href = `/${data.moshpit.title}/${data.threadId}`
       })
-
 
       const createThread = document.getElementById('create-thread')
       const modal = document.getElementById('create-thread-box')
@@ -184,17 +188,15 @@
         modal.showModal()
       })
 
-      
-const closeButton = document.getElementById('close-button')
+      const closeButton = document.getElementById('close-button')
 
       closeButton.addEventListener('click', () => {
         event.preventDefault()
- 
+
         modal.close()
       })
       const closeButton2 = document.getElementById('close-button-2')
 
-      
       const threadForm = document.getElementById('modal-form')
       const textarea = document.getElementById('thread-text')
       // const threads = document.getElementById('threads')
