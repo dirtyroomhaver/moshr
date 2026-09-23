@@ -11,13 +11,14 @@ function createPost (
   post_number,
   country,
   updated_at,
-  original_comment
+  original_comment,
+  html
 ) {
   return db
     .prepare(
       `
-        INSERT INTO posts (author_id, ip, thread_id, board_id, comment, post_number, country, updated_at, original_comment)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO posts (author_id, ip, thread_id, board_id, comment, post_number, country, updated_at, original_comment, html)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         RETURNING *
     `
     )
@@ -30,7 +31,8 @@ function createPost (
       post_number,
       country,
       updated_at,
-      original_comment
+      original_comment,
+      html
     )
 }
 
@@ -90,18 +92,18 @@ function updatePostCount(thread_id) {
       UPDATE threads SET post_count = post_count + 1 WHERE id = ?
     `).run(thread_id)
 }
-function createThread (a, b, c, d, e, board_id) {
+function createThread (a, b, c, d, e, board_id, original_comment, html) {
   return db
     .prepare(
       `
         INSERT INTO threads (author_id, 
-        moshpit, thread_text, 
-        updated_at, bumped_at, board_id)
-        VALUES (?, ?, ?, ?, ?, ?)
+        moshpit, comment, 
+        updated_at, bumped_at, board_id, original_comment, html)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         RETURNING *
     `
     )
-    .get(a, b, c, d, e, board_id)
+    .get(a, b, c, d, e, board_id, original_comment, html)
 }
 
 function getThread (id) {

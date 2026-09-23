@@ -15,10 +15,10 @@
     --rage: light-dark(#b20000, #ff0000);
     --greentext: light-dark(#416600, #8bb444);
     --back: light-dark(#d5d5d5, #8b8b8b);
-    --border-color: light-dark( #232323, #acacac);
+    --border-color: light-dark(#232323, #acacac);
     --e: light-dark(#ececec, #d2d6dc);
     --ee: light-dark(#d5d5d5, #acacac);
-    --mt:light-dark(#232323, #222127);
+    --mt: light-dark(#232323, #222127);
 }
 
 
@@ -61,11 +61,13 @@ td {
 }
 
 html {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
+
 p {
     white-space: pre-wrap;
 }
+
 /* =========================================================
    3. NAVIGATION
    ========================================================= */
@@ -159,7 +161,7 @@ p {
 }
 
 .tab-nav-div {
-    background-image: linear-gradient(var(--panel),var(--gradient) );
+    background-image: linear-gradient(var(--panel), var(--gradient));
     border-bottom: 1px solid var(--border-color)
 }
 
@@ -171,15 +173,18 @@ p {
     display: flex;
     justify-content: space-between;
 }
+
 .anchor {
-  overflow-anchor: auto;
-  height: 1px;
+    overflow-anchor: auto;
+    height: 1px;
 }
+
 .body-left {
     height: 100vh;
     overflow-y: scroll;
     flex: 1;
     min-width: 0;
+
     &::-webkit-scrollbar {
         display: none;
     }
@@ -188,7 +193,7 @@ p {
     scrollbar-width: none;
 
     /* Hide scrollbar for IE and legacy Edge */
-    -ms-overflow-style: none;  
+    -ms-overflow-style: none;
 }
 
 .body-right {
@@ -240,7 +245,7 @@ p {
     min-width: 5%;
 
     border: 1px solid var(--border-color);
-overflow: hidden;
+    overflow: hidden;
     box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.1);
 
     margin: 7px;
@@ -281,6 +286,7 @@ overflow: hidden;
 .options-div {
     padding: 5px 0px 12px 0px;
 }
+
 /* =========================================================
    7. POSTS
    ========================================================= */
@@ -291,7 +297,7 @@ overflow: hidden;
     color: var(--text);
     box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.2);
     width: 100%;
-   
+
 }
 
 .post-header {
@@ -320,9 +326,10 @@ overflow: hidden;
     margin: 0 5px;
     padding-top: 2px;
 }
+
 .post-container {
-  overflow-y: auto;
-  overflow-anchor: auto;
+    overflow-y: auto;
+    overflow-anchor: auto;
 }
 
 
@@ -337,7 +344,7 @@ overflow: hidden;
 
 }
 
-.post-body { 
+.post-body {
     white-space: pre-wrap;
     line-height: 1.4;
 }
@@ -366,8 +373,8 @@ overflow: hidden;
 }
 
 .bold {
-    font-weight:bold;
-    
+    font-weight: bold;
+
 }
 
 .italic {
@@ -592,6 +599,7 @@ label {
 
 .code {
     white-space: pre-wrap;
+    max-width: 980;
     width: fit-content;
     margin-top: 4px;
     padding: 10px;
@@ -683,6 +691,21 @@ s:hover {
     animation: shake-1 0.12s infinite;
 }
 
+.shake1 {
+    animation: shake-1 0.12s infinite;
+}
+
+.shake2 {
+    animation: shake-1 0.12s infinite;
+    font-weight: bold;
+}
+
+.shake3 {
+    animation: shake-1 0.12s infinite;
+    font-weight: bold;
+    font-size: 2rem;
+}
+
 .shake-2 {
     animation: shake-2 0.15s infinite;
 }
@@ -694,6 +717,41 @@ s:hover {
 .hori {
     animation: horizontal-shaking 0.25s infinite;
 }
+
+.hori1 {
+    animation: horizontal-shaking 0.25s infinite;
+}
+
+.hori2 {
+    animation: horizontal-shaking 0.25s infinite;
+    font-weight: bold;
+}
+
+.hori3 {
+    animation: horizontal-shaking 0.25s infinite;
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.italic1 {
+    font-style: italic;
+}
+
+.italic2 {
+
+    font-style: italic;
+
+    font-weight: bold;
+}
+
+.italic3 {
+    font-style: italic;
+
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+
 
 .schizo {
     animation: skew-x-shaking 0.5s infinite;
@@ -870,7 +928,7 @@ s:hover {
         width: 98vw;
     }
 
-  
+
 }
 
 .extra-post {

@@ -47,15 +47,19 @@ app.use((req, res, next) => {
 app.use(async (req, res, next) => {
   try {
     let sessionId = req.cookies.sessionId
-
-    if (!sessionId) {
+    const cuser = await getUser(sessionId)
+    if (!cuser) {
       const ip = req.ip
       const reader = await Reader.open('./GeoLite2-City.mmdb')
       const response = reader.city('162.204.244.204')
-
-      sessionId = crypto.randomUUID()
+      if (sessionId) {
+        const user = await createUser(sessionId, ip, response.country.names.en)
+      } else {
+        sessionId = crypto.randomUUID()
 
       const user = await createUser(sessionId, ip, response.country.names.en)
+      }
+      
 
       res.cookie('sessionId', sessionId, {
         httpOnly: true,
@@ -65,6 +69,8 @@ app.use(async (req, res, next) => {
       })
 
       console.log('Created new user:', sessionId)
+    } else {
+
     }
 
     // Eventually you can look up the user here:
@@ -192,7 +198,7 @@ app.post('/api/create/post', async (req, res, next) => {
   try {
     const text = req.body.text
     const thread_id = req.body.thread_id
-
+    const html = req.body.html
     if (!text || !text.trim()) {
       return res.status(400).json({
         error: 'Post cannot be empty'
@@ -242,7 +248,8 @@ app.post('/api/create/post', async (req, res, next) => {
       post_number,
       response.country.names.en,
       now,
-      text
+      text,
+      html
     )
 
     updatePostCount(thread_id)
@@ -260,6 +267,7 @@ app.post('/api/create/post', async (req, res, next) => {
 
 app.post('/api/create/thread', (req, res) => {
   const text = req.body.text
+  const html = req.body.html
   let moshpit = req.body.moshpit
   if (!text || !text.trim()) {
     return res.status(400).json({
@@ -282,7 +290,9 @@ app.post('/api/create/thread', (req, res) => {
       text,
       now,
       now,
-      moshpit.id
+      moshpit.id,
+      text,
+      html
     )
     // res.json(thread)
     return res.json({

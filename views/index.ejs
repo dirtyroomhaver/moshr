@@ -10,6 +10,13 @@
   </head>
 
   <body>
+    <% function formatText(post) {
+        if (!post ) return ''
+        const regex = /@([a-zA-Z0-9]+)/g
+        return post.replace(regex, `<span style="color: var(--rage)">@$1</span>`)
+      }
+ %>
+
     <div class="navbar">
       <div class="navbar-left">
         <ul class="nav-list">
@@ -63,12 +70,12 @@
       <div class="body-left">
         <div id="threads">
           <% threads.forEach(thread => { %>
-          <div
+          <a href="/<%= thread.moshpit %>/<%= thread.id %>"><div
             class="thread"
-            onclick="window.location.href='/<%= thread.moshpit %>/<%= thread.id %>'"
+            
           >
             <div class="thread-text">
-              <p class="thread-index-text"><%= thread.thread_text %></p>
+              <p class="thread-index-text"><%- formatText(thread.comment) %></p>
             </div>
             <div class="bot-thread">
               <div class="thread-update">
@@ -84,7 +91,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div></a>
           <% }) %>
         </div>
       </div>
@@ -166,7 +173,8 @@
 
           body: JSON.stringify({
             text: text,
-            moshpit: moshpit
+            moshpit: moshpit,
+            html: formatText(text)
           })
         })
 
@@ -178,6 +186,11 @@
         const data = await response.json()
         window.location.href = `/${data.moshpit.title}/${data.threadId}`
       })
+      function formatText(post) {
+        if (!post ) return ''
+        const regex = /@([a-zA-Z0-9]+)/g
+        return post.replace(regex, `<a href="#$1" style="color: var(--rage)">@$1</a>`)
+      }
 
       const createThread = document.getElementById('create-thread')
       const modal = document.getElementById('create-thread-box')

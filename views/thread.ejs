@@ -10,13 +10,25 @@
   </head>
   <body>
     <% 
-    // Declare formatText at top level so EJS template blocks can use it safely
     function formatText(post) {
-      if (!post || !post.comment) return '';
-      const regex = /@([a-zA-Z0-9]+)/g;
-      return post.comment.replace(regex, `<a href="#$1" style="color: var(--rage)">@$1</a>`);
-    } 
-    %>
+        if (!post || !post.comment) return ''
+        let comment = post.comment
+        const cregex = /~~~([\s\S]*)~~~/
+        console.log(comment)
+        if (cregex.test(comment)) {   
+          comment = comment.replace(cregex, `<span class="code">$1</span>`)
+          const csplit = comment.split(cregex)
+          console.log(csplit)
+         
+        }
+
+        const lines = comment.split(/\r?\n/)
+        const regex = /@([a-zA-Z0-9]+)/g
+        return comment.replace(
+          regex,
+          `<a href="#$1" style="color: var(--rage)">@$1</a>`
+        )
+      } %>
 
     <div class="navbar" id="navbar">
       <div class="navbar-left">
@@ -34,7 +46,9 @@
       </div>
       <div class="navbar-middle">
         <div class="title">
-          <h2 onclick="window.location.href='/<%= thread.moshpit %>/'">[ <%= thread.moshpit %> ]</h2>
+          <h2 onclick="window.location.href='/<%= thread.moshpit %>/'">
+            [ <%= thread.moshpit %> ]
+          </h2>
         </div>
       </div>
       <div class="navbar-right">
@@ -47,29 +61,34 @@
     </div>
 
     <div class="body-thread">
-       <div class="thread-options" id="header">
-          <div class="options-div">
-            <a href="/<%= thread.moshpit %>/">return&nbsp</a>|
-            <a href="#footer">bottom&nbsp</a>|
-            <a href="" class="reply-button" data-thread-id="">reply</a>
-          </div>
+      <div class="thread-options" id="header">
+        <div class="options-div">
+          <a href="/<%= thread.moshpit %>/">return&nbsp</a>|
+          <a href="#footer">bottom&nbsp</a>|
+          <a href="" class="reply-button" data-thread-id="">reply</a>
         </div>
-      <div id="post-container"> 
-       
-
+      </div>
+      <div id="post-container">
         <!-- OP Post -->
         <div class="post" id="OP">
           <div class="post-header">
             <div style="display: flex; justify-content: space-between">
               <div style="display: flex">
                 <% if(posts) { %>
-                  <p>@OP |&nbsp</p> 
+                <p>@OP |&nbsp</p>
                 <% } %>
                 <p>anonymous (Italy) |&nbsp</p>
-                <p itemprop="">9/13/25 17:00:00</p>
+                <p itemprop=""><%= new Date(thread.created_at * 1000).toLocaleString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                      hour: 'numeric',
+                      minute: '2-digit'
+                    }) %></p>
               </div>
               <div style="display: flex">
-                <a href="" class="reply-button" data-thread-id="OP">reply</a>&nbsp|&nbsp
+                <a href="" class="reply-button" data-thread-id="OP">reply</a
+                >&nbsp|&nbsp
                 <a href="" id="report_a">report</a>
               </div>
             </div>
@@ -84,16 +103,20 @@
               padding: 7px;
             "
           >
-            <div class="post-body"><p><%= thread.thread_text %></p></div>
+            <div class="post-body"><p><%- formatText(thread) %></p></div>
             <div class="hidden">
               <p style="color: var(--rage); font-weight: bold">
                 HAVE THE TIME WHEN YOU HOVER - USER WAS SHOT FOR THIS POST
               </p>
             </div>
-          
-            <div class="hidden"
+
+            <div
+              class="hidden"
               style="
-                background-image: linear-gradient(var(--panel), var(--gradient));
+                background-image: linear-gradient(
+                  var(--panel),
+                  var(--gradient)
+                );
                 border-top: 1px solid var(--border-color);
               "
             >
@@ -155,9 +178,9 @@
               </div> <!-- Closed inner content div -->
             </div> <!-- Closed outer .post container div -->
         <% })} %>
+      </div>
+      <!-- /#post-container -->
 
-      </div> <!-- /#post-container -->
-      
       <div class="thread-options" id="footer">
         <div class="options-div">
           <a href="/<%= thread.moshpit %>/">return&nbsp</a>|
@@ -167,7 +190,7 @@
       </div>
       <div class="anchor"></div>
     </div>
-    
+
     <dialog id="create-thread-box">
       <div class="modal-top">
         <div><p>new thread</p></div>
@@ -220,16 +243,22 @@
             <option value="" selected disabled hidden>
               --please choose an option--
             </option>
-            <option value="1">1. dont post anything that violates local or US law</option>
+            <option value="1">
+              1. dont post anything that violates local or US law
+            </option>
             <option value="2">2. dont post here if you are under 18</option>
             <option value="3">3. dont spam</option>
-            <option value="4">4. dont advertise anything you get monetary gain from</option>
+            <option value="4">
+              4. dont advertise anything you get monetary gain from
+            </option>
             <option value="5">5. dont post offtopic threads or replies</option>
             <option value="6">6. dont dox or raid</option>
             <option value="7">7. dont send false reports</option>
             <option value="8">8. dont link to nsfw content</option>
             <option value="9">9. dont joke about child abuse</option>
-            <option value="10">10. dont be obnoxiously racist, homophobic, or transphobic</option>
+            <option value="10">
+              10. dont be obnoxiously racist, homophobic, or transphobic
+            </option>
           </select>
           <label>false reports = ban</label>
           <button type="submit">submit</button>
@@ -247,7 +276,9 @@
           <textarea name="reply" id="reply-textarea"></textarea>
           <div>
             <div>
-              <label for="reply-sig" style="margin: 0px 0px 0px -5px">signature</label>
+              <label for="reply-sig" style="margin: 0px 0px 0px -5px"
+                >signature</label
+              >
               <input
                 id="reply-sig"
                 type="text"
@@ -267,14 +298,14 @@
       const createThread = document.getElementById('create-thread')
       const modal = document.getElementById('create-thread-box')
 
-      createThread.addEventListener('click', (event) => {
+      createThread.addEventListener('click', event => {
         event.preventDefault()
         modal.showModal()
       })
       const createThreadForm = document.getElementById('modal-form')
       const buttonThreadForm = document.getElementById('button-thread')
       const textarea = document.getElementById('thread-text')
-      
+      const events = new EventSource(`/api/events?thread_id=<%= thread.id %>`)
       createThreadForm.addEventListener('submit', async event => {
         // Prevent the browser from reloading the page
         event.preventDefault()
@@ -283,7 +314,8 @@
         if (!text.trim()) {
           return
         }
-
+        
+        
         const response = await fetch('/api/create/thread', {
           method: 'POST',
 
@@ -293,7 +325,8 @@
 
           body: JSON.stringify({
             text: text,
-            moshpit: moshpit
+            moshpit: moshpit,
+            html: formatText(text)
           })
         })
 
@@ -306,25 +339,24 @@
         window.location.href = `/${data.moshpit.title}/${data.threadId}`
       })
 
-
       const report = document.getElementById('report_a')
       const report_modal = document.getElementById('report-box')
 
       if (report) {
-        report.addEventListener('click', (event) => {
+        report.addEventListener('click', event => {
           event.preventDefault()
           report_modal.showModal()
         })
       }
 
       const closeButton = document.getElementById('close-button')
-      closeButton.addEventListener('click', (event) => {
+      closeButton.addEventListener('click', event => {
         event.preventDefault()
         modal.close()
       })
 
       const closeButton2 = document.getElementById('close-button-2')
-      closeButton2.addEventListener('click', (event) => {
+      closeButton2.addEventListener('click', event => {
         event.preventDefault()
         report_modal.close()
       })
@@ -333,7 +365,7 @@
       const areatext = document.getElementById('reply-textarea')
       const closeButton3 = document.getElementById('close-button3')
 
-      closeButton3.addEventListener('click', (event) => {
+      closeButton3.addEventListener('click', event => {
         event.preventDefault()
         areatext.value = ''
         areatext.style.width = ''
@@ -344,16 +376,21 @@
       makeElementMovable(document.getElementById('myPopup'))
 
       document.querySelectorAll('.reply-button').forEach(a => {
-        a.addEventListener('click', (event) => {
+        a.addEventListener('click', event => {
           event.preventDefault()
-          areatext.value += a.dataset.threadId ? '@' + a.dataset.threadId + '\n' : ''
+          areatext.value += a.dataset.threadId
+            ? '@' + a.dataset.threadId + '\n'
+            : ''
           popup.classList.remove('hidden')
           areatext.focus()
         })
       })
 
       function makeElementMovable(element) {
-        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0
+        let pos1 = 0,
+          pos2 = 0,
+          pos3 = 0,
+          pos4 = 0
         const header = document.getElementById(element.id + 'Header')
         if (header) {
           header.onmousedown = dragMouseDown
@@ -377,8 +414,8 @@
           pos2 = pos4 - e.clientY
           pos3 = e.clientX
           pos4 = e.clientY
-          element.style.top = (element.offsetTop - pos2) + 'px'
-          element.style.left = (element.offsetLeft - pos1) + 'px'
+          element.style.top = element.offsetTop - pos2 + 'px'
+          element.style.left = element.offsetLeft - pos1 + 'px'
         }
 
         function closeDragElement() {
@@ -403,7 +440,8 @@
             body: JSON.stringify({
               text: text,
               moshpit: '<%= thread.moshpit %>',
-              thread_id: '<%= thread.id %>'
+              thread_id: '<%= thread.id %>',
+              html: formatText(text)
             })
           })
 
@@ -419,17 +457,16 @@
         }
       })
 
-      const events = new EventSource(`/api/events?thread_id=<%= thread.id %>`)
+      
 
+      events.onmessage = event => {
+        console.log(JSON.parse(event.data))
+      }
 
-      events.onmessage = (event) => {
-  console.log(JSON.parse(event.data));
-};
-
-// Close connection cleanly when changing pages or reloading
-window.addEventListener('beforeunload', () => {
-  events.close();
-});
+      // Close connection cleanly when changing pages or reloading
+      window.addEventListener('beforeunload', () => {
+        events.close()
+      })
       events.addEventListener('new-post', event => {
         const post = JSON.parse(event.data)
         addPost(post)
@@ -487,9 +524,30 @@ window.addEventListener('beforeunload', () => {
 
       // Client-side helper function for dynamic SSE posts
       function formatText(post) {
-        if (!post || !post.comment) return ''
+        let comment = ''
+        if (!post) {
+          return '' 
+        } else if (!post.comment) {
+          comment = post
+        } else {
+          comment = post.comment
+        }
+      
+        const cregex = /~~~([\s\S]*)~~~/
+        console.log(comment)
+        if (cregex.test(comment)) {   
+          comment = comment.replace(cregex, `<span class="code">$1</span>`)
+          const csplit = comment.split(cregex)
+          console.log(csplit)
+         
+        }
+
+        const lines = comment.split(/\r?\n/)
         const regex = /@([a-zA-Z0-9]+)/g
-        return post.comment.replace(regex, `<a href="#$1" style="color: var(--rage)">@$1</a>`)
+        return comment.replace(
+          regex,
+          `<a href="#$1" style="color: var(--rage)">@$1</a>`
+        )
       }
     </script>
   </body>

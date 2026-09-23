@@ -155,13 +155,16 @@ CREATE TABLE IF NOT EXISTS threads (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
     post_count INTEGER NOT NULL DEFAULT 0,
-    thread_text TEXT NOT NULL,
+    comment TEXT NOT NULL,
+    
     created_at INTEGER NOT NULL DEFAULT (unixepoch()),
     updated_at INTEGER,
     bumped_at INTEGER,
     author_id INTEGER,
     board_id TEXT NOT NULL,
     moshpit TEXT NOT NULL,
+    original_comment TEXT NOT NULL,
+    html TEXT NOT NULL, 
     country TEXT,
     ip TEXT,
     hid INTEGER NOT NULL DEFAULT 0
@@ -230,9 +233,10 @@ CREATE TABLE IF NOT EXISTS posts (
     created_at INTEGER NOT NULL DEFAULT (unixepoch()),
     updated_at INTEGER,
     comment TEXT NOT NULL,
-    hid INTEGER NOT NULL DEFAULT 0
-        CHECK (hid IN (0, 1)),
+    
+    hid INTEGER NOT NULL DEFAULT 0 CHECK (hid IN (0, 1)),
     original_comment TEXT NOT NULL,
+       html TEXT NOT NULL, 
     deleted_at INTEGER,
     deleted_by INTEGER,
 
