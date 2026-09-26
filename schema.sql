@@ -10,6 +10,40 @@ CREATE TABLE IF NOT EXISTS cached_results (
     recent TEXT NOT NULL,
     updated_at INTEGER NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS slaps (
+    victim_id INTEGER,
+    slaper_id INTEGER,
+    ip TEXT,
+    thread_id INTEGER,
+    created_at INTEGER NOT NULL DEFAULT (unixepoch()),
+    FOREIGN KEY (victim_id)
+        REFERENCES users(id)
+        ON DELETE SET NULL,
+    FOREIGN KEY (slaper_id)
+        REFERENCES users(id)
+        ON DELETE SET NULL,
+    FOREIGN KEY (thread_id)
+        REFERENCES threads(id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS shots (
+    victim_id INTEGER,
+    shooter_id INTEGER,
+    ip TEXT,
+    thread_id INTEGER,
+    created_at INTEGER NOT NULL DEFAULT (unixepoch()),
+    FOREIGN KEY (victim_id)
+        REFERENCES users(id)
+        ON DELETE SET NULL,
+    FOREIGN KEY (shooter_id)
+        REFERENCES users(id)
+        ON DELETE SET NULL,
+    FOREIGN KEY (thread_id)
+        REFERENCES threads(id)
+        ON DELETE CASCADE
+);
 CREATE TABLE IF NOT EXISTS site_settings (
     id INTEGER PRIMARY KEY CHECK (id = 1),
 
@@ -27,10 +61,12 @@ CREATE TABLE IF NOT EXISTS site_settings (
 
     post_cooldown_thread INTEGER,
     post_cooldown_post INTEGER,
-
+    nuke_count INTEGER, 
     bump_limit INTEGER,
 
-    report_cooldown INTEGER
+    report_cooldown INTEGER,
+    announcement TEXT,
+    announcement_status INTEGER NOT NULL DEFAULT 0
 );
 
 INSERT OR IGNORE INTO site_settings (id)
@@ -112,12 +148,11 @@ CREATE TABLE IF NOT EXISTS moshpits (
     post_cooldown_thread INTEGER,
     post_cooldown_post INTEGER,
 
-    posts_per_page INTEGER,
-    pages INTEGER,
+   
 
     bump_limit INTEGER,
 
-    flags TEXT,
+    flags INTEGER NOT NULL DEFAULT 0,
 
     FOREIGN KEY (author_id)
         REFERENCES users(id)
@@ -138,14 +173,7 @@ CREATE INDEX IF NOT EXISTS idx_moshpits_dis
 -- ============================================================
 -- -shot
 -- ============================================================
-CREATE TABLE IF NOT EXISTS shot (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    time_shot INTEGER NOT NULL DEFAULT (unixepoch()),
-    thread_id INTEGER NOT NULL,
-    user_id INTEGER NOT NULL,
-    recover_at INTEGER NOT NULL 
 
-);
 
 -- ============================================================
 -- THREADS
@@ -163,7 +191,6 @@ CREATE TABLE IF NOT EXISTS threads (
     author_id INTEGER,
     board_id TEXT NOT NULL,
     moshpit TEXT NOT NULL,
-    original_comment TEXT NOT NULL,
     html TEXT NOT NULL, 
     country TEXT,
     ip TEXT,
@@ -177,7 +204,7 @@ CREATE TABLE IF NOT EXISTS threads (
 
     sticky INTEGER NOT NULL DEFAULT 0
         CHECK (sticky IN (0, 1)),
-    shot INTEGER NOT NULL DEFAULT 0,
+
     bump_limit_enabled INTEGER NOT NULL DEFAULT 0
         CHECK (bump_limit_enabled IN (0, 1)),
 
@@ -235,12 +262,12 @@ CREATE TABLE IF NOT EXISTS posts (
     comment TEXT NOT NULL,
     
     hid INTEGER NOT NULL DEFAULT 0 CHECK (hid IN (0, 1)),
-    original_comment TEXT NOT NULL,
        html TEXT NOT NULL, 
     deleted_at INTEGER,
     deleted_by INTEGER,
 
     shot INTEGER NOT NULL DEFAULT 0, 
+    slapped INTEGER NOT NULL DEFAULT 0, 
     country TEXT,
 
     gems INTEGER NOT NULL DEFAULT 0,

@@ -6,16 +6,102 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/../stylesheet.css" />
     <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="preload" href="/Monapo.woff2" as="font" type="font/woff2" crossorigin>
     <title>moshr</title>
   </head>
 
   <body>
-    <% function formatText(post) {
-        if (!post ) return ''
-        const regex = /@([a-zA-Z0-9]+)/g
-        return post.replace(regex, `<span style="color: var(--rage)">@$1</span>`)
+    <%  function formatText(post) {
+        let comment = ''
+        if (!post) {
+          return '' 
+        } else if (!post.comment) {
+          comment = post
+        } else {
+          comment = post.comment
+        }
+        const escaper = /(\s*)[<](\s*)/g
+        comment = comment.replaceAll(escaper, `$1&lt;$2`)
+        
+       comment = partytext(comment)
+    
+        // const cregex = /~~~([\s\S]*)~~~/
+
+        // if (cregex.test(comment)) {   
+        //   comment = comment.replace(cregex, `<span class="code">$1</span>`)
+        //   const spanreg = /<span class="code">([\s\S]*)<\/span>/
+        //   const csplit = comment.split(spanreg)
+        //   const ccregex = /<span class="code">[\s\S]+<\/span>/
+        //   if (ccregex.test(csplit[0])) {
+        //     comment = csplit[1]
+        //   } else {
+        //     comment = csplit[0]
+        //   }
+        // }
+
+        
+        // const lines = comment.split(/\r?\n/)
+        const regex = /@([0-9\s+]+|[OP\s+]+)/g
+          
+        return comment.replace(
+          regex,
+          `<a href="#$1" style="color: var(--rage)">@$1</a>`
+        )
+      }
+
+      function partytext(c) {
+        const spoiler = /\[\[([\s\S]*?)]]/g
+        let comment = c.replace(spoiler, `<s>$1</s>`)
+        const array1 = comment.split("\n")
+   
+        let comment1 = ''
+        const shake1 = /\[s1\]([\s\S]*?)\[\/s1\]/g
+        const shake2 = /\[s2\]([\s\S]*?)\[\/s2\]/g
+        const shake3 = /\[s3\]([\s\S]*?)\[\/s3\]/g
+        const shake3a = /\[s3a\]([\s\S]*?)\[\/s3a\]/g
+        const glow = /\[g\]([\s\S]*?)\[\/g\]/g
+        array1.forEach((c) => {
+         
+            let pre = ''
+            let end = ''
+            
+          if (c.endsWith('!!!!!')) {
+          //  comment1 = comment1 + '<span class="shake3">' + c + '</span>' + "\n"
+           pre = '<span class="shake3">' + pre
+          end = end + '</span>'
+          
+        } else if (c.endsWith('!!!!')) {
+          // comment1 = comment1 + '<span class="shake2">' + c + '</span>' + "\n"
+           pre = '<span class="shake2">' + pre
+          end = end + '</span>'
+          } else if (c.endsWith('!!!')) {
+          // comment1 = comment1 + '<span class="shake1">' + c + '</span>' + "\n"
+           pre = '<span class="shake1">' + pre
+          end = end + '</span>'
+        } else if(c === ''){
+          
+        } else {
+          
+           
+           
+        }
+        comment1 = comment1 + pre + c + end + "\n"
+        comment1 = comment1.replace(shake3a, '<span class="shake3absolute">$1</span>')
+        comment1 = comment1.replace(shake3, '<span class="shake3">$1</span>')
+        comment1 = comment1.replace(shake2, '<span class="shake2">$1</span>')
+
+        comment1 = comment1.replace(shake1, '<span class="shake1">$1</span>')
+        
+        comment1 = comment1.replace(glow, '<span class="glow">$1</span>')
+     
+        })
+        
+        return comment1
       }
  %>
+ 
+
+  
 
     <div class="navbar">
       <div class="navbar-left">
@@ -67,6 +153,22 @@
     </div>
 
     <div class="body">
+      <div class="body-right">
+        <div class="moshpit-info">
+          <div class="tab-nav-div">
+            <ul class="tab-nav">
+              <li><B>watched</B></li>
+            </ul>
+          </div>
+          <div>
+            <ul class="info-list">
+              <% trending.forEach(moshpit => { %>
+              <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.post_count%></a></li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+      </div>
       <div class="body-left">
         <div id="threads">
           <% threads.forEach(thread => { %>
@@ -75,13 +177,14 @@
             
           >
             <div class="thread-text">
-              <p class="thread-index-text"><%- formatText(thread.comment) %></p>
+              <p class="thread-index-text"><%- thread.html %></p>
             </div>
             <div class="bot-thread">
               <div class="thread-update">
                 <div class="last-post">
                   <p>last post:&nbsp</p>
-                  <p><%= thread.updated_at %></p>
+                  
+
                 </div>
                 <div class="post-bar">
                   <div
@@ -99,13 +202,13 @@
         <div class="moshpit-info">
           <div class="tab-nav-div">
             <ul class="tab-nav">
-              <li><a href="">trending</a></li>
+              <li><B>trending</B></li>
             </ul>
           </div>
           <div>
             <ul class="info-list">
               <% trending.forEach(moshpit => { %>
-              <li><a href="/<%= moshpit.title %>/"><%= moshpit.title %></a></li>
+              <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.post_count%> <%= moshpit.post_count === 1 ? 'post in the last hour' : 'posts in the last hour' %></a></li>
               <% }) %>
             </ul>
           </div>
@@ -134,7 +237,8 @@
             ><input
               type="text"
               name="moshpit"
-              placeholder="if left blank your thread will go onto the homepage"
+              value="<%= moshpit %>"
+              placeholder="if left blank your thread will go onto /moshpit/ <= 7 chars"
             />
           </div>
 
@@ -161,9 +265,17 @@
         const text = textarea.value
         const moshpit = document.querySelector('input[name="moshpit"]').value
         if (!text.trim()) {
+          alert('the comment field cannot be empty')
           return
         }
-
+        const regex = /^[a-z0-9]+$/i
+        if (moshpit.length > 7) {
+          alert('moshpit titles cannot be over 7 characters long')
+          return
+        } else if (!regex.test(moshpit)) {
+          alert('only alphanumeric characters are allowed for moshpit titles')
+          return
+        }
         const response = await fetch('/api/create/thread', {
           method: 'POST',
 
@@ -186,11 +298,7 @@
         const data = await response.json()
         window.location.href = `/${data.moshpit.title}/${data.threadId}`
       })
-      function formatText(post) {
-        if (!post ) return ''
-        const regex = /@([a-zA-Z0-9]+)/g
-        return post.replace(regex, `<a href="#$1" style="color: var(--rage)">@$1</a>`)
-      }
+      
 
       const createThread = document.getElementById('create-thread')
       const modal = document.getElementById('create-thread-box')
@@ -212,56 +320,79 @@
 
       const threadForm = document.getElementById('modal-form')
       const textarea = document.getElementById('thread-text')
-      // const threads = document.getElementById('threads')
-      // threadForm.addEventListener('submit', async event => {
-      //   // Prevent the browser from reloading the page
-      //   event.preventDefault()
+      function formatText(post) {
+        let comment = ''
+        if (!post) {
+          return '' 
+        } else if (!post.comment) {
+          comment = post
+        } else {
+          comment = post.comment
+        }
+        const escaper = /(\s*)[<](\s*)/g
+        comment = comment.replaceAll(escaper, `$1&lt;$2`)
+        
+       comment = partytext(comment)
+    
+  
 
-      //   const text = textarea.value
+        
+        // const lines = comment.split(/\r?\n/)
+        const regex = /@([0-9\s+]+|[OP\s+]+)/g
+          
+        return comment.replace(
+          regex,
+          `<a href="#$1" style="color: var(--rage)">@$1</a>`
+        )
+      }
 
-      //   if (!text.trim()) {
-      //     return
-      //   }
+      function partytext(c) {
+        const spoiler = /\[\[([\s\S]*?)]]/g
+        let comment = c.replace(spoiler, `<s>$1</s>`)
+        const array1 = comment.split("\n")
+   
+        let comment1 = ''
+        const shake1 = /\[s1\]([\s\S]*?)\[\/s1\]/g
+        const shake2 = /\[s2\]([\s\S]*?)\[\/s2\]/g
+        const shake3 = /\[s3\]([\s\S]*?)\[\/s3\]/g
+        const glow = /\[g\]([\s\S]*?)\[\/g\]/g
+        array1.forEach((c) => {
+         
+            let pre = ''
+            let end = ''
+            
+          if (c.endsWith('!!!!!')) {
+          //  comment1 = comment1 + '<span class="shake3">' + c + '</span>' + "\n"
+           pre = '<span class="shake3">' + pre
+          end = end + '</span>'
+          
+        } else if (c.endsWith('!!!!')) {
+          // comment1 = comment1 + '<span class="shake2">' + c + '</span>' + "\n"
+           pre = '<span class="shake2">' + pre
+          end = end + '</span>'
+          } else if (c.endsWith('!!!')) {
+          // comment1 = comment1 + '<span class="shake1">' + c + '</span>' + "\n"
+           pre = '<span class="shake1">' + pre
+          end = end + '</span>'
+        } else if(c === ''){
+          
+        } else {
+          
+           
+           
+        }
+        comment1 = comment1 + pre + c + end + "\n"
+        comment1 = comment1.replace(shake3, '<span class="shake3">$1</span>')
+        comment1 = comment1.replace(shake2, '<span class="shake2">$1</span>')
 
-      //   const response = await fetch('/api/threads', {
-      //     method: 'POST',
-
-      //     headers: {
-      //       'Content-Type': 'application/json'
-      //     },
-
-      //     body: JSON.stringify({
-      //       text: text
-      //     })
-      //   })
-
-      //   if (!response.ok) {
-      //     console.error('Failed to create thread')
-      //     return
-      //   }
-
-      //   textarea.value = ''
-      // })
-
-      // const events = new EventSource('/api/events')
-
-      // events.addEventListener('new-thread', event => {
-      //   const thread = JSON.parse(event.data)
-
-      //   addThread(thread)
-      // })
-
-      // function addThread(thread) {
-      //   const article = document.createElement('article')
-
-      //   const text = document.createElement('p')
-
-      //   text.textContent = thread.thread_text
-
-      //   article.appendChild(text)
-
-      //   threads.prepend(article)
-      // }
+        comment1 = comment1.replace(shake1, '<span class="shake1">$1</span>')
+        
+        comment1 = comment1.replace(glow, '<span class="glow">$1</span>')
+    
+        })
+        
+        return comment1
+      }
     </script>
   </body>
 </html>

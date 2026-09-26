@@ -3,6 +3,7 @@ const path = require('path')
 const crypto = require('crypto')
 const cookieParser = require('cookie-parser')
 const EventEmitter = require('events')
+const bcrypt = require('bcrypt')
 const {
   getUser,
   createUser,
@@ -52,14 +53,14 @@ app.use(async (req, res, next) => {
       const ip = req.ip
       const reader = await Reader.open('./GeoLite2-City.mmdb')
       const response = reader.city('162.204.244.204')
+  
       if (sessionId) {
         const user = await createUser(sessionId, ip, response.country.names.en)
       } else {
         sessionId = crypto.randomUUID()
 
-      const user = await createUser(sessionId, ip, response.country.names.en)
+        const user = await createUser(sessionId, ip, response.country.names.en)
       }
-      
 
       res.cookie('sessionId', sessionId, {
         httpOnly: true,
@@ -70,7 +71,6 @@ app.use(async (req, res, next) => {
 
       console.log('Created new user:', sessionId)
     } else {
-
     }
 
     // Eventually you can look up the user here:
@@ -143,8 +143,9 @@ app.get('/', async (req, res) => {
   res.render('index', { threads, moshpit, trending, popular, recent })
 })
 
-app.get('/quirks', (req, res) => {
-  res.render('quirks', {})
+app.get('/quirks', async (req, res) => {
+  const trending = await getTrendingMoshpits()
+  res.render('quirks', {trending})
 })
 
 app.get('/faq', (req, res) => {
@@ -187,8 +188,10 @@ app.get('/:moshpit/:thread_id', async (req, res) => {
   if (!thread) {
     return res.status(404).send('Thread not found')
   }
+  const user = await getUser(req.sessionId)
   const posts = await getPosts(thread_id)
-  res.render( 'thread', {thread, posts })
+  const moshpit = await getOrCreateMoshpit(thread.moshpit)
+  res.render('thread', { thread, posts, user, moshpit })
 })
 
 // -------------------------
@@ -199,6 +202,7 @@ app.post('/api/create/post', async (req, res, next) => {
     const text = req.body.text
     const thread_id = req.body.thread_id
     const html = req.body.html
+    
     if (!text || !text.trim()) {
       return res.status(400).json({
         error: 'Post cannot be empty'
@@ -219,10 +223,7 @@ app.post('/api/create/post', async (req, res, next) => {
       })
     }
 
-    const moshpit = getOrCreateMoshpit(
-      req.body.moshpit,
-      user.id
-    )
+    const moshpit = getOrCreateMoshpit(req.body.moshpit, user.id)
 
     if (!moshpit) {
       return res.status(400).json({
@@ -248,7 +249,6 @@ app.post('/api/create/post', async (req, res, next) => {
       post_number,
       response.country.names.en,
       now,
-      text,
       html
     )
 
@@ -258,14 +258,16 @@ app.post('/api/create/post', async (req, res, next) => {
     events.emit('new-post', post)
 
     // Respond to the POST request
-    return res.json(post)
-
+    return res.json({
+      post: post,
+      moshpit: moshpit
+    })
   } catch (error) {
     next(error)
   }
 })
 
-app.post('/api/create/thread', (req, res) => {
+app.post('/api/create/thread', async (req, res) => {
   const text = req.body.text
   const html = req.body.html
   let moshpit = req.body.moshpit
@@ -278,12 +280,25 @@ app.post('/api/create/thread', (req, res) => {
   if (!moshpit) {
     moshpit = 'moshpit'
   }
+  const regex = /^[a-z0-9]+$/i
+  if (moshpit.length > 7) {
+    return res.status(400).json({
+      error: 'moshpit titles cannot be over 7 characters long'
+    })
+    
+  } else if (!regex.test(moshpit)) {
+    return res.status(400).json({
+      error: 'only alphanumeric characters are allowed for moshpit titles'
+    })
+   
+  }
   const user = getUser(req.sessionId)
-  moshpit = getOrCreateMoshpit(moshpit, user.id)
+  moshpit = getOrCreateMoshpit(moshpit.toLowerCase(), user.id)
 
   if (user) {
     const now = new Date().toISOString()
-
+    const reader = await Reader.open('./GeoLite2-City.mmdb')
+    const response = reader.city('162.204.244.204')
     const thread = createThread(
       user.id,
       moshpit.title,
@@ -291,13 +306,14 @@ app.post('/api/create/thread', (req, res) => {
       now,
       now,
       moshpit.id,
-      text,
-      html
+      html,
+      '162.204.244.204',
+      response.country.names.en
     )
     // res.json(thread)
     return res.json({
       threadId: thread.id,
-      moshpit: moshpit
+      moshpit: moshpit,
     })
   }
 

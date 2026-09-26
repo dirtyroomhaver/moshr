@@ -11,14 +11,13 @@ function createPost (
   post_number,
   country,
   updated_at,
-  original_comment,
   html
 ) {
   return db
     .prepare(
       `
-        INSERT INTO posts (author_id, ip, thread_id, board_id, comment, post_number, country, updated_at, original_comment, html)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO posts (author_id, ip, thread_id, board_id, comment, post_number, country, updated_at, html)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         RETURNING *
     `
     )
@@ -31,7 +30,6 @@ function createPost (
       post_number,
       country,
       updated_at,
-      original_comment,
       html
     )
 }
@@ -72,6 +70,30 @@ function createUser (session_id, ip, country) {
     )
     .get(session_id, ip, country)
 }
+
+function createUser (session_id, ip, country) {
+  return db
+    .prepare(
+      `
+        INSERT INTO users (session_id, ip, country)
+        VALUES (?, ?, ?)
+        RETURNING *
+    `
+    )
+    .get(session_id, ip, country)
+}
+
+function createAdmin (session_id, code, pin_hash) {
+  return db
+    .prepare(
+      `
+        INSERT INTO users (session_id, code, pin_hash)
+        VALUES (?, ?, ?)
+        RETURNING *
+    `
+    )
+    .get(session_id, code, pin_hash)
+}
 function banUser (text) {
   return db
     .prepare(
@@ -92,18 +114,18 @@ function updatePostCount(thread_id) {
       UPDATE threads SET post_count = post_count + 1 WHERE id = ?
     `).run(thread_id)
 }
-function createThread (a, b, c, d, e, board_id, original_comment, html) {
+function createThread (a, b, c, d, e, board_id, html, ip, country) {
   return db
     .prepare(
       `
         INSERT INTO threads (author_id, 
         moshpit, comment, 
-        updated_at, bumped_at, board_id, original_comment, html)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        updated_at, bumped_at, board_id, html, ip, country)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         RETURNING *
     `
     )
-    .get(a, b, c, d, e, board_id, original_comment, html)
+    .get(a, b, c, d, e, board_id, html, ip, country)
 }
 
 function getThread (id) {
@@ -166,7 +188,7 @@ SELECT
             AND p2.created_at >= unixepoch() - 3600
       )
       ORDER BY post_count DESC
-      LIMIT 100;
+      LIMIT 1000;
     `
     )
     .all()

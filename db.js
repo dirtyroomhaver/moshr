@@ -29,6 +29,20 @@ db.prepare(`
   INSERT OR IGNORE INTO moshpits (title)
   VALUES (?)
 `).run('moshpit')
+
+db.prepare(`
+  INSERT OR IGNORE INTO moshpits (title, flags)
+  VALUES (?,?)
+`).run('global', 1)
+
+db
+    .prepare(
+      `
+        INSERT INTO users (session_id, code, pin_hash)
+        VALUES (?, ?, ?)
+    `
+    )
+    .run('1', 'sippy', `$2b$10$dCnuQlVCTi6yDG.ABWXMXurwPj8pth0dQD1uELTPCuhwTotN.7/la`)
 module.exports = {
     db
 }
