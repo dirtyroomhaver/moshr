@@ -38,11 +38,11 @@ db.prepare(`
 db
     .prepare(
       `
-        INSERT INTO users (session_id, code, pin_hash)
-        VALUES (?, ?, ?)
+        INSERT OR IGNORE INTO users (session_id, code, pin_hash, is_admin)
+        VALUES (?, ?, ?, ?)
     `
     )
-    .run('1', 'sippy', `$2b$10$dCnuQlVCTi6yDG.ABWXMXurwPj8pth0dQD1uELTPCuhwTotN.7/la`)
+    .run('1', 'sippy', `$2b$10$dCnuQlVCTi6yDG.ABWXMXurwPj8pth0dQD1uELTPCuhwTotN.7/la`, '1')
 module.exports = {
     db
 }

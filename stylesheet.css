@@ -6,19 +6,20 @@
     color-scheme: light dark;
 
 
-    --bg-color: light-dark(#f8faff, #222127);
+    --bg-color: light-dark(#f8faff, #272834);
     --accent-color: light-dark(#393736, #d2d6dc);
-    --gradient: light-dark(#d5d5d5, #0b0b0e);
-    --panel: light-dark(#ececec, #1D1F21);
-    --text: light-dark(#232323, #dbe0e6);
+    --gradient: light-dark(#d5d5d5, #0e0d11);
+
+    --panel: light-dark(#ececec, #16151f);
+    --text: light-dark(#232323, #d7d7d7);
     --bar: light-dark(#adff9d, #adff9d);
     --rage: light-dark(#b20000, #cc2626);
-    --greentext: light-dark(#416600, #8bb444);
+    --greentext: light-dark(#499d00, #8bb444);
     --back: light-dark(#d5d5d5, #8b8b8b);
     --border-color: light-dark(#232323, #acacac);
     --e: light-dark(#ececec, #d2d6dc);
     --ee: light-dark(#d5d5d5, #acacac);
-    --mt: light-dark(#232323, #222127);
+    --mt: light-dark(#232323, #232323);
 }
 
 
@@ -60,14 +61,18 @@
 }
 
 @font-face {
-    font-family: 'AAHub';
-
-    src: url('../fonts/aahub/aahub.woff') format('woff'), url('../fonts/aahub/aahub.woff2') format('woff2');
-     font-weight: normal;
-    font-style: normal;
-    font-display: swap;
+  font-family: "RobotoJAA";
+  src: url("RobotoJAA.woff2") format("woff2"),
+    url("RobotoJAA.woff") format("woff");
+  font-display: swap;
 }
 
+.RobotoJAA {
+  font-family: "RobotoJAA";
+  white-space: pre;
+  font-size: 16px;
+  line-height: 18px;
+}
 
 body {
     background-image: linear-gradient(var(--gradient),
@@ -75,7 +80,7 @@ body {
     background-size: 100% 20%;
     background-repeat: no-repeat;
     background-color: var(--bg-color);
-    font-family: Monapo,Mona,IPAMonaPGothic,"MS Pgothic", "ＭＳ Ｐゴシック", sans-serif;
+    font-family: RobotoJAA, Monapo,Mona,IPAMonaPGothic,"MS Pgothic", "ＭＳ Ｐゴシック", sans-serif;
     /* font-family: Arial, sans-serif; */
 }
 
@@ -109,11 +114,11 @@ span {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-image: linear-gradient(var(--gradient), var(--gradient) );
+    background-image: linear-gradient(var(--panel), var(--gradient) );
      height: 40px;
     padding: 10px;
     border-bottom: 1px solid var(--border-color);
-    position: sticky;
+
 }
 
 .navbar div {
@@ -204,7 +209,7 @@ span {
 
 .body {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
 }
 
 .anchor {
@@ -214,9 +219,10 @@ span {
 
 .body-left {
     height: 100vh;
-    overflow-y: scroll;
+    overflow-y: visible;
     flex: 1;
-    min-width: 0;
+    width: 20%;
+   
 
     &::-webkit-scrollbar {
         display: none;
@@ -230,17 +236,19 @@ span {
 }
 
 .body-right {
-    width: 30vh;
     min-width: 300px;
+     padding: 0px 7px 0px 7px;
+    
 }
 
 .body-thread {
     display: flex;
     flex-direction: column;
     align-items: center;
-
+    width: 100%;
     height: 100vh;
     padding-top: 5px;
+
 }
 
 .body-admin {
@@ -258,18 +266,20 @@ span {
    ========================================================= */
 
 #threads {
-
-
+    display: flex;
+    align-items: center;
+flex-direction: column;
     color: var(--text);
-    margin-top: 3px;
+
 
 }
 
 .thread {
-    max-height: 30vh;
+    max-height: 45vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    
     background-image:
         linear-gradient(var(--panel), var(--gradient));
     overflow-wrap: break-word;
@@ -277,15 +287,15 @@ span {
     overflow: hidden;
     box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.1);
     line-height: 1;
-    margin: 7px;
+    margin: 7px 3px 0px 3px;
+    z-index: 1000;
     position: relative
 }
 
 #threads a {
     overflow-wrap: break-word;
-    width: 50vw;
     max-width: 100%;
-    ;
+    min-width: 100%;
 }
 
 .thread:hover {
@@ -301,11 +311,13 @@ span {
     overflow-wrap: break-word;
     justify-content: left;
     align-content: start;
+    
 }
 
 .thread-index-text {
     padding: 7px;
     overflow: hidden;
+    width: 100%
 }
 
 .thread-update {
@@ -335,10 +347,10 @@ span {
 
 .post {
     border: 1px solid var(--border-color);
-    margin: 0px 5px 5px 5px;
+    margin: 0px 2.5% 10px 2.5%;
     color: var(--text);
     box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.2);
-    width: 100%;
+    width: 95%;
 
 
 }
@@ -347,16 +359,14 @@ span {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-width: 1000px;
     background-image:
         linear-gradient(var(--panel), var(--gradient));
 
     border-bottom: 1px solid var(--border-color);
 
     padding: 5px;
-
     box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.1);
-
+    width: 100%;
     margin: 0;
 }
 
@@ -370,9 +380,10 @@ span {
     padding-top: 2px;
 }
 
-.post-container {
-    overflow-y: auto;
-    overflow-anchor: auto;
+#post-container {
+   
+     width: 100%;
+    
 }
 
 
@@ -390,8 +401,9 @@ span {
 .post-body {
     line-height: 1;
     white-space: pre-wrap;
-    max-width: 1000px;
+    max-width: 65vw;
     overflow-wrap: break-word;
+    position: relative
 }
 
 .post-bar {
@@ -475,6 +487,9 @@ span {
 
 .search input {
     width: 10vw;
+    border-radius: 0px;
+    border: 1px solid var(--accent-color);
+    background-color: var(--bg-color)
 }
 
 
@@ -518,6 +533,13 @@ label {
     margin: 0px;
     width: 100%;
     height: 80px;
+    border-radius: 0px;
+    border: 1px solid var(--accent-color)
+}
+
+#reply-sig {
+   border-radius: 0px;
+    border: 1px solid var(--accent-color) 
 }
 
 #modal-form div select {
@@ -666,6 +688,12 @@ s {
 
 
 }
+.big {
+    font-size: 2rem;
+}
+.greentext {
+    color: var(--greentext)
+}
 .rage {
     color: var(--rage);
 }
@@ -753,14 +781,13 @@ s:hover {
     font-size: 2rem;
 
 }
-.shake3absolute {
+.shake3a {
     animation: shake-1 0.12s infinite;
     font-weight:bolder;
     font-size: 2rem;
+    position: absolute;
 }
-.shake-2 {
-    animation: shake-2 0.15s infinite;
-}
+
 
 .vert {
     animation: vertical-shaking 0.25s infinite;
@@ -792,6 +819,7 @@ s:hover {
     animation: horizontal-shaking 0.25s infinite;
     font-weight: bold;
     font-size: 2rem;
+    position: absolute;
 }
 .italic1 {
     font-style: italic;
@@ -858,7 +886,7 @@ s:hover {
     }
 
     25% {
-        transform: translate(2px, 1px) rotate(0.3deg);
+        transform: translate(2px, 1px) rotate(0.5deg);
     }
 
     50% {
@@ -866,7 +894,7 @@ s:hover {
     }
 
     75% {
-        transform: translate(1px, -1px) rotate(-0.2deg);
+        transform: translate(1px, -1px) rotate(-0.4deg);
     }
 
     100% {
@@ -880,7 +908,7 @@ s:hover {
     }
 
     25% {
-        transform: translate(-1px, 1px) rotate(-0.5deg);
+        transform: translate(1px, -1px) rotate(-0.2deg);
     }
 
     50% {
@@ -888,7 +916,7 @@ s:hover {
     }
 
     75% {
-        transform: translate(1px, -1px) rotate(0.5deg);
+        transform: translate(2px, 1px) rotate(0.3deg);
     }
 
     100% {
@@ -946,7 +974,7 @@ s:hover {
     }
 
     5% {
-        transform: skewX(100deg);
+        transform: skewX(50deg);
     }
 
     10% {
@@ -980,6 +1008,7 @@ s:hover {
 
     .body-right {
         display: none;
+       
     }
 
     .post-header {

@@ -6,12 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/../stylesheet.css" />
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="preload" href="/Monapo.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="../RobotoJAA.woff2" as="font" type="font/woff2" crossorigin>
     <title>moshr</title>
+    <script src="
+https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
+"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
   </head>
 
   <body>
-    <%  function formatText(post) {
+    <% 
+    function formatText(post) {
         let comment = ''
         if (!post) {
           return '' 
@@ -49,8 +54,9 @@
         )
       }
 
+     
       function partytext(c) {
-        const spoiler = /\[\[([\s\S]*?)]]/g
+        const spoiler = /\[\[\[([\s\S]*?)]]]/g
         let comment = c.replace(spoiler, `<s>$1</s>`)
         const array1 = comment.split("\n")
    
@@ -59,26 +65,90 @@
         const shake2 = /\[s2\]([\s\S]*?)\[\/s2\]/g
         const shake3 = /\[s3\]([\s\S]*?)\[\/s3\]/g
         const shake3a = /\[s3a\]([\s\S]*?)\[\/s3a\]/g
+        const hori1 = /\[h1\]([\s\S]*?)\[\/h1\]/g
+        const hori2 = /\[h2\]([\s\S]*?)\[\/h2\]/g
+        const hori3 = /\[h3\]([\s\S]*?)\[\/h3\]/g
+        const hori3a = /\[h3a\]([\s\S]*?)\[\/h3a\]/g
+        const gay = /\[r\]([\s\S]*?)\[\/r\]/g
+        const trans = /\[t\]([\s\S]*?)\[\/t\]/g
+        const schizo = /\[tv\]([\s\S]*?)\[\/tv\]/g
+        const schizoa = /\[tva\]([\s\S]*?)\[\/tva\]/g
+        const yay = /\[v\]([\s\S]*?)\[\/v\]/g
+        const yaya = /\[va\]([\s\S]*?)\[\/va\]/g
+        const police = /\[p\]([\s\S]*?)\[\/p\]/g
+        const bold = /\[b\]([\s\S]*?)\[\/b\]/g
+        const italic = /\[i\]([\s\S]*?)\[\/i\]/g
+        const big = /\[big\]([\s\S]*?)\[\/big\]/g
+        const rage = /\[red\]([\s\S]*?)\[\/red\]/g
+
         const glow = /\[g\]([\s\S]*?)\[\/g\]/g
         array1.forEach((c) => {
          
             let pre = ''
             let end = ''
-            
+            if (c.startsWith('>')&& !c.startsWith('> ')) {
+               pre = '<span class="greentext">' + pre
+              end = end + '</span>'
+            } else if (c.toLowerCase().startsWith("im gay") || c.toLowerCase().startsWith("i'm gay")) {
+             pre = '<span class="gay">' + pre
+              end = end + '</span>'
+            } else if (c.toLowerCase().startsWith("im trans") || c.toLowerCase().startsWith("i'm trans")) {
+             pre = '<span class="trans">' + pre
+              end = end + '</span>'
+            } else if (c.startsWith("THE VOICES")) {
+             pre = '<span class="schizo">' + pre
+              end = end + '</span>'
+            }else if (c.toLowerCase().startsWith("yay")) {
+             pre = '<span class="vert">' + pre
+              end = end + '</span>'
+            }else if (c.startsWith("POLICE")) {
+             pre = '<span class="police">' + pre
+              end = end + '</span>'
+            }else if (c.startsWith("FUCK") || c.startsWith("WTF")) {
+             pre = '<span class="rage">' + pre
+              end = end + '</span>'
+            }
           if (c.endsWith('!!!!!')) {
           //  comment1 = comment1 + '<span class="shake3">' + c + '</span>' + "\n"
            pre = '<span class="shake3">' + pre
           end = end + '</span>'
           
         } else if (c.endsWith('!!!!')) {
-          // comment1 = comment1 + '<span class="shake2">' + c + '</span>' + "\n"
            pre = '<span class="shake2">' + pre
           end = end + '</span>'
           } else if (c.endsWith('!!!')) {
-          // comment1 = comment1 + '<span class="shake1">' + c + '</span>' + "\n"
            pre = '<span class="shake1">' + pre
           end = end + '</span>'
-        } else if(c === ''){
+        } else if (c.endsWith('....!')) {
+           pre = '<span class="hori3">' + pre
+          end = end + '</span>'
+          } else if (c.endsWith('...!')) {
+           pre = '<span class="hori2">' + pre
+          end = end + '</span>'
+        } else if (c.endsWith('..!')) {
+           pre = '<span class="hori1">' + pre
+          end = end + '</span>' } 
+          else if (c.endsWith('?!?!?') || c.endsWith('!?!?!')) {
+           pre = '<span class="shake3">' + pre
+          end = end + '</span>'
+          
+        } else if (c.endsWith('?!?!') || c.endsWith('!?!?')) {
+           pre = '<span class="shake2">' + pre
+          end = end + '</span>'
+          } else if (c.endsWith('?!?') || c.endsWith('!?!')) {
+           pre = '<span class="shake1">' + pre
+          end = end + '</span>'
+        }else if (c.endsWith('.....')) {
+           pre = '<span class="italic3">' + pre
+          end = end + '</span>'
+          } else if (c.endsWith('....')) {
+           pre = '<span class="italic2">' + pre
+          end = end + '</span>'
+        } else if (c.endsWith('...')) {
+           pre = '<span class="italic1">' + pre
+          end = end + '</span>' } 
+          
+          else if(c === ''){
           
         } else {
           
@@ -86,14 +156,31 @@
            
         }
         comment1 = comment1 + pre + c + end + "\n"
-        comment1 = comment1.replace(shake3a, '<span class="shake3absolute">$1</span>')
+        comment1 = comment1.replace(shake3a, '<span class="shake3a">$1</span>')
         comment1 = comment1.replace(shake3, '<span class="shake3">$1</span>')
         comment1 = comment1.replace(shake2, '<span class="shake2">$1</span>')
-
         comment1 = comment1.replace(shake1, '<span class="shake1">$1</span>')
+
+        comment1 = comment1.replace(hori3a, '<span class="hori3a">$1</span>')
+        comment1 = comment1.replace(hori3, '<span class="hori3">$1</span>')
+        comment1 = comment1.replace(hori2, '<span class="hori2">$1</span>')
+        comment1 = comment1.replace(hori1, '<span class="hori1">$1</span>')
         
         comment1 = comment1.replace(glow, '<span class="glow">$1</span>')
-     
+        comment1 = comment1.replace(gay, '<span class="gay">$1</span>')
+        comment1 = comment1.replace(trans, '<span class="trans">$1</span>')
+        comment1 = comment1.replace(schizo, '<span class="schizo">$1</span>')
+        comment1 = comment1.replace(schizoa, '<span class="schizoa">$1</span>')
+        comment1 = comment1.replace(yay, '<span class="vert">$1</span>')
+        comment1 = comment1.replace(yaya, '<span class="verta">$1</span>')
+        comment1 = comment1.replace(police, '<span class="police">$1</span>')
+        comment1 = comment1.replace(rage, '<span class="rage">$1</span>')
+        comment1 = comment1.replace(big, '<span class="big">$1</span>')
+        comment1 = comment1.replace(bold, '<span class="bold">$1</span>')
+        comment1 = comment1.replace(italic, '<span class="italic">$1</span>')
+
+
+    
         })
         
         return comment1
@@ -157,7 +244,7 @@
         <div class="moshpit-info">
           <div class="tab-nav-div">
             <ul class="tab-nav">
-              <li><B>watched</B></li>
+              <li><B>watching</B></li>
             </ul>
           </div>
           <div>
@@ -172,7 +259,7 @@
       <div class="body-left">
         <div id="threads">
           <% threads.forEach(thread => { %>
-          <a href="/<%= thread.moshpit %>/<%= thread.id %>"><div
+          <a href="/<%= thread.moshpit %>/<%= thread.id %>" class="allthreads"><div
             class="thread"
             
           >
@@ -183,7 +270,7 @@
               <div class="thread-update">
                 <div class="last-post">
                   <p>last post:&nbsp</p>
-                  
+                  <p class="timer" data-time="<%= thread.updated_at %>"></p>
 
                 </div>
                 <div class="post-bar">
@@ -208,12 +295,15 @@
           <div>
             <ul class="info-list">
               <% trending.forEach(moshpit => { %>
-              <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.post_count%> <%= moshpit.post_count === 1 ? 'post in the last hour' : 'posts in the last hour' %></a></li>
+              <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.post_count%> <%= moshpit.post_count === 1 ? 'recent post' : 'recent posts' %></a></li>
               <% }) %>
             </ul>
           </div>
         </div>
       </div>
+    </div>
+    <div>
+      
     </div>
     <dialog id="create-thread-box">
       <div class="modal-top">
@@ -256,6 +346,34 @@
     </dialog>
 
     <script>
+      dayjs.extend(window.dayjs_plugin_relativeTime);
+      const timers = document.querySelectorAll('.timer')
+      timers.forEach((t) => {
+        t.addEventListener('hover', e => {
+
+        } )  
+        t.textContent= dayjs.unix(Number(t.dataset.time)).fromNow()
+      })
+    
+        setInterval(() => {timers.forEach((t) => {
+          
+        t.textContent= dayjs.unix(Number(t.dataset.time)).fromNow()
+        } )
+      }, 60000)
+      let searchbar = document.getElementById('search-bar')
+      const all_threads = document.getElementsByClassName('allthreads')
+      searchbar.addEventListener('input', e => {
+        Array.prototype.forEach.call(all_threads, function(thread) {
+        if (!thread.textContent.toLowerCase().includes(e.target.value.toLowerCase())) {
+            thread.classList.add('hidden')
+          } else {
+            thread.classList.remove('hidden')
+          }
+        
+          console.log(e.target.value)
+        })
+      })
+      
       const createThreadForm = document.getElementById('modal-form')
       const buttonThreadForm = document.getElementById('button-thread')
 
@@ -284,9 +402,9 @@
           },
 
           body: JSON.stringify({
-            text: text,
+            text: text.trimEnd(),
             moshpit: moshpit,
-            html: formatText(text)
+            html: formatText(text).trimEnd()
           })
         })
 
@@ -346,8 +464,9 @@
         )
       }
 
+      
       function partytext(c) {
-        const spoiler = /\[\[([\s\S]*?)]]/g
+        const spoiler = /\[\[\[([\s\S]*?)]]]/g
         let comment = c.replace(spoiler, `<s>$1</s>`)
         const array1 = comment.split("\n")
    
@@ -355,26 +474,91 @@
         const shake1 = /\[s1\]([\s\S]*?)\[\/s1\]/g
         const shake2 = /\[s2\]([\s\S]*?)\[\/s2\]/g
         const shake3 = /\[s3\]([\s\S]*?)\[\/s3\]/g
+        const shake3a = /\[s3a\]([\s\S]*?)\[\/s3a\]/g
+        const hori1 = /\[h1\]([\s\S]*?)\[\/h1\]/g
+        const hori2 = /\[h2\]([\s\S]*?)\[\/h2\]/g
+        const hori3 = /\[h3\]([\s\S]*?)\[\/h3\]/g
+        const hori3a = /\[h3a\]([\s\S]*?)\[\/h3a\]/g
+        const gay = /\[r\]([\s\S]*?)\[\/r\]/g
+        const trans = /\[t\]([\s\S]*?)\[\/t\]/g
+        const schizo = /\[tv\]([\s\S]*?)\[\/tv\]/g
+        const schizoa = /\[tva\]([\s\S]*?)\[\/tva\]/g
+        const yay = /\[v\]([\s\S]*?)\[\/v\]/g
+        const yaya = /\[va\]([\s\S]*?)\[\/va\]/g
+        const police = /\[p\]([\s\S]*?)\[\/p\]/g
+        const bold = /\[b\]([\s\S]*?)\[\/b\]/g
+        const italic = /\[i\]([\s\S]*?)\[\/i\]/g
+        const big = /\[big\]([\s\S]*?)\[\/big\]/g
+        const rage = /\[red\]([\s\S]*?)\[\/red\]/g
+
         const glow = /\[g\]([\s\S]*?)\[\/g\]/g
         array1.forEach((c) => {
          
             let pre = ''
             let end = ''
-            
+            if (c.startsWith('>')&& !c.startsWith('> ')) {
+               pre = '<span class="greentext">' + pre
+              end = end + '</span>'
+            } else if (c.toLowerCase().startsWith("im gay") || c.toLowerCase().startsWith("i'm gay")) {
+             pre = '<span class="gay">' + pre
+              end = end + '</span>'
+            } else if (c.toLowerCase().startsWith("im trans") || c.toLowerCase().startsWith("i'm trans")) {
+             pre = '<span class="trans">' + pre
+              end = end + '</span>'
+            } else if (c.startsWith("THE VOICES")) {
+             pre = '<span class="schizo">' + pre
+              end = end + '</span>'
+            }else if (c.toLowerCase().startsWith("yay")) {
+             pre = '<span class="vert">' + pre
+              end = end + '</span>'
+            }else if (c.startsWith("POLICE")) {
+             pre = '<span class="police">' + pre
+              end = end + '</span>'
+            }else if (c.startsWith("FUCK") || c.startsWith("WTF")) {
+             pre = '<span class="rage">' + pre
+              end = end + '</span>'
+            }
           if (c.endsWith('!!!!!')) {
           //  comment1 = comment1 + '<span class="shake3">' + c + '</span>' + "\n"
            pre = '<span class="shake3">' + pre
           end = end + '</span>'
           
         } else if (c.endsWith('!!!!')) {
-          // comment1 = comment1 + '<span class="shake2">' + c + '</span>' + "\n"
            pre = '<span class="shake2">' + pre
           end = end + '</span>'
           } else if (c.endsWith('!!!')) {
-          // comment1 = comment1 + '<span class="shake1">' + c + '</span>' + "\n"
            pre = '<span class="shake1">' + pre
           end = end + '</span>'
-        } else if(c === ''){
+        } else if (c.endsWith('....!')) {
+           pre = '<span class="hori3">' + pre
+          end = end + '</span>'
+          } else if (c.endsWith('...!')) {
+           pre = '<span class="hori2">' + pre
+          end = end + '</span>'
+        } else if (c.endsWith('..!')) {
+           pre = '<span class="hori1">' + pre
+          end = end + '</span>' } 
+          else if (c.endsWith('?!?!?') || c.endsWith('!?!?!')) {
+           pre = '<span class="shake3">' + pre
+          end = end + '</span>'
+          
+        } else if (c.endsWith('?!?!') || c.endsWith('!?!?')) {
+           pre = '<span class="shake2">' + pre
+          end = end + '</span>'
+          } else if (c.endsWith('?!?') || c.endsWith('!?!')) {
+           pre = '<span class="shake1">' + pre
+          end = end + '</span>'
+        }else if (c.endsWith('.....')) {
+           pre = '<span class="italic3">' + pre
+          end = end + '</span>'
+          } else if (c.endsWith('....')) {
+           pre = '<span class="italic2">' + pre
+          end = end + '</span>'
+        } else if (c.endsWith('...')) {
+           pre = '<span class="italic1">' + pre
+          end = end + '</span>' } 
+          
+          else if(c === ''){
           
         } else {
           
@@ -382,12 +566,30 @@
            
         }
         comment1 = comment1 + pre + c + end + "\n"
+        comment1 = comment1.replace(shake3a, '<span class="shake3a">$1</span>')
         comment1 = comment1.replace(shake3, '<span class="shake3">$1</span>')
         comment1 = comment1.replace(shake2, '<span class="shake2">$1</span>')
-
         comment1 = comment1.replace(shake1, '<span class="shake1">$1</span>')
+
+        comment1 = comment1.replace(hori3a, '<span class="hori3a">$1</span>')
+        comment1 = comment1.replace(hori3, '<span class="hori3">$1</span>')
+        comment1 = comment1.replace(hori2, '<span class="hori2">$1</span>')
+        comment1 = comment1.replace(hori1, '<span class="hori1">$1</span>')
         
         comment1 = comment1.replace(glow, '<span class="glow">$1</span>')
+        comment1 = comment1.replace(gay, '<span class="gay">$1</span>')
+        comment1 = comment1.replace(trans, '<span class="trans">$1</span>')
+        comment1 = comment1.replace(schizo, '<span class="schizo">$1</span>')
+        comment1 = comment1.replace(schizoa, '<span class="schizoa">$1</span>')
+        comment1 = comment1.replace(yay, '<span class="vert">$1</span>')
+        comment1 = comment1.replace(yaya, '<span class="verta">$1</span>')
+        comment1 = comment1.replace(police, '<span class="police">$1</span>')
+        comment1 = comment1.replace(rage, '<span class="rage">$1</span>')
+        comment1 = comment1.replace(big, '<span class="big">$1</span>')
+        comment1 = comment1.replace(bold, '<span class="bold">$1</span>')
+        comment1 = comment1.replace(italic, '<span class="italic">$1</span>')
+
+
     
         })
         

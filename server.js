@@ -18,7 +18,10 @@ const {
   createPost,
   getPosts,
   getLastPost,
-  updatePostCount
+  updatePostCount,
+  bumpThread,
+  updateThread,
+  getNewPosts
 } = require('./db-queries')
 const { Reader } = require('@maxmind/geoip2-node')
 
@@ -93,36 +96,36 @@ app.use(express.static(__dirname))
 // -------------------------
 // Server-Sent Events
 // -------------------------
+let countr = 0
+// app.get('/api/events', (req, res) => {
+//   res.setHeader('Content-Type', 'text/event-stream')
+//   res.setHeader('Cache-Control', 'no-cache')
+//   res.setHeader('Connection', 'keep-alive')
 
-app.get('/api/events', (req, res) => {
-  res.setHeader('Content-Type', 'text/event-stream')
-  res.setHeader('Cache-Control', 'no-cache')
-  res.setHeader('Connection', 'keep-alive')
+//   const threadId = req.query.thread_id
 
-  const threadId = req.query.thread_id
+//   console.log('SSE connection for thread:', countr++)
 
-  console.log('SSE connection for thread:', threadId)
+//   const sendPost = post => {
+//     // Only send this post to clients watching this thread
+//     if (String(post.thread_id) !== String(threadId)) {
+//       return
+//     }
 
-  const sendPost = post => {
-    // Only send this post to clients watching this thread
-    if (String(post.thread_id) !== String(threadId)) {
-      return
-    }
+//     res.write(`event: new-post\n`)
+//     res.write(`data: ${JSON.stringify(post)}\n\n`)
+//   }
 
-    res.write(`event: new-post\n`)
-    res.write(`data: ${JSON.stringify(post)}\n\n`)
-  }
+//   events.on('new-post', sendPost)
 
-  events.on('new-post', sendPost)
+//   // Tell the browser that the connection is alive
+//   res.write(`: connected\n\n`)
 
-  // Tell the browser that the connection is alive
-  res.write(`: connected\n\n`)
-
-  req.on('close', () => {
-    console.log('SSE connection closed:', threadId)
-    events.off('new-post', sendPost)
-  })
-})
+//   req.on('close', () => {
+//     console.log('SSE connection closed:', threadId)
+//     events.off('new-post', sendPost)
+//   })
+// })
 // -------------------------
 // Page routes
 // -------------------------
@@ -133,6 +136,7 @@ app.get('/api', (req, res) => {
 
 app.get('/', async (req, res) => {
   const threads = await getThreads('moshpit')
+    const user = getUser(req.sessionId)
   const trending = await getTrendingMoshpits()
   const popular = await getPopularMoshpits()
   const recent = await getRecentMoshpits()
@@ -140,7 +144,7 @@ app.get('/', async (req, res) => {
     return res.status(404).send('No threads found, make one?')
   }
   const moshpit = 'moshpit'
-  res.render('index', { threads, moshpit, trending, popular, recent })
+  res.render('index', { threads, moshpit, trending, popular, recent, user })
 })
 
 app.get('/quirks', async (req, res) => {
@@ -166,7 +170,7 @@ app.get('/thread', (req, res) => {
 
 app.get('/:moshpit', async (req, res) => {
   const { moshpit } = req.params
-
+  const user = getUser(req.sessionId)
   const threads = await getThreads(moshpit)
   const trending = await getTrendingMoshpits()
 
@@ -177,12 +181,12 @@ app.get('/:moshpit', async (req, res) => {
     return res.status(404).send('No threads found, make one?')
   }
 
-  res.render('index', { threads, moshpit, trending, popular, recent })
+  res.render('index', { threads, moshpit, trending, popular, recent, user })
 })
 
 app.get('/:moshpit/:thread_id', async (req, res) => {
   const { thread_id } = req.params
-
+  const trending = await getTrendingMoshpits()
   const thread = await getThread(thread_id)
 
   if (!thread) {
@@ -191,12 +195,32 @@ app.get('/:moshpit/:thread_id', async (req, res) => {
   const user = await getUser(req.sessionId)
   const posts = await getPosts(thread_id)
   const moshpit = await getOrCreateMoshpit(thread.moshpit)
-  res.render('thread', { thread, posts, user, moshpit })
+  res.render('thread', { thread, posts, user, moshpit, trending })
 })
 
 // -------------------------
 // API routes
 // -------------------------
+app.get('/api/refresh/:thread_id/:last_post', async (req, res) => {
+  const { thread_id } = req.params
+  const { last_post } = req.params
+  if (!thread_id) {
+      return res.status(400).json({
+        error: 'thread_id cannot be empty'
+      })
+    }
+  if (!last_post) {
+      return res.status(400).json({
+        error: 'last_post cannot be empty'
+      })
+    }
+
+  const posts = await getNewPosts(thread_id, last_post)
+
+  return res.json({
+      posts: posts,
+    })
+})
 app.post('/api/create/post', async (req, res, next) => {
   try {
     const text = req.body.text
@@ -215,7 +239,7 @@ app.post('/api/create/post', async (req, res, next) => {
       })
     }
 
-    const user = getUser(req.sessionId)
+    const user = await getUser(req.sessionId)
 
     if (!user) {
       return res.status(400).json({
@@ -223,7 +247,7 @@ app.post('/api/create/post', async (req, res, next) => {
       })
     }
 
-    const moshpit = getOrCreateMoshpit(req.body.moshpit, user.id)
+    const moshpit = await getOrCreateMoshpit(req.body.moshpit, user.id)
 
     if (!moshpit) {
       return res.status(400).json({
@@ -231,16 +255,16 @@ app.post('/api/create/post', async (req, res, next) => {
       })
     }
 
-    const now = new Date().toISOString()
+    const now = Math.floor(Date.now() /1000)
 
     const reader = await Reader.open('./GeoLite2-City.mmdb')
     const response = reader.city('162.204.244.204')
 
-    const lastPost = getLastPost(thread_id)
+    const lastPost = await getLastPost(thread_id)
 
     const post_number = (lastPost?.post_number ?? 0) + 1
 
-    const post = createPost(
+    const post = await createPost(
       user.id,
       '162.204.244.204',
       thread_id,
@@ -253,10 +277,9 @@ app.post('/api/create/post', async (req, res, next) => {
     )
 
     updatePostCount(thread_id)
-
-    // Send the newly-created post through SSE
-    events.emit('new-post', post)
-
+    updateThread(now, thread_id)
+    bumpThread(now, thread_id)
+    
     // Respond to the POST request
     return res.json({
       post: post,
@@ -296,7 +319,7 @@ app.post('/api/create/thread', async (req, res) => {
   moshpit = getOrCreateMoshpit(moshpit.toLowerCase(), user.id)
 
   if (user) {
-    const now = new Date().toISOString()
+    const now = Math.floor(Date.now() /1000)
     const reader = await Reader.open('./GeoLite2-City.mmdb')
     const response = reader.city('162.204.244.204')
     const thread = createThread(

@@ -36,14 +36,20 @@ function createPost (
 
 function getPosts(thread_id) {
   return db.prepare(`
-    SELECT * FROM posts WHERE thread_id = ? ORDER BY post_number ASC
+    SELECT id, thread_id, board_id, post_number, created_at, updated_at, comment, hid, html, shot, slapped FROM posts WHERE thread_id = ? ORDER BY post_number ASC
     `).all(thread_id)
 }
 
 function getLastPost(thread_id) {
   return db.prepare(`
-    SELECT * FROM posts WHERE thread_id = ? ORDER BY post_number DESC LIMIT 1
+    SELECT id, thread_id, board_id, post_number, created_at, updated_at, comment, hid, html, shot, slapped FROM posts WHERE thread_id = ? ORDER BY post_number DESC LIMIT 1
     `).get(thread_id)
+}
+
+function getNewPosts(thread_id, last_post) {
+    return db.prepare(`
+    SELECT id, thread_id, board_id, post_number, created_at, updated_at, comment, hid, html, shot, slapped FROM posts WHERE thread_id = ? AND post_number >= ? ORDER BY post_number ASC
+    `).all(thread_id, last_post)
 }
 // -------------------------
 // USER
@@ -127,7 +133,18 @@ function createThread (a, b, c, d, e, board_id, html, ip, country) {
     )
     .get(a, b, c, d, e, board_id, html, ip, country)
 }
+function bumpThread (bumped_at,thread_id) {
 
+  return db.prepare(`
+      UPDATE threads SET bumped_at = ? WHERE id = ?
+    `).run(bumped_at, thread_id)
+}
+function updateThread (updated_at,thread_id) {
+
+  return db.prepare(`
+      UPDATE threads SET updated_at = ? WHERE id = ?
+    `).run(updated_at, thread_id)
+}
 function getThread (id) {
   return db
     .prepare(
@@ -142,7 +159,7 @@ function getThreads (moshpit) {
   return db
     .prepare(
       `
-    SELECT * FROM threads WHERE moshpit = ? ORDER BY bumped_at DESC
+    SELECT * FROM threads WHERE moshpit = ? ORDER BY bumped_at DESC LIMIT 150
     `
     )
     .all(moshpit)
@@ -163,21 +180,21 @@ SELECT
               JOIN threads t2
                   ON t2.id = p.thread_id
               WHERE t2.moshpit = m.title
-                AND p.created_at >= unixepoch() - 3600
+                AND p.created_at >= unixepoch() - 900
           )
           +
           (
               SELECT COUNT(*)
               FROM threads t3
               WHERE t3.moshpit = m.title
-                AND t3.created_at >= unixepoch() - 3600
+                AND t3.created_at >= unixepoch() - 900
           ) AS post_count
       FROM moshpits m
       WHERE EXISTS (
           SELECT 1
           FROM threads t4
           WHERE t4.moshpit = m.title
-            AND t4.created_at >= unixepoch() - 3600
+            AND t4.created_at >= unixepoch() - 900
       )
       OR EXISTS (
           SELECT 1
@@ -185,7 +202,7 @@ SELECT
           JOIN threads t5
               ON t5.id = p2.thread_id
           WHERE t5.moshpit = m.title
-            AND p2.created_at >= unixepoch() - 3600
+            AND p2.created_at >= unixepoch() - 900
       )
       ORDER BY post_count DESC
       LIMIT 1000;
@@ -262,5 +279,8 @@ module.exports = {
   createPost,
   getPosts,
   getLastPost,
-  updatePostCount
+  updatePostCount,
+  bumpThread,
+  updateThread,
+  getNewPosts
 }

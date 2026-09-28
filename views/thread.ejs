@@ -7,7 +7,11 @@
     <link rel="stylesheet" href="/../stylesheet.css" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="robots" content="noindex, follow" />
-    <link rel="preload" href="/Monapo.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="../RobotoJAA.woff2" as="font" type="font/woff2" crossorigin>
+    <script src="
+https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
+"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
   </head>
   <body>
     <% 
@@ -49,8 +53,9 @@
         )
       }
 
+      
       function partytext(c) {
-        const spoiler = /\[\[([\s\S]*?)]]/g
+        const spoiler = /\[\[\[([\s\S]*?)]]]/g
         let comment = c.replace(spoiler, `<s>$1</s>`)
         const array1 = comment.split("\n")
    
@@ -59,26 +64,90 @@
         const shake2 = /\[s2\]([\s\S]*?)\[\/s2\]/g
         const shake3 = /\[s3\]([\s\S]*?)\[\/s3\]/g
         const shake3a = /\[s3a\]([\s\S]*?)\[\/s3a\]/g
+        const hori1 = /\[h1\]([\s\S]*?)\[\/h1\]/g
+        const hori2 = /\[h2\]([\s\S]*?)\[\/h2\]/g
+        const hori3 = /\[h3\]([\s\S]*?)\[\/h3\]/g
+        const hori3a = /\[h3a\]([\s\S]*?)\[\/h3a\]/g
+        const gay = /\[r\]([\s\S]*?)\[\/r\]/g
+        const trans = /\[t\]([\s\S]*?)\[\/t\]/g
+        const schizo = /\[tv\]([\s\S]*?)\[\/tv\]/g
+        const schizoa = /\[tva\]([\s\S]*?)\[\/tva\]/g
+        const yay = /\[v\]([\s\S]*?)\[\/v\]/g
+        const yaya = /\[va\]([\s\S]*?)\[\/va\]/g
+        const police = /\[p\]([\s\S]*?)\[\/p\]/g
+        const bold = /\[b\]([\s\S]*?)\[\/b\]/g
+        const italic = /\[i\]([\s\S]*?)\[\/i\]/g
+        const big = /\[big\]([\s\S]*?)\[\/big\]/g
+        const rage = /\[red\]([\s\S]*?)\[\/red\]/g
+
         const glow = /\[g\]([\s\S]*?)\[\/g\]/g
         array1.forEach((c) => {
          
             let pre = ''
             let end = ''
-            
+            if (c.startsWith('>') && !c.startsWith('> ')) {
+               pre = '<span class="greentext">' + pre
+              end = end + '</span>'
+            } else if (c.toLowerCase().startsWith("im gay") || c.toLowerCase().startsWith("i'm gay")) {
+             pre = '<span class="gay">' + pre
+              end = end + '</span>'
+            } else if (c.toLowerCase().startsWith("im trans") || c.toLowerCase().startsWith("i'm trans")) {
+             pre = '<span class="trans">' + pre
+              end = end + '</span>'
+            } else if (c.startsWith("THE VOICES")) {
+             pre = '<span class="schizo">' + pre
+              end = end + '</span>'
+            }else if (c.toLowerCase().startsWith("yay")) {
+             pre = '<span class="vert">' + pre
+              end = end + '</span>'
+            }else if (c.startsWith("POLICE")) {
+             pre = '<span class="police">' + pre
+              end = end + '</span>'
+            }else if (c.startsWith("FUCK") || c.startsWith("WTF")) {
+             pre = '<span class="rage">' + pre
+              end = end + '</span>'
+            }
           if (c.endsWith('!!!!!')) {
           //  comment1 = comment1 + '<span class="shake3">' + c + '</span>' + "\n"
            pre = '<span class="shake3">' + pre
           end = end + '</span>'
           
         } else if (c.endsWith('!!!!')) {
-          // comment1 = comment1 + '<span class="shake2">' + c + '</span>' + "\n"
            pre = '<span class="shake2">' + pre
           end = end + '</span>'
           } else if (c.endsWith('!!!')) {
-          // comment1 = comment1 + '<span class="shake1">' + c + '</span>' + "\n"
            pre = '<span class="shake1">' + pre
           end = end + '</span>'
-        } else if(c === ''){
+        } else if (c.endsWith('....!')) {
+           pre = '<span class="hori3">' + pre
+          end = end + '</span>'
+          } else if (c.endsWith('...!')) {
+           pre = '<span class="hori2">' + pre
+          end = end + '</span>'
+        } else if (c.endsWith('..!')) {
+           pre = '<span class="hori1">' + pre
+          end = end + '</span>' } 
+          else if (c.endsWith('?!?!?') || c.endsWith('!?!?!')) {
+           pre = '<span class="shake3">' + pre
+          end = end + '</span>'
+          
+        } else if (c.endsWith('?!?!') || c.endsWith('!?!?')) {
+           pre = '<span class="shake2">' + pre
+          end = end + '</span>'
+          } else if (c.endsWith('?!?') || c.endsWith('!?!')) {
+           pre = '<span class="shake1">' + pre
+          end = end + '</span>'
+        }else if (c.endsWith('.....')) {
+           pre = '<span class="italic3">' + pre
+          end = end + '</span>'
+          } else if (c.endsWith('....')) {
+           pre = '<span class="italic2">' + pre
+          end = end + '</span>'
+        } else if (c.endsWith('...')) {
+           pre = '<span class="italic1">' + pre
+          end = end + '</span>' } 
+          
+          else if(c === ''){
           
         } else {
           
@@ -86,14 +155,31 @@
            
         }
         comment1 = comment1 + pre + c + end + "\n"
-        comment1 = comment1.replace(shake3a, '<span class="shake3absolute">$1</span>')
+        comment1 = comment1.replace(shake3a, '<span class="shake3a">$1</span>')
         comment1 = comment1.replace(shake3, '<span class="shake3">$1</span>')
         comment1 = comment1.replace(shake2, '<span class="shake2">$1</span>')
-
         comment1 = comment1.replace(shake1, '<span class="shake1">$1</span>')
+
+        comment1 = comment1.replace(hori3a, '<span class="hori3a">$1</span>')
+        comment1 = comment1.replace(hori3, '<span class="hori3">$1</span>')
+        comment1 = comment1.replace(hori2, '<span class="hori2">$1</span>')
+        comment1 = comment1.replace(hori1, '<span class="hori1">$1</span>')
         
         comment1 = comment1.replace(glow, '<span class="glow">$1</span>')
+        comment1 = comment1.replace(gay, '<span class="gay">$1</span>')
+        comment1 = comment1.replace(trans, '<span class="trans">$1</span>')
+        comment1 = comment1.replace(schizo, '<span class="schizo">$1</span>')
+        comment1 = comment1.replace(schizoa, '<span class="schizoa">$1</span>')
+        comment1 = comment1.replace(yay, '<span class="vert">$1</span>')
+        comment1 = comment1.replace(yaya, '<span class="verta">$1</span>')
+        comment1 = comment1.replace(police, '<span class="police">$1</span>')
+        comment1 = comment1.replace(rage, '<span class="rage">$1</span>')
+        comment1 = comment1.replace(big, '<span class="big">$1</span>')
+        comment1 = comment1.replace(bold, '<span class="bold">$1</span>')
+        comment1 = comment1.replace(italic, '<span class="italic">$1</span>')
 
+
+    
         })
         
         return comment1
@@ -129,18 +215,35 @@
     <div class="announcement">
       <p id="announcement-text">afsafasfaf</p>
     </div>
-
+    <div class="body">
+      <div class="body-right">
+        <div class="moshpit-info">
+          <div class="tab-nav-div">
+            <ul class="tab-nav">
+              <li><B>trending</B></li>
+            </ul>
+          </div>
+          <div>
+            <ul class="info-list">
+              <% trending.forEach(moshpit => { %>
+              <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.post_count%> <%= moshpit.post_count === 1 ? 'recent post' : 'recent posts' %></a></li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    <div class="body-left">
     <div class="body-thread">
       <div class="thread-options" id="header">
         <div class="options-div">
           <a href="/<%= thread.moshpit %>/">return&nbsp</a>|
+          <a href="" class="update">update&nbsp</a>|
           <a href="#footer">bottom&nbsp</a>|
           <a href="" class="reply-button" data-thread-id="">reply</a>
         </div>
       </div>
       
       <div id="post-container">
-        <!-- OP Post -->
         <div class="post" id="OP">
           <div class="post-header">
             <div style="display: flex; justify-content: space-between">
@@ -149,13 +252,13 @@
                 <p>@OP |&nbsp</p>
                 <% } %>
                 <p>anonymous<% if (moshpit.flags){ %> (<%=  thread.country %>)<%}%> |&nbsp</p>
-                <p itemprop=""><%= new Date(thread.created_at * 1000).toLocaleString('en-US', {
+                <p itemprop="" class="timer" title="<%= new Date(thread.created_at * 1000).toLocaleString('en-US', {
                       month: 'short',
                       day: 'numeric',
                       year: 'numeric',
                       hour: 'numeric',
                       minute: '2-digit'
-                    }) %></p>
+                    }) %>" data-time=<%- thread.created_at %>></p>
               </div>
               <div style="display: flex">
                 <a href="" class="reply-button" data-thread-id="OP">reply</a
@@ -192,10 +295,13 @@
             >
               <ul class="post-replies"></ul>
             </div>
+            <hr style="margin-top: 5px;">
+            <div style="margin-top: 5px;"><button>( ♥ 3 ♥) </button><button>.·°՞(˃ ᗜ ˂)՞°·.</button> | ( ≧▽≦) | ლ(ಠ益ಠლ | ( ╥﹏╥) | (╯'□')╯︵ ┻━┻</div>
+
           </div>
         </div>
 
-        <!-- Reply Posts Loop -->
+        
         <% if (posts) {
           posts.forEach(post => { %>
             <div class="post" id="<%= post.post_number %>">
@@ -204,13 +310,13 @@
                   <div style="display: flex">
                     <p><%= post.post_number %> |&nbsp</p>
                     <p>anonymous<% if (moshpit.flags){ %> (<%=  post.country %>)<%}%> |&nbsp</p>
-                    <p itemprop=""><%= new Date(post.created_at * 1000).toLocaleString('en-US', {
+                    <p itemprop="" class="timer" title="<%= new Date(thread.created_at * 1000).toLocaleString('en-US', {
                       month: 'short',
                       day: 'numeric',
                       year: 'numeric',
                       hour: 'numeric',
                       minute: '2-digit'
-                    }) %></p>
+                    }) %>" data-time="<%= post.created_at %>"></p>
                   </div>
                   <div style="display: flex">
                     <a href="" class="reply-button" data-thread-id="<%= post.post_number %>">reply</a>&nbsp|&nbsp
@@ -253,13 +359,31 @@
       <div class="thread-options" id="footer">
         <div class="options-div">
           <a href="/<%= thread.moshpit %>/">return&nbsp</a>|
+          <a href="" class="update">update&nbsp</a>|
           <a href="#navbar">top&nbsp</a>|
           <a href="" class="reply-button" data-thread-id="">reply</a>
         </div>
       </div>
       <div class="anchor"></div>
     </div>
-
+    </div>
+     <div class="body-right">
+        <div class="moshpit-info">
+          <div class="tab-nav-div">
+            <ul class="tab-nav">
+              <li><B>trending</B></li>
+            </ul>
+          </div>
+          <div>
+            <ul class="info-list">
+              <% trending.forEach(moshpit => { %>
+              <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.post_count%> <%= moshpit.post_count === 1 ? 'recent post' : 'recent posts' %></a></li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+      </div>
+      </div>
     <dialog id="create-thread-box">
       <div class="modal-top">
         <div><p>new thread</p></div>
@@ -364,9 +488,67 @@
       </div>
     </div>
 
-    <script>
-      const createThread = document.getElementById('create-thread')
+    <script defer>
+      dayjs.extend(window.dayjs_plugin_relativeTime);
+      let timers = document.querySelectorAll('.timer')
+      timers.forEach((t) => {
+        t.textContent= dayjs.unix(Number(t.dataset.time)).fromNow()
+      })
+      let timerid; 
+  function timerup() {
+    if (!timerid) [
+timerid = setInterval(() => {
+          timers = document.querySelectorAll('.timer')
+          
+          timers.forEach((t) => {
+          
+        t.textContent= dayjs.unix(Number(t.dataset.time)).fromNow()
+        } )
+      }, 1000) 
+    ]
+  }
+      timerup()
+       
+        
+      
+      const updaters = document.querySelectorAll('.update')
+
+      updaters.forEach(u => {
+        u.addEventListener('click', event => {
+          event.preventDefault()
+          getNewPosts()
+        })
+      })
+      // const config = { attributes: true, childList: true, subtree: true };
+      // let post_container = document.getElementById('post-container')
+      // console.log(post_container instanceof Node)
+      // const callback = (mutationList, observer) => {
+      //   for (const mutation of mutationList) {
+          
+      //       clearInterval(timerid)
+      //       timerid = null
+            
+      //       timers = document.querySelectorAll('.timer')
+      //       timerid = setInterval(() => {
+          
+          
+      //     timers.forEach((t) => {
+          
+      //   t.textContent= dayjs.unix(Number(t.dataset.time)).fromNow()
+      //   } )
+      // }, 1000)
+      //     }
+      //   }
+      // }
+
+      // const observer = new MutationObserver(callback);
+
+
+      // observer.observe(post_container, config);
+
+       const createThread = document.getElementById('create-thread')
       const modal = document.getElementById('create-thread-box')
+     
 
       createThread.addEventListener('click', event => {
         event.preventDefault()
@@ -375,7 +557,6 @@
       const createThreadForm = document.getElementById('modal-form')
       const buttonThreadForm = document.getElementById('button-thread')
       const textarea = document.getElementById('thread-text')
-      const events = new EventSource(`/api/events?thread_id=<%= thread.id %>`)
       createThreadForm.addEventListener('submit', async event => {
         // Prevent the browser from reloading the page
         event.preventDefault()
@@ -405,9 +586,9 @@
           },
 
           body: JSON.stringify({
-            text: text,
+            text: text.trimEnd(),
             moshpit: moshpit,
-            html: formatText(text)
+            html: formatText(text).trimEnd()
           })
         })
 
@@ -456,6 +637,7 @@
 
       makeElementMovable(document.getElementById('myPopup'))
 
+      //reply box pop up when you click the reply to post button
       document.querySelectorAll('.reply-button').forEach(a => {
         a.addEventListener('click', event => {
           event.preventDefault()
@@ -466,7 +648,7 @@
           areatext.focus()
         })
       })
-
+      // idk i stole it 
       function makeElementMovable(element) {
         let pos1 = 0,
           pos2 = 0,
@@ -519,10 +701,10 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              text: text,
+              text: text.trimEnd(),
               moshpit: '<%= thread.moshpit %>',
               thread_id: '<%= thread.id %>',
-              html: formatText(text)
+              html: formatText(text).trimEnd()
             })
           })
 
@@ -533,38 +715,84 @@
 
           reply_textarea.value = ''
           popup.classList.add('hidden')
+          await getNewPosts()
         } catch (error) {
           alert('Failed to create post: ' + error)
+        } 
+      })
+async function getNewPosts() {
+      try {
+        const after = getLastPostId()
+       
+        if (after === null) {
+          return
         }
-      })
 
-      
+        const response = await fetch(
+          `/api/refresh/<%= thread.id %>/${encodeURIComponent(after)}`,
+          {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json'
+            },
+            cache: 'no-store'
+          }
+        )
 
-      events.onmessage = event => {
-        console.log(JSON.parse(event.data))
+        if (!response.ok) {
+          throw new Error(
+            `Failed to get new posts: ${response.status} ${response.statusText}`
+          )
+        }
+
+        const data = await response.json()
+
+        const posts = Array.isArray(data)
+          ? data
+          : Array.isArray(data.posts)
+            ? data.posts
+            : []
+
+        for (const post of posts) {
+          if (!post || post.post_number === undefined) {
+            continue
+          }
+
+          if (postAlreadyExists(post.post_number)) {
+            continue
+          }
+
+          addPost(post)
+          
+        }
+      } catch (error) {
+        console.error('Error getting new posts:', error)
+      }
+    }
+      function getLastPostId() {
+      const postElements = document.querySelectorAll('.post[id]')
+
+      if (!postElements.length) {
+        return null
       }
 
-      // Close connection cleanly when changing pages or reloading
-      window.addEventListener('beforeunload', () => {
-        events.close()
-      })
-      events.addEventListener('new-post', event => {
-        const post = JSON.parse(event.data)
-        addPost(post)
-      })
+      const lastPost = postElements[postElements.length - 1]
 
-      events.onerror = error => {
-        console.error('SSE error:', error)
+      return lastPost.id
+    }
+    function postAlreadyExists(postId) {
+      if (postId === null || postId === undefined) {
+        return false
       }
+
+      return document.getElementById(String(postId)) !== null
+    }
 
       function addPost(post) {
         const postElements = document.querySelectorAll('.post')
         const template = postElements[0]
 
-        if (!template) {
-          console.error('No .post exists to use as a template')
-          return
-        }
+       
 
         const newPost = template.cloneNode(true)
         const header = newPost.querySelector('.post-header')
@@ -585,13 +813,7 @@
 
         const date = newPost.querySelector('[itemprop]')
         if (date) {
-          date.textContent = new Date(post.created_at * 1000).toLocaleString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric',
-                      hour: 'numeric',
-                      minute: '2-digit'
-                    })
+          date.dataset.time = post.created_at
      
         }
 
@@ -609,6 +831,14 @@
         const threadContainer = document.getElementById('post-container')
         newPost.id = post.post_number
         threadContainer.appendChild(newPost)
+        clearInterval(timerid)
+          timerid = null
+          timers = document.querySelectorAll('.timer')
+          timers.forEach((t) => {
+          
+        t.textContent= dayjs.unix(Number(t.dataset.time)).fromNow() 
+        })
+        timerup()
       }
 
    
@@ -625,23 +855,6 @@
         comment = comment.replaceAll(escaper, `$1&lt;$2`)
         
        comment = partytext(comment)
-    
-        // const cregex = /~~~([\s\S]*)~~~/
-
-        // if (cregex.test(comment)) {   
-        //   comment = comment.replace(cregex, `<span class="code">$1</span>`)
-        //   const spanreg = /<span class="code">([\s\S]*)<\/span>/
-        //   const csplit = comment.split(spanreg)
-        //   const ccregex = /<span class="code">[\s\S]+<\/span>/
-        //   if (ccregex.test(csplit[0])) {
-        //     comment = csplit[1]
-        //   } else {
-        //     comment = csplit[0]
-        //   }
-        // }
-
-        
-        // const lines = comment.split(/\r?\n/)
         const regex = /@([0-9\s+]+|[OP\s+]+)/g
           
         return comment.replace(
@@ -651,7 +864,7 @@
       }
 
       function partytext(c) {
-        const spoiler = /\[\[([\s\S]*?)]]/g
+        const spoiler = /\[\[\[([\s\S]*?)]]]/g
         let comment = c.replace(spoiler, `<s>$1</s>`)
         const array1 = comment.split("\n")
    
@@ -660,26 +873,90 @@
         const shake2 = /\[s2\]([\s\S]*?)\[\/s2\]/g
         const shake3 = /\[s3\]([\s\S]*?)\[\/s3\]/g
         const shake3a = /\[s3a\]([\s\S]*?)\[\/s3a\]/g
+        const hori1 = /\[h1\]([\s\S]*?)\[\/h1\]/g
+        const hori2 = /\[h2\]([\s\S]*?)\[\/h2\]/g
+        const hori3 = /\[h3\]([\s\S]*?)\[\/h3\]/g
+        const hori3a = /\[h3a\]([\s\S]*?)\[\/h3a\]/g
+        const gay = /\[r\]([\s\S]*?)\[\/r\]/g
+        const trans = /\[t\]([\s\S]*?)\[\/t\]/g
+        const schizo = /\[tv\]([\s\S]*?)\[\/tv\]/g
+        const schizoa = /\[tva\]([\s\S]*?)\[\/tva\]/g
+        const yay = /\[v\]([\s\S]*?)\[\/v\]/g
+        const yaya = /\[va\]([\s\S]*?)\[\/va\]/g
+        const police = /\[p\]([\s\S]*?)\[\/p\]/g
+        const bold = /\[b\]([\s\S]*?)\[\/b\]/g
+        const italic = /\[i\]([\s\S]*?)\[\/i\]/g
+        const big = /\[big\]([\s\S]*?)\[\/big\]/g
+        const rage = /\[red\]([\s\S]*?)\[\/red\]/g
+
         const glow = /\[g\]([\s\S]*?)\[\/g\]/g
         array1.forEach((c) => {
          
             let pre = ''
             let end = ''
-            
+            if (c.startsWith('>')&& !c.startsWith('> ')) {
+               pre = '<span class="greentext">' + pre
+              end = end + '</span>'
+            } else if (c.toLowerCase().startsWith("im gay") || c.toLowerCase().startsWith("i'm gay")) {
+             pre = '<span class="gay">' + pre
+              end = end + '</span>'
+            } else if (c.toLowerCase().startsWith("im trans") || c.toLowerCase().startsWith("i'm trans")) {
+             pre = '<span class="trans">' + pre
+              end = end + '</span>'
+            } else if (c.startsWith("THE VOICES")) {
+             pre = '<span class="schizo">' + pre
+              end = end + '</span>'
+            }else if (c.toLowerCase().startsWith("yay")) {
+             pre = '<span class="vert">' + pre
+              end = end + '</span>'
+            }else if (c.startsWith("POLICE")) {
+             pre = '<span class="police">' + pre
+              end = end + '</span>'
+            }else if (c.startsWith("FUCK") || c.startsWith("WTF")) {
+             pre = '<span class="rage">' + pre
+              end = end + '</span>'
+            }
           if (c.endsWith('!!!!!')) {
           //  comment1 = comment1 + '<span class="shake3">' + c + '</span>' + "\n"
            pre = '<span class="shake3">' + pre
           end = end + '</span>'
           
         } else if (c.endsWith('!!!!')) {
-          // comment1 = comment1 + '<span class="shake2">' + c + '</span>' + "\n"
            pre = '<span class="shake2">' + pre
           end = end + '</span>'
           } else if (c.endsWith('!!!')) {
-          // comment1 = comment1 + '<span class="shake1">' + c + '</span>' + "\n"
            pre = '<span class="shake1">' + pre
           end = end + '</span>'
-        } else if(c === ''){
+        } else if (c.endsWith('....!')) {
+           pre = '<span class="hori3">' + pre
+          end = end + '</span>'
+          } else if (c.endsWith('...!')) {
+           pre = '<span class="hori2">' + pre
+          end = end + '</span>'
+        } else if (c.endsWith('..!')) {
+           pre = '<span class="hori1">' + pre
+          end = end + '</span>' } 
+          else if (c.endsWith('?!?!?') || c.endsWith('!?!?!')) {
+           pre = '<span class="shake3">' + pre
+          end = end + '</span>'
+          
+        } else if (c.endsWith('?!?!') || c.endsWith('!?!?')) {
+           pre = '<span class="shake2">' + pre
+          end = end + '</span>'
+          } else if (c.endsWith('?!?') || c.endsWith('!?!')) {
+           pre = '<span class="shake1">' + pre
+          end = end + '</span>'
+        }else if (c.endsWith('.....')) {
+           pre = '<span class="italic3">' + pre
+          end = end + '</span>'
+          } else if (c.endsWith('....')) {
+           pre = '<span class="italic2">' + pre
+          end = end + '</span>'
+        } else if (c.endsWith('...')) {
+           pre = '<span class="italic1">' + pre
+          end = end + '</span>' } 
+          
+          else if(c === ''){
           
         } else {
           
@@ -687,19 +964,35 @@
            
         }
         comment1 = comment1 + pre + c + end + "\n"
-        comment1 = comment1.replace(shake3a, '<span class="shake3absolute">$1</span>')
+        comment1 = comment1.replace(shake3a, '<span class="shake3a">$1</span>')
         comment1 = comment1.replace(shake3, '<span class="shake3">$1</span>')
         comment1 = comment1.replace(shake2, '<span class="shake2">$1</span>')
-
         comment1 = comment1.replace(shake1, '<span class="shake1">$1</span>')
+
+        comment1 = comment1.replace(hori3a, '<span class="hori3a">$1</span>')
+        comment1 = comment1.replace(hori3, '<span class="hori3">$1</span>')
+        comment1 = comment1.replace(hori2, '<span class="hori2">$1</span>')
+        comment1 = comment1.replace(hori1, '<span class="hori1">$1</span>')
         
         comment1 = comment1.replace(glow, '<span class="glow">$1</span>')
+        comment1 = comment1.replace(gay, '<span class="gay">$1</span>')
+        comment1 = comment1.replace(trans, '<span class="trans">$1</span>')
+        comment1 = comment1.replace(schizo, '<span class="schizo">$1</span>')
+        comment1 = comment1.replace(schizoa, '<span class="schizoa">$1</span>')
+        comment1 = comment1.replace(yay, '<span class="vert">$1</span>')
+        comment1 = comment1.replace(yaya, '<span class="verta">$1</span>')
+        comment1 = comment1.replace(police, '<span class="police">$1</span>')
+        comment1 = comment1.replace(rage, '<span class="rage">$1</span>')
+        comment1 = comment1.replace(big, '<span class="big">$1</span>')
+        comment1 = comment1.replace(bold, '<span class="bold">$1</span>')
+        comment1 = comment1.replace(italic, '<span class="italic">$1</span>')
+
+
     
         })
         
         return comment1
       }
-
       
     </script>
   </body>
