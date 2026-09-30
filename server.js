@@ -21,7 +21,14 @@ const {
   updatePostCount,
   bumpThread,
   updateThread,
-  getNewPosts
+  getNewPosts,
+  getSettings,
+  setCachedResults,
+  getCachedResults,
+  refreshCache,
+  deleteOldThreads,
+  deleteLowThreads,
+
 } = require('./db-queries')
 const { Reader } = require('@maxmind/geoip2-node')
 
@@ -58,11 +65,11 @@ app.use(async (req, res, next) => {
       const response = reader.city('162.204.244.204')
   
       if (sessionId) {
-        const user = await createUser(sessionId, ip, response.country.names.en)
+        const user = await createUser(sessionId, ip, response.country.isoCode)
       } else {
         sessionId = crypto.randomUUID()
 
-        const user = await createUser(sessionId, ip, response.country.names.en)
+        const user = await createUser(sessionId, ip, response.country.isoCode)
       }
 
       res.cookie('sessionId', sessionId, {
@@ -93,42 +100,7 @@ app.use(async (req, res, next) => {
 // -------------------------
 
 app.use(express.static(__dirname))
-// -------------------------
-// Server-Sent Events
-// -------------------------
-let countr = 0
-// app.get('/api/events', (req, res) => {
-//   res.setHeader('Content-Type', 'text/event-stream')
-//   res.setHeader('Cache-Control', 'no-cache')
-//   res.setHeader('Connection', 'keep-alive')
 
-//   const threadId = req.query.thread_id
-
-//   console.log('SSE connection for thread:', countr++)
-
-//   const sendPost = post => {
-//     // Only send this post to clients watching this thread
-//     if (String(post.thread_id) !== String(threadId)) {
-//       return
-//     }
-
-//     res.write(`event: new-post\n`)
-//     res.write(`data: ${JSON.stringify(post)}\n\n`)
-//   }
-
-//   events.on('new-post', sendPost)
-
-//   // Tell the browser that the connection is alive
-//   res.write(`: connected\n\n`)
-
-//   req.on('close', () => {
-//     console.log('SSE connection closed:', threadId)
-//     events.off('new-post', sendPost)
-//   })
-// })
-// -------------------------
-// Page routes
-// -------------------------
 
 app.get('/api', (req, res) => {
   res.redirect('/')
@@ -137,90 +109,111 @@ app.get('/api', (req, res) => {
 app.get('/', async (req, res) => {
   const threads = await getThreads('moshpit')
     const user = getUser(req.sessionId)
-  const trending = await getTrendingMoshpits()
-  const popular = await getPopularMoshpits()
-  const recent = await getRecentMoshpits()
-  if (!threads || !trending || !popular || !recent) {
+  const results = await getCachedResults()
+  const settings = await getSettings()
+  if (!threads || !results ) {
     return res.status(404).send('No threads found, make one?')
   }
   const moshpit = 'moshpit'
-  res.render('index', { threads, moshpit, trending, popular, recent, user })
+  res.render('index', { threads, moshpit, trending: results.trending, recent: results.recent, popular: results.popular, user, settings })
 })
 
 app.get('/quirks', async (req, res) => {
-  const trending = await getTrendingMoshpits()
-  res.render('quirks', {trending})
+  const results = await getCachedResults()
+  const settings = await getSettings()
+
+  res.render('quirks', {trending: results.trending, recent: results.recent, settings})
 })
 
-app.get('/faq', (req, res) => {
-  res.sendFile(path.join(__dirname, 'faq.html'))
+app.get('/faq', async (req, res) => {
+      const results = await getCachedResults()
+
+  const settings = await getSettings()
+
+  res.render('faq', {trending: results.trending, recent: results.recent, settings})
 })
 
-app.get('/rules', (req, res) => {
-  res.sendFile(path.join(__dirname, 'rules.html'))
+app.get('/rules', async (req, res) => {
+   const results = await getCachedResults()
+  const settings = await getSettings()
+
+  res.render('rules', {trending: results.trending,  recent: results.recent,settings})
 })
 
-app.get('/moshpits', (req, res) => {
-  res.sendFile(path.join(__dirname, 'moshpits.html'))
-})
+app.get('/moshpits', async (req, res) => {
+  const results = getCachedResults()
 
-app.get('/thread', (req, res) => {
-  res.sendFile(path.join(__dirname, 'thread.html'))
+  const settings = await getSettings()
+
+  res.render('moshpits', {trending: results.trending, settings, popular: results.popular, recent: results.recent})
 })
 
 app.get('/:moshpit', async (req, res) => {
+  const results = getCachedResults()
   const { moshpit } = req.params
   const user = getUser(req.sessionId)
   const threads = await getThreads(moshpit)
   const trending = await getTrendingMoshpits()
+  const settings = await getSettings()
 
-  const popular = await getPopularMoshpits()
-  const recent = await getRecentMoshpits()
 
-  if (!threads || !trending) {
-    return res.status(404).send('No threads found, make one?')
-  }
+  // if (!threads || !trending) {
+  //   return res.status(404).send('No threads found, make one?')
+  // }
 
-  res.render('index', { threads, moshpit, trending, popular, recent, user })
+  res.render('index', { threads, moshpit, trending: results.trending, recent: results.recent, user, settings })
 })
 
 app.get('/:moshpit/:thread_id', async (req, res) => {
   const { thread_id } = req.params
-  const trending = await getTrendingMoshpits()
+  const results = getCachedResults()
   const thread = await getThread(thread_id)
 
   if (!thread) {
-    return res.status(404).send('Thread not found')
+    return res.redirect(`/${encodeURIComponent(moshpit)}`)
   }
   const user = await getUser(req.sessionId)
   const posts = await getPosts(thread_id)
   const moshpit = await getOrCreateMoshpit(thread.moshpit)
-  res.render('thread', { thread, posts, user, moshpit, trending })
+  const settings = await getSettings()
+
+  res.render('thread', { thread, posts, user, moshpit, trending: results.trending, recent: results.recent, settings })
 })
 
 // -------------------------
 // API routes
 // -------------------------
-app.get('/api/refresh/:thread_id/:last_post', async (req, res) => {
+app.get('/api/refresh/:moshpit/:thread_id/:last_post', async (req, res) => {
   const { thread_id } = req.params
-  const { last_post } = req.params
+  let { last_post } = req.params
+  let { moshpit } = req.params
   if (!thread_id) {
       return res.status(400).json({
         error: 'thread_id cannot be empty'
       })
     }
+
   if (!last_post) {
       return res.status(400).json({
         error: 'last_post cannot be empty'
       })
     }
-
-  const posts = await getNewPosts(thread_id, last_post)
-
+  if (last_post === 'OP') {
+      last_post = '1'
+    }
+  let posts = await getNewPosts(thread_id, last_post)
+  let moshpitcreate = await getOrCreateMoshpit(moshpit)
+   if (moshpitcreate.flags == 0) {
+      posts.forEach(post => {
+        post.country = 'nigga stop looking here bitch'
+      })
+    }
   return res.json({
       posts: posts,
     })
 })
+
+let banned_words = ['nigger', 'rape', 'rapist', 'spic', 'spics', 'niggers', 'rapists', 'honky', 'chink', 'chinks', 'kike', 'faggot', 'loli', 'shota', 'cp', 'csam', '1488', '14', '88', 'HH', 'hitler', 'adolf', 'tnd', 'tkd', 'tranny', 'troon']
 app.post('/api/create/post', async (req, res, next) => {
   try {
     const text = req.body.text
@@ -232,7 +225,17 @@ app.post('/api/create/post', async (req, res, next) => {
         error: 'Post cannot be empty'
       })
     }
+    if (text.length > 2000) {
+      return res.status(422).json({
+        error: 'Post too long'
+      })
+    }
 
+    if (text.length > 2000) {
+      return res.status(422).json({
+        error: 'Post too long'
+      })
+    }
     if (!thread_id) {
       return res.status(400).json({
         error: 'thread_id cannot be empty'
@@ -247,7 +250,7 @@ app.post('/api/create/post', async (req, res, next) => {
       })
     }
 
-    const moshpit = await getOrCreateMoshpit(req.body.moshpit, user.id)
+    let moshpit = await getOrCreateMoshpit(req.body.moshpit)
 
     if (!moshpit) {
       return res.status(400).json({
@@ -259,27 +262,30 @@ app.post('/api/create/post', async (req, res, next) => {
 
     const reader = await Reader.open('./GeoLite2-City.mmdb')
     const response = reader.city('162.204.244.204')
-
+    // console.log(response)
     const lastPost = await getLastPost(thread_id)
 
     const post_number = (lastPost?.post_number ?? 0) + 1
 
-    const post = await createPost(
+    let post = await createPost(
       user.id,
       '162.204.244.204',
       thread_id,
       moshpit.id,
       text,
       post_number,
-      response.country.names.en,
+      response.country.isoCode,
       now,
-      html
+      formatText(html)
     )
-
-    updatePostCount(thread_id)
+    post.ip = ''
+    // console.log(response.country.isoCode)
+    updatePostCount(thread_id, moshpit.title)
     updateThread(now, thread_id)
     bumpThread(now, thread_id)
-    
+    if (moshpit.flags == 0) {
+      post.country = 'Chiraq'
+    }
     // Respond to the POST request
     return res.json({
       post: post,
@@ -309,12 +315,23 @@ app.post('/api/create/thread', async (req, res) => {
       error: 'moshpit titles cannot be over 7 characters long'
     })
     
-  } else if (!regex.test(moshpit)) {
+  }
+  if (!regex.test(moshpit)) {
     return res.status(400).json({
       error: 'only alphanumeric characters are allowed for moshpit titles'
     })
    
   }
+  const containsBannedWord = banned_words.some(word =>
+  moshpit.includes(word)
+)
+
+if (containsBannedWord) {
+  return res.status(422).json({
+    error: 'moshpit titles cannot contain banned words'
+  })
+}
+
   const user = getUser(req.sessionId)
   moshpit = getOrCreateMoshpit(moshpit.toLowerCase(), user.id)
 
@@ -329,9 +346,9 @@ app.post('/api/create/thread', async (req, res) => {
       now,
       now,
       moshpit.id,
-      html,
+      formatText(html),
       '162.204.244.204',
-      response.country.names.en
+      response.country.isoCode
     )
     // res.json(thread)
     return res.json({
@@ -345,7 +362,159 @@ app.post('/api/create/thread', async (req, res) => {
     error: 'Error'
   })
 })
+function formatText(post) {
+        let comment = ''
+        if (!post) {
+          return '' 
+        } else if (!post.comment) {
+          comment = post
+        } else {
+          comment = post.comment
+        }
+        const escaper = /(\s*)[<](\s*)/g
+        comment = comment.replaceAll(escaper, `$1&lt;$2`)
+        
+       comment = partytext(comment).trimEnd()
+        const regex = /@([0-9\s+]+|[OP\s+]+)/g
+        const regex2 = /#([A-Za-z0-9\s+]{1,7})(?![A-Za-z0-9\s+])/g
 
+        comment = comment.replaceAll(regex2, `<a href="/$1/" class="pitquote" style="color: var(--rage);">#$1</a>`)
+        return comment.replace(
+          regex,
+          `<a href="#$1" class="quote" data-quoteid="$1" style="color: var(--rage);">@$1</a>`
+        )
+      }
+
+      function partytext(c) {
+        const spoiler = /\[\[\[([\s\S]*?)]]]/g
+        let comment = c.replace(spoiler, `<s>$1</s>`)
+        const array1 = comment.split("\n")
+   
+        let comment1 = ''
+        const shake1 = /\[s1\]([\s\S]*?)\[\/s1\]/g
+        const shake2 = /\[s2\]([\s\S]*?)\[\/s2\]/g
+        const shake3 = /\[s3\]([\s\S]*?)\[\/s3\]/g
+        const shake3a = /\[s3a\]([\s\S]*?)\[\/s3a\]/g
+        const hori1 = /\[h1\]([\s\S]*?)\[\/h1\]/g
+        const hori2 = /\[h2\]([\s\S]*?)\[\/h2\]/g
+        const hori3 = /\[h3\]([\s\S]*?)\[\/h3\]/g
+        const hori3a = /\[h3a\]([\s\S]*?)\[\/h3a\]/g
+        const gay = /\[r\]([\s\S]*?)\[\/r\]/g
+        const trans = /\[t\]([\s\S]*?)\[\/t\]/g
+        const schizo = /\[tv\]([\s\S]*?)\[\/tv\]/g
+        const schizoa = /\[tva\]([\s\S]*?)\[\/tva\]/g
+        const yay = /\[v\]([\s\S]*?)\[\/v\]/g
+        const yaya = /\[va\]([\s\S]*?)\[\/va\]/g
+        const police = /\[p\]([\s\S]*?)\[\/p\]/g
+        const bold = /\[b\]([\s\S]*?)\[\/b\]/g
+        const italic = /\[i\]([\s\S]*?)\[\/i\]/g
+        const big = /\[big\]([\s\S]*?)\[\/big\]/g
+        const rage = /\[red\]([\s\S]*?)\[\/red\]/g
+
+        const glow = /\[g\]([\s\S]*?)\[\/g\]/g
+        array1.forEach((c) => {
+         
+            let pre = ''
+            let end = ''
+            if (c.startsWith('>')&& !c.startsWith('> ')) {
+               pre = '<span class="greentext">' + pre
+              end = end + '</span>'
+            } else if (c.toLowerCase().startsWith("im gay") || c.toLowerCase().startsWith("i'm gay")) {
+             pre = '<span class="gay">' + pre
+              end = end + '</span>'
+            } else if (c.toLowerCase().startsWith("im trans") || c.toLowerCase().startsWith("i'm trans")) {
+             pre = '<span class="trans">' + pre
+              end = end + '</span>'
+            } else if (c.startsWith("THE VOICES")) {
+             pre = '<span class="schizo">' + pre
+              end = end + '</span>'
+            }else if (c.toLowerCase().startsWith("yay")) {
+             pre = '<span class="vert">' + pre
+              end = end + '</span>'
+            }else if (c.startsWith("POLICE")) {
+             pre = '<span class="police">' + pre
+              end = end + '</span>'
+            }else if (c.startsWith("FUCK") || c.startsWith("WTF")) {
+             pre = '<span class="rage">' + pre
+              end = end + '</span>'
+            }
+          if (c.endsWith('!!!!!')) {
+          //  comment1 = comment1 + '<span class="shake3">' + c + '</span>' + "\n"
+           pre = '<span class="shake3">' + pre
+          end = end + '</span>'
+          
+        } else if (c.endsWith('!!!!')) {
+           pre = '<span class="shake2">' + pre
+          end = end + '</span>'
+          } else if (c.endsWith('!!!')) {
+           pre = '<span class="shake1">' + pre
+          end = end + '</span>'
+        } else if (c.endsWith('....!')) {
+           pre = '<span class="hori3">' + pre
+          end = end + '</span>'
+          } else if (c.endsWith('...!')) {
+           pre = '<span class="hori2">' + pre
+          end = end + '</span>'
+        } else if (c.endsWith('..!')) {
+           pre = '<span class="hori1">' + pre
+          end = end + '</span>' } 
+          else if (c.endsWith('?!?!?') || c.endsWith('!?!?!')) {
+           pre = '<span class="shake3">' + pre
+          end = end + '</span>'
+          
+        } else if (c.endsWith('?!?!') || c.endsWith('!?!?')) {
+           pre = '<span class="shake2">' + pre
+          end = end + '</span>'
+          } else if (c.endsWith('?!?') || c.endsWith('!?!')) {
+           pre = '<span class="shake1">' + pre
+          end = end + '</span>'
+        }else if (c.endsWith('.....')) {
+           pre = '<span class="italic3">' + pre
+          end = end + '</span>'
+          } else if (c.endsWith('....')) {
+           pre = '<span class="italic2">' + pre
+          end = end + '</span>'
+        } else if (c.endsWith('...')) {
+           pre = '<span class="italic1">' + pre
+          end = end + '</span>' } 
+          
+          else if(c === ''){
+          
+        } else {
+          
+           
+           
+        }
+        comment1 = comment1 + pre + c + end + "\n"
+        comment1 = comment1.replace(shake3a, '<span class="shake3a">$1</span>')
+        comment1 = comment1.replace(shake3, '<span class="shake3">$1</span>')
+        comment1 = comment1.replace(shake2, '<span class="shake2">$1</span>')
+        comment1 = comment1.replace(shake1, '<span class="shake1">$1</span>')
+
+        comment1 = comment1.replace(hori3a, '<span class="hori3a">$1</span>')
+        comment1 = comment1.replace(hori3, '<span class="hori3">$1</span>')
+        comment1 = comment1.replace(hori2, '<span class="hori2">$1</span>')
+        comment1 = comment1.replace(hori1, '<span class="hori1">$1</span>')
+        
+        comment1 = comment1.replace(glow, '<span class="glow">$1</span>')
+        comment1 = comment1.replace(gay, '<span class="gay">$1</span>')
+        comment1 = comment1.replace(trans, '<span class="trans">$1</span>')
+        comment1 = comment1.replace(schizo, '<span class="schizo">$1</span>')
+        comment1 = comment1.replace(schizoa, '<span class="schizoa">$1</span>')
+        comment1 = comment1.replace(yay, '<span class="vert">$1</span>')
+        comment1 = comment1.replace(yaya, '<span class="verta">$1</span>')
+        comment1 = comment1.replace(police, '<span class="police">$1</span>')
+        comment1 = comment1.replace(rage, '<span class="rage">$1</span>')
+        comment1 = comment1.replace(big, '<span class="big">$1</span>')
+        comment1 = comment1.replace(bold, '<span class="bold">$1</span>')
+        comment1 = comment1.replace(italic, '<span class="italic">$1</span>')
+
+
+    
+        })
+        
+        return comment1
+      }
 // -------------------------
 // Error handling
 // -------------------------
@@ -362,6 +531,13 @@ app.use((err, req, res, next) => {
 // Start server
 // -------------------------
 
+
+deleteOldThreads()
+refreshCache()
+deleteLowThreads()
 app.listen(3000, () => {
   console.log('Running at http://localhost:3000')
+  setInterval(() => {deleteLowThreads()}, 100000)
+  setInterval(() => { refreshCache() }, 15000)
+  setInterval(() => {deleteOldThreads()}, getSettings().decay_timer * 1000)
 })

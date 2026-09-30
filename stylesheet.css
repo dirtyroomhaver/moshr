@@ -8,13 +8,13 @@
 
     --bg-color: light-dark(#f8faff, #272834);
     --accent-color: light-dark(#393736, #d2d6dc);
-    --gradient: light-dark(#d5d5d5, #0e0d11);
+    --gradient: light-dark(#d5d5d5, #111216);
 
-    --panel: light-dark(#ececec, #16151f);
+    --panel: light-dark(#ececec, #1c1b27);
     --text: light-dark(#232323, #d7d7d7);
     --bar: light-dark(#adff9d, #adff9d);
     --rage: light-dark(#b20000, #cc2626);
-    --greentext: light-dark(#499d00, #8bb444);
+    --greentext: light-dark(#4a7524, #8bb444);
     --back: light-dark(#d5d5d5, #8b8b8b);
     --border-color: light-dark(#232323, #acacac);
     --e: light-dark(#ececec, #d2d6dc);
@@ -80,6 +80,7 @@ body {
     background-size: 100% 20%;
     background-repeat: no-repeat;
     background-color: var(--bg-color);
+    position: relative;
     font-family: RobotoJAA, Monapo,Mona,IPAMonaPGothic,"MS Pgothic", "ＭＳ Ｐゴシック", sans-serif;
     /* font-family: Arial, sans-serif; */
 }
@@ -177,7 +178,9 @@ span {
     color: var(--text);
 }
 
-
+#navbar2 {
+    display: none;
+}
 /* =========================================================
    4. TABS
    ========================================================= */
@@ -221,7 +224,7 @@ span {
     height: 100vh;
     overflow-y: visible;
     flex: 1;
-    width: 20%;
+    width: 50%;
    
 
     &::-webkit-scrollbar {
@@ -236,6 +239,13 @@ span {
 }
 
 .body-right {
+   
+    min-width: 300px;
+     padding: 0px 7px 0px 7px;
+    
+}
+.body-right1 {
+   
     min-width: 300px;
      padding: 0px 7px 0px 7px;
     
@@ -333,7 +343,7 @@ flex-direction: column;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50vw;
+
     color: var(--text)
 }
 
@@ -347,14 +357,28 @@ flex-direction: column;
 
 .post {
     border: 1px solid var(--border-color);
-    margin: 0px 2.5% 10px 2.5%;
+    margin: 0px 0.1% 10px 0.1%;
     color: var(--text);
     box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.2);
-    width: 95%;
+    width: 99.8%;
 
 
 }
-
+.backpanel { 
+    background-color: var(--panel);
+              display: flex;
+              justify-content: space-between;
+              flex-direction: column;
+              padding: 7px;
+}
+.replylist {
+    background-image: linear-gradient(
+                  var(--panel),
+                  var(--gradient)
+                );
+                border-top: 1px solid var(--border-color);
+                width: 100%;
+}
 .post-header {
     display: flex;
     flex-direction: column;
@@ -420,7 +444,7 @@ flex-direction: column;
     display: flex;
 
     color: var(--accent-color);
-    font-weight: bold;
+    
 
     padding: 0 0 0 7px;
 }
@@ -478,6 +502,7 @@ flex-direction: column;
     padding: 0 7px 7px;
     color: var(--text);
     margin-top: 5px;
+    line-height: 1.4;
 }
 
 
@@ -497,6 +522,12 @@ flex-direction: column;
    10. FORMS / MODALS
    ========================================================= */
 
+#rule-select {
+    width: 200px;
+}
+.hoverquote {
+    pointer-events: none
+}
 label {
     display: block;
     padding: 5px 0 0 5px;
@@ -534,12 +565,13 @@ label {
     width: 100%;
     height: 80px;
     border-radius: 0px;
-    border: 1px solid var(--accent-color)
+    border: 1px solid var(--border-color);
+    font-size: 16px;
 }
 
 #reply-sig {
    border-radius: 0px;
-    border: 1px solid var(--accent-color) 
+    border: 1px solid var(--border-color) 
 }
 
 #modal-form div select {
@@ -556,7 +588,16 @@ label {
 /* =========================================================
    11. CREATE THREAD / REPORT MODALS
    ========================================================= */
+#create-thread2 {
+    border: 1px solid var(--border-color);
+    border-radius: 0px;
+    color: (var(--text))
+}
 
+#pages {
+    border: 1px solid var(--border-color);
+    border-radius: 0px
+}
 #create-thread-box {
     position: fixed;
 
@@ -565,7 +606,7 @@ label {
 
     transform: translate(-50%, -50%);
 
-    min-width: 450px;
+    min-width: 400px;
     min-height: 615px;
 
     background: var(--panel);
@@ -603,10 +644,10 @@ label {
 }
 
 .announcement {
-    display: none;
+    display: flex;
     justify-content: center;
 
-    margin-top: 9px;
+    margin-top: 7px;
 
     color: var(--rage);
     font-weight: bold;
@@ -627,8 +668,9 @@ label {
 
     min-width: 300px;
 
-    top: 30%;
-    left: 40%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%)
 }
 
 .hidden {
@@ -886,7 +928,7 @@ s:hover {
     }
 
     25% {
-        transform: translate(2px, 1px) rotate(0.5deg);
+        transform: translate(3px, 1px) rotate(0.7deg);
     }
 
     50% {
@@ -894,7 +936,7 @@ s:hover {
     }
 
     75% {
-        transform: translate(1px, -1px) rotate(-0.4deg);
+        transform: translate(1px, -2px) rotate(-0.6deg);
     }
 
     100% {
@@ -995,31 +1037,49 @@ s:hover {
 }
 
 
-
+#search {
+    display: none;
+    font-size: 16px;
+}
 /* =========================================================
    16. RESPONSIVE
    ========================================================= */
 
-@media (max-width: 1325px) {
+@media (max-width: 1300px) {
 
     #threads {
         grid-template-columns: 1fr;
     }
 
     .body-right {
-        display: none;
+       display: none
        
+    }
+    #search {
+        display: flex;
+        justify-content: center;
+        margin-top: 7px;
+    }
+    #search input {
+        width: 200px;
+    }
+    #navbar {
+        display: none
+    }
+
+    #navbar2 {
+        display: flex
     }
 
     .post-header {
-        width: 100vw;
+        
         min-width: 370px;
     }
 
     .extra-post {
         width: 98vw;
     }
-
+   
 
 }
 

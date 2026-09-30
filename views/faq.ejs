@@ -2,17 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self';">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="stylesheet.css" />
-    <link rel="icon" type="image/png" href="/favicon.png">
-    <title>rules - moshr</title><meta http-equiv="Content-Security-Policy" content="default-src 'self';">
+<link rel="icon" type="image/png" href="/favicon.png">
+    <title>faq - moshr</title>
   </head>
 
   <body>
     <div class="navbar">
       <div class="navbar-left">
         <ul class="nav-list">
-          <li><a href="/">home</a></li>
+           <li><a href="/">home</a></li>
           <p>|</p>
           <li><a href="/rules">rules</a></li>
           <p>|</p>
@@ -25,54 +27,77 @@
       </div>
       <div class="navbar-middle">
         <div class="title" onclick="window.location.href='/'">
-          <h2>\m/(- _ -)\m/</h2>
+          <h2>[ moshr.net ]</h2>
         </div>
       </div>
       <div class="navbar-right">
-  
-       <a href="" id="create-thread" class="hidden">create new thread</a>
+ 
+        <a href="" id="create-thread" class="hidden">create new thread</a>
       </div>
     </div>
+   <% if (settings.announcement_status) {  %>
     <div class="announcement">
-      <p id="announcement-text">afsafasfaf</p>
-      <p></p>
-    </div>
+      <p id="announcement-text"><%- settings.announcement %></p>
+    </div> <% } %>
 
     <div class="body">
-      <div class="body-left">
-        <!-- <h2 style="margin-left: 7px;margin-top: 2px;">rules</h2> -->
-        <div class="misc-text">
-        1. dont post anything that violates local or US law <br>
-        2. dont post here if you are under the age of 18<br>
-        3. dont spam, abuse ascii art, or abuse whitespace <br>
-        4. dont advertise anything you get monetary gain from<br>
-        5. dont post offtopic threads or replies <br>
-        6. dont dox or raid <br>
-        7. dont send false reports <br>
-        8. dont evade bans <br>
-        9. dont advocate for pedophilia or zoophilia <br>
-        10. dont link to or request nsfw or harmful (malware for example) content <br>
-        <b>just use common sense and you will be fine</b> <br>  
-        </div>
-       
-      </div>
-      <div class="body-right">
+      <div class="body-right1">
         <div class="moshpit-info">
           <div class="tab-nav-div">
             <ul class="tab-nav">
-              <li><a href="">trending</a></li>
-              <p>|</p>
-              <li><a href="">popular</a></li>
-              <p>|</p>
-              <li><a href="">recent</a></li>
+              <li><B>recently created</B></li>
             </ul>
           </div>
           <div>
             <ul class="info-list">
-              <li><a href="">1. /MOSHPIT/</a></li>
-              <li><a href="">1. /MOSHPIT/</a></li>
-              <li><a href="">1. /MOSHPIT/</a></li>
-              <li><a href="">1. /MOSHPIT/</a></li>
+              <% recent.forEach(moshpit => { %>
+              <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.post_count + moshpit.thread_count%> <%= moshpit.post_count+ moshpit.thread_count === 1 ? 'post' : 'posts' %></a></li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="body-left">
+        <!-- <h3 style="margin-left: 7px;margin-top: 2px;color: #d2d6dc">faq</h3> -->
+        <div class="misc-text">
+        <h3>what is moshr?</h3> 
+        moshr is an ephemeral real-time anonymous text-only forum. you do not need an account to post here.  
+        <h3>how do i post?</h3> 
+        to make a new thread simply click on the "create new thread" button in the top right corner.  to post in a thread simply click the "create new post" button at the top of the thread or click reply on someones post.  
+        <h3>what is a moshpit?</h3> 
+        a moshpit is a sub-forum dedicated to a specific topic 
+        <h3>how do i make a moshpit?</h3> 
+        you dont, moshpits are based on user activity. all you need is one thread for a moshpit to become active 
+        a thread gets scheduled for deletion after 7 days of existence 
+        <h3>what is a quirk?</h3> 
+        a typing quirk. basically something that modifies text to make it more exciting
+<h3>what does it mean when it says someone was shot or slapped?</h3> 
+        the OP of a thread is the defacto moderator of that thread. slapping mutes someone from the thread for one hour while shooting mutes them permanently 
+         <h3>why isnt there a list of rules per moshpit?</h3> 
+        this site is a bit of an experiment. by not having rules communities will determine and enforce what they find socially acceptable on their own
+        <h3>where can i find ascii/shift-jis art?</h3> 
+        <a href="https://aahub.org/" target="_blank"><u>https://aahub.org/</u></a> and <a href="https://aa.mozz.us/utf8art/scroller.shtml" target="_blank"><u>https://aa.mozz.us/utf8art/scroller.shtml</u></a>  
+        <h3>how do i link to another moshpit</h3> 
+        #moshpit_name   
+        <h3>how can i support the site?</h3> 
+        by being active, by sharing the site with friends, and by donating.   
+        
+        
+        </div>
+       
+      </div>
+     <div class="body-right">
+        <div class="moshpit-info">
+          <div class="tab-nav-div">
+            <ul class="tab-nav">
+              <li><B>trending</B></li>
+            </ul>
+          </div>
+          <div>
+            <ul class="info-list">
+              <% trending.forEach(moshpit => { %>
+              <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.recent_count %> <%= moshpit.recent_count === 1 ? 'post in the last hour' : 'posts in the last hour' %></a></li>
+              <% }) %>
             </ul>
           </div>
         </div>
@@ -139,12 +164,11 @@
         modal.showModal()
       })
 
-   
+ 
       const closeButton = document.getElementById('close-button')
 
       closeButton.addEventListener('click', () => {
         event.preventDefault()
-      
         modal.close()
       })
       // form.addEventListener('submit', async event => {

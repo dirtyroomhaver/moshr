@@ -42,7 +42,11 @@ db
         VALUES (?, ?, ?, ?)
     `
     )
-    .run('1', 'sippy', `$2b$10$dCnuQlVCTi6yDG.ABWXMXurwPj8pth0dQD1uELTPCuhwTotN.7/la`, '1')
+    .run('1', 'dirtyroom', `$2b$10$dCnuQlVCTi6yDG.ABWXMXurwPj8pth0dQD1uELTPCuhwTotN.7/la`, '1')
+
+db.prepare(
+  `INSERT OR IGNORE INTO site_settings (max_threads) VALUES (?)`
+).run(150)
 module.exports = {
     db
 }

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="stylesheet.css" />
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <title>moshpits - moshr</title><meta http-equiv="Content-Security-Policy" content="default-src 'self';">
+
+  </head>
+
+  <body>
+    <div class="navbar">
+      <div class="navbar-left">
+        <ul class="nav-list">
+            <li><a href="/">home</a></li>
+          <p>|</p>
+          <li><a href="/rules">rules</a></li>
+          <p>|</p>
+          <li><a href="/faq">faq</a></li>
+          <p>|</p>
+          <li><a href="/quirks">quirks</a></li>
+          <p>|</p>
+          <li><a href="/moshpits">moshpits</a></li>
+        </ul>
+      </div>
+      <div class="navbar-middle">
+        <div class="title" onclick="window.location.href='/'">
+          <h2>[ moshr.net ]</h2>
+        </div>
+      </div>
+      <div class="navbar-right">
+         
+      </div>
+    </div>
+    <div class="navbar" id="navbar2">
+      <div class="navbar-left">
+        <select name="pages" id="pages" onchange="
+    if (this.value.startsWith('/')) {
+      window.location = this.value
+    }
+  ">
+         
+            <option value="" selected disabled hidden>pages</option>
+            <option value="/index">home</option>
+            <option value="/rules">rules</option>
+            <option value="/faq">faq</option>
+            <option value="/quirks">quirks</option>
+            <option value="/moshpits">moshpits</option>
+          
+        </select>
+      </div>
+      <div class="navbar-middle">
+        <div class="title">
+          <h2 onclick="window.location.href='/moshpit/'">
+            [  moshr.net ]
+          </h2>
+        </div>
+      </div>
+      <div class="navbar-right">
+        
+      </div>
+    </div>
+
+    <% if (settings.announcement_status) {  %>
+    <div class="announcement">
+      <p id="announcement-text"><%- settings.announcement %></p>
+    </div> <% } %>
+
+    <div class="body" >
+      <!-- <h2 style="margin-left: 7px;margin-top: 2px;color: #d2d6dc">faq</h2> -->
+      <div class="body-right1" >
+        <div class="moshpit-info">
+          <div class="tab-nav-div">
+            <ul class="tab-nav">
+              <li><B>popular</B></li>
+            </ul>
+          </div>
+          <div>
+            <ul class="info-list">
+              <% popular.forEach(moshpit => { %>
+              <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.post_count + moshpit.thread_count %> <%= moshpit.post_count + moshpit.thread_count === 1 ? 'post' : 'posts' %></a></li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      </div>
+      
+    </div>
+    <dialog id="create-thread-box">
+      <form id="modal-form">
+        <div class="modal-top">
+          <div><p>new thread</p></div>
+          <div><button id="close-button">x</button></div>
+        </div>
+        <hr />
+        <div>
+          <div class="modal-input">
+            <label for="">comment</label
+            ><textarea
+              name="text"
+              id="thread-text"
+              style="height: 400px; width: 96.4%"
+              placeholder="write "
+            ></textarea>
+          </div>
+          <hr />
+          <div class="modal-input">
+            <label for="">moshpit (board)</label
+            ><input
+              type="text"
+              placeholder="if left blank your thread will go onto the homepage"
+            />
+          </div>
+          <hr />
+          <div class="modal-input">
+            <label for="">signature</label
+            ><input
+              type="text"
+              placeholder="put a secure password here to sign your post"
+            />
+          </div>
+          <input type="hidden" name="post-text" id="post-text" />
+        </div>
+      </form>
+    </dialog>
+
+    <!-- <form id="thread-form">
+      <textarea
+        id="thread-text"
+        name="text"
+        placeholder="Write a thread..."
+      ></textarea>
+
+      <button type="submit">Post</button>
+    </form> -->
+
+    <script>
+      
+    
+    </script>
+  </body>
+</html>

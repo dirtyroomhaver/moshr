@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="stylesheet.css" />
+<link rel="icon" type="image/png" href="/favicon.png">
+    <title>quirks - moshr</title>
+
+  <body>
+    <div class="navbar">
+      <div class="navbar-left">
+        <ul class="nav-list">
+          <li><a href="/">home</a></li>
+          <p>|</p>
+          <li><a href="/rules">rules</a></li>
+          <p>|</p>
+          <li><a href="/faq">faq</a></li>
+          <p>|</p>
+          <li><a href="/quirks">quirks</a></li>
+          <p>|</p>
+          <li><a href="/moshpits">moshpits</a></li>
+        </ul>
+      </div>
+      <div class="navbar-middle">
+        <div class="title" onclick="window.location.href='/'">
+          <h2>[ moshr.net ]</h2>
+        </div>
+      </div>
+      <div class="navbar-right">
+         
+        <a href="" id="create-thread" class="hidden">create new thread</a>
+      </div>
+    </div>
+   <% if (settings.announcement_status) {  %>
+    <div class="announcement">
+      <p id="announcement-text"><%- settings.announcement %></p>
+    </div> <% } %>
+
+    <div class="body">
+      <div class="body-right1">
+        <div class="moshpit-info">
+          <div class="tab-nav-div">
+            <ul class="tab-nav">
+              <li><B>recently created</B></li>
+            </ul>
+          </div>
+          <div>
+            <ul class="info-list">
+              <% recent.forEach(moshpit => { %>
+              <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.post_count + moshpit.thread_count%> <%= moshpit.post_count+ moshpit.thread_count === 1 ? 'post' : 'posts' %></a></li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="body-left">
+        
+        <div class="misc-text">
+            typing ">" at the start of a new line colors your text green: <br />
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span style="color:var(--greentext)">>posting on moshr.net</span>
+          </div>
+          <br>
+            wrap [big] [/big] around a selection of text to make it bigger: <br>
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <h2>I'M BIG</h2>
+          </div>
+          <br>
+          wrap [b] [/b] around a selection of text to make it bold: <br>
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <b>I'M STRONG</b>
+          </div>
+          <br>
+          wrap [i] [/i] around a selection of text to make it italic: <br>
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <i>I'M SLY</i>
+          </div>
+          <br />
+          typing "I'm gay" or "im gay" (case insensitive) at the start of a new line colors your text with the gay flag's colors: <br />
+          or you can wrap [r] [/r] around a selection of text to add the effect: <br>
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class="gay">I'm gay and I LOVE moshr.net!</span>
+          </div>
+          <br />
+          typing "I'm trans" or "im trans" (case insensitive) at the start of a new line colors your text with the trans flag's colors: <br />
+          or you can wrap [t] [/t] around a selection of text to add the effect: <br>
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class="trans">I'm trans and I LOVE moshr.net!</span>
+          </div>
+          <br />
+           typing "THE VOICES" at the start of a new line gives you a glitch effect: <br />
+           or you can wrap [tv | tva] [/tv | tva] around a selection of text to add the effect: <br>
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class="schizo">THE VOICES ARE TELLING ME TO DOWNLOAD TEKKEN 8 AGAIN!</span>
+          </div>
+          <br />
+            typing "YAY" (case insensitive) at the start of a new line gives you a vertical shake effect: <br />
+            or you can wrap [v | va] [/v | va] around a selection of text to add the effect: <br>
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class="vert">YAY THEY SELL VITNER'S CRUNCHY NUGGETS HERE!</span>
+          </div>
+          <br />
+          typing "POLICE" at the start of a new line colors your text with police siren colors: <br />
+          or you can wrap [p] [/p] around a selection of text to add the effect: <br>
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class="police">POLICE, HELP!</span>
+          </div>
+          <br />
+          typing "FUCK" or "WTF" at the start of a new line colors your text red <br />
+          or you can wrap [red] [/red] around a selection of text to color it red: <br>
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class="rage">FUCK I TECHED THAT THROW!</span>
+          </div>
+          <br />
+          
+         
+          typing "!!!", "!!!!", or "!!!!!" at the end of a line gives you a shake effect of various strengths: <br />
+          or you can wrap [s1 | s2 | s3 | s3a] [/s1 | s2 | s3 | s3a] around a selection of text to add a shake effect: <br>
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class="shake-1">THROW YA' DRACOS IN THE AIR, THIS THAT FLEX MUSIC!!!</span>
+          </div>
+          <br />
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class="shake-1"><b>THROW YA' DRACOS IN THE AIR, THIS THAT FLEX MUSIC!!!!</b></span>
+          </div>
+          <br />
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class="shake-1"><h2>THROW YA' DRACOS IN THE AIR, THIS THAT FLEX MUSIC!!!!!</h2></span>
+          </div>
+          <br />
+          typing "?!?", "?!?!", or "?!?!?" at the end of a line gives you a shake effect of various strengths: <br />
+          or you can wrap [s1 | s2 | s3 | s3a] [/s1 | s2 | s3 | s3a] around a selection of text to add a shake effect: <br>
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class="shake-1">DUDE WHY DID YOU TELL ME TO READ LIAR GAME? WHAT THE FUCK WAS THAT ENDING?!?</span>
+          </div>
+          <br />
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class="shake-1"><b>DUDE WHY DID YOU TELL ME TO READ LIAR GAME? WHAT THE FUCK WAS THAT ENDING?!?!</b></span>
+          </div>
+          <br />
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class="shake-1"><h2>DUDE WHY DID YOU TELL ME TO READ LIAR GAME? WHAT THE FUCK WAS THAT ENDING?!?!?</h2></span>
+          </div>
+          <br />
+        
+          
+          typing "..!", "...!", or "....!" at the end of a line gives you a shake effect of various strengths: <br />
+          or you can wrap [h1 | h2 | h3 | h3a] [/h1 | h2 | h3 | h3a] around a selection of text to add a shake effect: <br>
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class="hori">It's Punishment Time..!</span>
+          </div>
+          <br />
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class="hori"><b>It's Punishment Time...!</b></span>
+          </div>
+          <br />
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class="hori"><h2>It's Punishment Time....!</h2></span>
+          </div>
+          <br />
+          typing "...", "....", or "....." at the end of a line gives you an italic effect of various strengths: <br />
+          or you can wrap [i1 | i2 | i3] [/i1 | i2 | i3] around a selection of text to italicize it: <br>
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class=""><i>Aniki...</i></span>
+          </div>
+          <br />
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class=""><b><i>Aniki....</b></i></span>
+          </div>
+          <br />
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class=""><h2><i>Aniki.....</h2></i></span>
+          </div>
+          <br />
+        
+      
+           adding [g] x [/g] around a selection of text gives you glowing text: <br />
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <span class="glow">ive been feeling weird ever since i ate that sourdough</span>
+          </div>
+          <br />
+           adding "[[[ x ]]]" around a selection of text gives you spoiler text: <br />
+          <div
+            style="
+               background-image: linear-gradient(var(--panel), var(--gradient));
+              border: 1px solid var(--border-color);
+              padding: 5px;
+              margin-top: 5px;
+            "
+          >
+            <s>I'm gay and I LOVE moshr.net</s>
+          </div>
+         
+           
+        </div>
+      </div>
+      <div class="body-right">
+        <div class="moshpit-info">
+          <div class="tab-nav-div">
+            <ul class="tab-nav">
+              <li><B>trending</B></li>
+            </ul>
+          </div>
+          <div>
+            <ul class="info-list">
+              <% trending.forEach(moshpit => { %>
+              <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.recent_count %> <%= moshpit.recent_count === 1 ? 'post in the last hour' : 'posts in the last hour' %></a></li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <dialog id="create-thread-box">
+      <div class="modal-top">
+        <div><p>new thread</p></div>
+        <div><button id="close-button">x</button></div>
+      </div>
+      <form id="modal-form">
+        <hr />
+        <div>
+          <div class="modal-input">
+            <label for="">comment</label
+            ><textarea
+              name="text"
+              id="thread-text"
+              style="height: 400px; width: 96.4%"
+            ></textarea>
+          </div>
+
+          <div class="modal-input">
+            <label for="">moshpit (board)</label
+            ><input
+              type="text"
+              name="moshpit"
+              placeholder="if left blank your thread will go onto the homepage"
+            />
+          </div>
+
+          <div class="modal-input">
+            <label for="">signature</label
+            ><input
+              type="text"
+              placeholder="put a secure password here to sign your post"
+            />
+          </div>
+          <div><button type="submit" id="button-thread">submit</button></div>
+          <input type="hidden" name="post-text" id="post-text" />
+        </div>
+      </form>
+    </dialog>
+    <!-- <form id="thread-form">
+      <textarea
+        id="thread-text"
+        name="text"
+        placeholder="Write a thread..."
+      ></textarea>
+
+      <button type="submit">Post</button>
+    </form> -->
+
+    <script>
+      
+  const createThread = document.getElementById('create-thread')
+      const modal = document.getElementById('create-thread-box')
+      //modal.showModal();
+
+      createThread.addEventListener('click', () => {
+        event.preventDefault()
+        modal.showModal()
+      })
+
+      const closeButton = document.getElementById('close-button')
+
+      closeButton.addEventListener('click', () => {
+        event.preventDefault()
+
+        modal.close()
+      })
+    
+
+
+     
+    </script>
+  </body>
+</html>

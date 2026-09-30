@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS cached_results (
     updated_at INTEGER NOT NULL
 );
 
+
 CREATE TABLE IF NOT EXISTS slaps (
     victim_id INTEGER,
     slaper_id INTEGER,
@@ -44,28 +45,65 @@ CREATE TABLE IF NOT EXISTS shots (
         REFERENCES threads(id)
         ON DELETE CASCADE
 );
+CREATE TABLE IF NOT EXISTS notifications (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sender_id INTEGER,
+    receiver_id INTEGER,
+    thread_id INTEGER,
+    notification_type TEXT,
+    comment TEXT,
+    seen INTEGER NOT NULL DEFAULT 0,
+FOREIGN KEY (thread_id)
+        REFERENCES threads(id)
+        ON DELETE CASCADE,
+            FOREIGN KEY (receiver_id)
+        REFERENCES users(id)
+        ON DELETE SET NULL,
+    FOREIGN KEY (sender_id)
+        REFERENCES users(id)
+        ON DELETE SET NULL
+);
+CREATE TABLE IF NOT EXISTS replies (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sender_id INTEGER,
+    receiver_id INTEGER,
+    thread_id INTEGER,
+    post_id INTEGER,
+FOREIGN KEY (thread_id)
+        REFERENCES threads(id)
+        ON DELETE CASCADE,
+        FOREIGN KEY (post_id)
+        REFERENCES posts(id)
+        ON DELETE CASCADE,
+            FOREIGN KEY (receiver_id)
+        REFERENCES users(id)
+        ON DELETE SET NULL,
+    FOREIGN KEY (sender_id)
+        REFERENCES users(id)
+        ON DELETE SET NULL
+);
+
 CREATE TABLE IF NOT EXISTS site_settings (
     id INTEGER PRIMARY KEY CHECK (id = 1),
 
-    max_threads INTEGER,
-    max_posts INTEGER,
+    max_threads INTEGER NOT NULL DEFAULT 150,
+    max_posts INTEGER NOT NULL DEFAULT 500,
 
     frozen INTEGER NOT NULL DEFAULT 0 CHECK (frozen IN (0, 1)),
     silenced INTEGER NOT NULL DEFAULT 0 CHECK (silenced IN (0, 1)),
 
     slowmode INTEGER NOT NULL DEFAULT 0 CHECK (slowmode IN (0, 1)),
-    slowmode_timer INTEGER,
+    slowmode_multiplier INTEGER NOT NULL DEFAULT 1,
+    thread_limit INTEGER NOT NULL DEFAULT 5,
+    new_poster_timer_thread INTEGER NOT NULL DEFAULT 0,
+    new_poster_timer_posts INTEGER NOT NULL DEFAULT 0,
 
-    new_poster_timer_thread INTEGER,
-    new_poster_timer_posts INTEGER,
-
-    post_cooldown_thread INTEGER,
-    post_cooldown_post INTEGER,
-    nuke_count INTEGER, 
-    bump_limit INTEGER,
-
-    report_cooldown INTEGER,
-    announcement TEXT,
+    post_cooldown_thread INTEGER NOT NULL DEFAULT 180,
+    post_cooldown_post INTEGER NOT NULL DEFAULT 10,
+    bump_limit INTEGER NOT NULL DEFAULT 300,
+    decay_timer INTEGER NOT NULL DEFAULT 604800,
+    report_cooldown INTEGER NOT NULL DEFAULT 10,
+    announcement TEXT NOT NULL DEFAULT 'WELCOME TO MOSHR.NET',
     announcement_status INTEGER NOT NULL DEFAULT 0
 );
 
@@ -120,14 +158,14 @@ CREATE TABLE IF NOT EXISTS moshpits (
     rules TEXT,
     bio TEXT,
 
-    dis INTEGER NOT NULL DEFAULT 0
-        CHECK (dis IN (0, 1)),
+    is_disabled INTEGER NOT NULL DEFAULT 0
+        CHECK (is_disabled IN (0, 1)),
 
     hid INTEGER NOT NULL DEFAULT 0
         CHECK (hid IN (0, 1)),
 
-    max_threads INTEGER NOT NULL DEFAULT 150,
-    max_posts INTEGER NOT NULL DEFAULT 300,
+    max_threads INTEGER,
+    max_posts INTEGER,
 
     frozen INTEGER NOT NULL DEFAULT 0
         CHECK (frozen IN (0, 1)),
@@ -148,7 +186,8 @@ CREATE TABLE IF NOT EXISTS moshpits (
     post_cooldown_thread INTEGER,
     post_cooldown_post INTEGER,
 
-   
+   post_count INTEGER NOT NULL DEFAULT 0,
+    thread_count INTEGER NOT NULL DEFAULT 0,
 
     bump_limit INTEGER,
 
@@ -158,6 +197,7 @@ CREATE TABLE IF NOT EXISTS moshpits (
         REFERENCES users(id)
         ON DELETE SET NULL
 );
+
 
 CREATE INDEX IF NOT EXISTS idx_moshpits_title
     ON moshpits(title);
@@ -169,7 +209,7 @@ CREATE INDEX IF NOT EXISTS idx_moshpits_hid
     ON moshpits(hid);
 
 CREATE INDEX IF NOT EXISTS idx_moshpits_dis
-    ON moshpits(dis);
+    ON moshpits(is_disabled);
 -- ============================================================
 -- -shot
 -- ============================================================
@@ -189,7 +229,7 @@ CREATE TABLE IF NOT EXISTS threads (
     updated_at INTEGER,
     bumped_at INTEGER,
     author_id INTEGER,
-    board_id TEXT NOT NULL,
+    board_id INTEGER NOT NULL,
     moshpit TEXT NOT NULL,
     html TEXT NOT NULL, 
     country TEXT,
@@ -212,14 +252,14 @@ CREATE TABLE IF NOT EXISTS threads (
 
     deleted_at INTEGER,
     deleted_by INTEGER,
-
+    sig TEXT,
     FOREIGN KEY (author_id)
         REFERENCES users(id)
         ON DELETE SET NULL,
 
-    -- FOREIGN KEY (board_id)
-    --     REFERENCES moshpits(id)
-    --     ON DELETE CASCADE,
+    FOREIGN KEY (board_id)
+        REFERENCES moshpits(id)
+        ON DELETE CASCADE,
 
     FOREIGN KEY (deleted_by)
         REFERENCES users(id)
@@ -269,7 +309,7 @@ CREATE TABLE IF NOT EXISTS posts (
     shot INTEGER NOT NULL DEFAULT 0, 
     slapped INTEGER NOT NULL DEFAULT 0, 
     country TEXT,
-
+    sig TEXT, 
     gems INTEGER NOT NULL DEFAULT 0,
 
     FOREIGN KEY (author_id)
@@ -336,7 +376,9 @@ CREATE TABLE IF NOT EXISTS reports (
     FOREIGN KEY (post_id)
         REFERENCES posts(id)
         ON DELETE CASCADE,
-
+FOREIGN KEY (violator_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE,
     FOREIGN KEY (resolved_by)
         REFERENCES users(id)
         ON DELETE SET NULL
@@ -551,3 +593,27 @@ CREATE INDEX IF NOT EXISTS idx_mod_actions_type
 
 CREATE INDEX IF NOT EXISTS idx_mod_actions_created
     ON moderation_actions(created_at);
+CREATE INDEX IF NOT EXISTS idx_posts_board_created
+ON posts(board_id, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_threads_board_created
+ON threads(board_id, created_at);
+CREATE TRIGGER IF NOT EXISTS trg_posts_after_delete
+AFTER DELETE ON posts
+BEGIN
+    UPDATE threads
+    SET post_count = MAX(post_count - 1, 0)
+    WHERE id = OLD.thread_id;
+
+    UPDATE moshpits
+    SET post_count = MAX(post_count - 1, 0)
+    WHERE id = OLD.board_id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS trg_threads_after_delete
+AFTER DELETE ON threads
+BEGIN
+    UPDATE moshpits
+    SET thread_count = MAX(thread_count - 1, 0)
+    WHERE id = OLD.board_id;
+END;
