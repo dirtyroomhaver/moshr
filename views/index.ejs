@@ -1,127 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/../stylesheet.css" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="preload" href="../RobotoJAA.woff2" as="font" type="font/woff2" crossorigin>
-    <title><%= moshpit %> | moshr</title>
-    <script src="
-https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
-"></script>
-<script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
-  </head>
+<head>
+  <meta charset="UTF-8" />
 
-  <body>
-   
- 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/../stylesheet.css" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="preload" href="../RobotoJAA.woff2" as="font" type="font/woff2" crossorigin>
+  <title><%= moshpit %> | moshr</title>
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
+</head>
+
+<body>
+
+
 
   <div class="navbar" id="navbar2">
-      <div class="navbar-left">
-        <select name="pages" id="pages" onchange="
+    <div class="navbar-left">
+      <select name="pages" id="pages" onchange="
     if (this.value.startsWith('/')) {
       window.location = this.value
     }
   ">
-         
-            <option value="" selected disabled hidden>pages</option>
-            <option value="/">home</option>
-            <option value="/rules">rules</option>
-            <option value="/faq">faq</option>
-            <option value="/quirks">quirks</option>
-            <option value="/moshpits">moshpits</option>
-          
-        </select>
-      </div>
-      <div class="navbar-middle">
-        <div class="title">
-          <h2 onclick="window.location.href='/<%= moshpit %>/'">
-            [ <%= moshpit %> ]
-          </h2>
-        </div>
-      </div>
-      <div class="navbar-right">
-        <button id="create-thread2">New +</button>
+
+        <option value="" selected disabled hidden>pages</option>
+        <option value="/">home</option>
+        <option value="/rules">rules</option>
+        <option value="/faq">faq</option>
+        <option value="/quirks">quirks</option>
+        <option value="/moshpits">moshpits</option>
+
+      </select>
+    </div>
+    <div class="navbar-middle">
+      <div class="title">
+        <h2 onclick="window.location.href='/<%= moshpit %>/'">
+          [ <%= moshpit %> ]
+        </h2>
       </div>
     </div>
+    <div class="navbar-right">
+      <button id="create-thread2">New +</button>
+    </div>
+  </div>
 
-    <div class="navbar" id="navbar">
-      <div class="navbar-left">
-        <ul class="nav-list">
-          <li><a href="/">home</a></li>
-          <p>|</p>
-          <li><a href="/rules">rules</a></li>
-          <p>|</p>
-          <li><a href="/faq">faq</a></li>
-          <p>|</p>
-          <li><a href="/quirks">quirks</a></li>
-          <p>|</p>
-          <li><a href="/moshpits">moshpits</a></li>
-        </ul>
-      </div>
-      <div class="navbar-middle">
-        <div class="title">
-          <% if (!threads[0] && moshpit.length <= 7) { %>
+  <div class="navbar" id="navbar">
+    <div class="navbar-left">
+      <ul class="nav-list">
+        <li><a href="/">home</a></li>
+        <p>|</p>
+        <li><a href="/rules">rules</a></li>
+        <p>|</p>
+        <li><a href="/faq">faq</a></li>
+        <p>|</p>
+        <li><a href="/quirks">quirks</a></li>
+        <p>|</p>
+        <li><a href="/moshpits">moshpits</a></li>
+      </ul>
+    </div>
+    <div class="navbar-middle">
+      <div class="title">
+        <% if (!threads[0] && moshpit.length <= 7) { %>
 
-          <h2 onclick="window.location.href='/<%= moshpit %>/'">
-            [ <%= moshpit %> ]
-          </h2>
+        <h2 onclick="window.location.href='/<%= moshpit %>/'">
+          [ <%= moshpit %> ]
+        </h2>
 
-          <% } else if (threads[0]) { %>
+        <% } else if (threads[0]) { %>
 
-          <h2 onclick="window.location.href='/<%= moshpit %>/'">
-            [ <%= moshpit %> ]
-          </h2>
+        <h2 onclick="window.location.href='/<%= moshpit %>/'">
+          [ <%= moshpit %> ]
+        </h2>
 
-          <% } else { %>
+        <% } else { %>
 
-          <script>
-            window.location.replace('/')
-          </script>
+        <script>
+          window.location.replace('/')
+        </script>
 
-          <% } %>
-        </div>
-      </div>
-      <div class="navbar-right">
-        <div class="search" >
-          <input type="text" class="search-bar" placeholder="search"/>
-        </div>
-        <a href="" id="create-thread">| create new thread</a>
+        <% } %>
       </div>
     </div>
-    <% if (settings.announcement_status) {  %>
-    <div class="announcement">
-      <p id="announcement-text"><%= settings.announcement %></p>
-    </div> <% } %>
-    <div class="search" id="search">
-          <input type="text" class="search-bar" placeholder="search"/>
+    <div class="navbar-right">
+      <div class="search">
+        <input type="text" class="search-bar" placeholder="search" />
       </div>
-    <div class="body" style="padding-bottom: 40px;">
-      <div class="body-right1">
-        <div class="moshpit-info">
-          <div class="tab-nav-div">
-            <ul class="tab-nav">
-              <li><B>recently created</B></li>
-            </ul>
-          </div>
-          <div>
-            <ul class="info-list">
-              <% recent.forEach(moshpit => { %>
-              <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.post_count + moshpit.thread_count%> <%= moshpit.post_count+ moshpit.thread_count === 1 ? 'post' : 'posts' %></a></li>
-              <% }) %>
-            </ul>
-          </div>
+      <a href="" id="create-thread">| create new thread</a>
+    </div>
+  </div>
+  <% if (settings.announcement_status) {  %>
+  <div class="announcement">
+    <p id="announcement-text"><%= settings.announcement %></p>
+  </div> <% } %>
+  <div class="search" id="search">
+    <input type="text" class="search-bar" placeholder="search" />
+  </div>
+  <div class="body" style="padding-bottom: 40px;">
+    <div class="body-right1">
+      <div class="moshpit-info">
+        <div class="tab-nav-div">
+          <ul class="tab-nav">
+            <li><B>recently created</B></li>
+          </ul>
+        </div>
+        <div>
+          <ul class="info-list">
+            <% recent.forEach(moshpits => { if (!moshpits.hid) { %>
+            <li><a href="/<%= moshpits.title %>/">/<%= moshpits.title %>/ - <%= moshpits.post_count + moshpits.thread_count%> <%= moshpits.post_count+ moshpits.thread_count === 1 ? 'post' : 'posts' %></a></li>
+            <% }}) %>
+          </ul>
         </div>
       </div>
-      <div class="body-left">
-        <div id="threads">
-          <% threads.forEach(thread => { %>
-          <a href="/<%= thread.moshpit %>/<%= thread.id %>" class="allthreads"><div
-            class="thread"
-            
-          >
+    </div>
+    <div class="body-left">
+      <div id="threads">
+        <% threads.forEach(thread => { if (thread.hid)  { } else { %>
+        <div onclick="window.location.href='/<%= thread.moshpit %>/<%= thread.id %>'" class="allthreads" id="<%- thread.id %>">
+          <div class="thread">
             <div class="thread-text">
               <p class="thread-index-text"><%- thread.html %></p>
             </div>
@@ -133,177 +130,318 @@ https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
 
                 </div>
                 <div class="post-bar">
-                  <div
-                    class="post-green"
-                    style="width: <%= Math.min(thread.post_count, 100) %>%"
-                  ></div>
+                  <div class="post-green" style="width: <%= Math.min(thread.post_count, 100) %>%"></div>
                 </div>
               </div>
             </div>
-          </div></a>
-          <% }) %>
-        </div>
-      </div>
-      <div class="body-right">
-        <div class="moshpit-info">
-          <div class="tab-nav-div">
-            <ul class="tab-nav">
-              <li><B>trending</B></li>
-            </ul>
           </div>
-          <div>
-            <ul class="info-list">
-              <% trending.forEach(moshpit => { %>
-              <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.recent_count%> <%= moshpit.recent_count=== 1 ? 'post in the last hour' : 'posts in the last hour' %></a></li>
-              <% }) %>
-            </ul>
-          </div>
+           <% if (user.is_admin || user.is_owner || user.is_mod) { %>
+          <div style="display: flex;">
+        <a href="" class="delete" data-id="<%- thread.id %>">delete</a>&nbsp|&nbsp<a href="" class="deleteban" data-id="<%- thread.id %>">delete + ban</a>&nbsp|&nbsp<a href="" class="sticky" data-id="<%- thread.id %>">sticky</a>
+
+          </div> <% } %>
         </div>
+       
+        <% }}) %>
       </div>
     </div>
-    <div>
-      
-    </div>
-    <dialog id="create-thread-box">
-      <div class="modal-top">
-        <div><p>new thread</p></div>
-        <div><button id="close-button">x</button></div>
-      </div>
-      <form id="modal-form">
-        <hr />
+    <div class="body-right">
+      <div class="moshpit-info">
+        <div class="tab-nav-div">
+          <ul class="tab-nav">
+            <li><B>trending</B></li>
+          </ul>
+        </div>
         <div>
-          <div class="modal-input">
-            <label for="">comment</label
-            ><textarea
-              name="text"
-              id="thread-text"
-              style="height: 400px; width: 96.4%"
-            ></textarea>
-          </div>
-
-          <div class="modal-input">
-            <label for="">moshpit (board)</label
-            ><input
-              type="text"
-              name="moshpit"
-              value="<%= moshpit %>"
-              placeholder="if left blank your thread will go onto /moshpit/ <= 7 chars"
-            />
-          </div>
-
-          <div class="modal-input">
-            <label for="">signature</label
-            ><input
-              type="text"
-              placeholder="put a secure password here to sign your post"
-            />
-          </div>
-          <div><button type="submit" id="button-thread">submit</button></div>
-          <input type="hidden" name="post-text" id="post-text" />
+          <ul class="info-list">
+            <% trending.forEach(moshpits => { if (!moshpits.hid) { %>
+            <li><a href="/<%= moshpits.title %>/">/<%= moshpits.title %>/ - <%= moshpits.recent_count %> <%= moshpits.recent_count === 1 ? 'post in the last hour' : 'posts in the last hour' %></a></li>
+            <% }}) %>
+          </ul>
         </div>
-      </form>
-    </dialog>
+      </div>
+    </div>
+  </div>
+  <div>
 
-    <script>
-      dayjs.extend(window.dayjs_plugin_relativeTime);
-      const timers = document.querySelectorAll('.timer')
+  </div>
+  <dialog id="create-thread-box">
+    <div class="modal-top">
+      <div>
+        <p>new thread</p>
+      </div>
+      <div><button id="close-button">x</button></div>
+    </div>
+    <form id="modal-form">
+      <hr />
+      <div>
+        <div class="modal-input">
+          <label for="">comment</label><textarea name="text" id="thread-text" style="height: 400px; width: 96.4%"></textarea>
+        </div>
+
+        <div class="modal-input">
+          <label for="">moshpit (board)</label><input type="text" name="moshpit" value="<%= moshpit %>" placeholder="if left blank your thread will go onto /moshpit/ <= 7 chars" />
+        </div>
+
+        <div class="modal-input">
+          <label for="">signature</label><input type="text" placeholder="put a secure password here to sign your post" />
+        </div>
+        <div><button type="submit" id="button-thread">submit</button></div>
+        <input type="hidden" name="post-text" id="post-text" />
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    dayjs.extend(window.dayjs_plugin_relativeTime);
+
+    const timers = document.querySelectorAll('.timer')
+    timers.forEach((t) => {
+      t.addEventListener('hover', e => {
+
+      })
+      t.textContent = dayjs.unix(Number(t.dataset.time)).fromNow()
+    })
+
+    setInterval(() => {
       timers.forEach((t) => {
-        t.addEventListener('hover', e => {
 
-        } )  
-        t.textContent= dayjs.unix(Number(t.dataset.time)).fromNow()
+        t.textContent = dayjs.unix(Number(t.dataset.time)).fromNow()
       })
-    
-        setInterval(() => {timers.forEach((t) => {
-          
-        t.textContent= dayjs.unix(Number(t.dataset.time)).fromNow()
-        } )
-      }, 60000)
-      let searchbar = document.querySelectorAll('.search-bar')
-      const all_threads = document.getElementsByClassName('allthreads')
-      searchbar.forEach(bar => {
-bar.addEventListener('input', e => {
-        Array.prototype.forEach.call(all_threads, function(thread) {
-        if (!thread.textContent.toLowerCase().includes(e.target.value.toLowerCase())) {
-            thread.classList.add('hidden')
-          } else {
-            thread.classList.remove('hidden')
+    }, 60000)
+    const searchbars = document.querySelectorAll('.search-bar')
+const allThreads = document.querySelectorAll('.allthreads')
+
+searchbars.forEach(bar => {
+    bar.addEventListener('input', () => {
+        const query = bar.value.trim().toLowerCase()
+
+        allThreads.forEach(thread => {
+            const text = thread.textContent.toLowerCase()
+            thread.style.display = text.includes(query) ? '' : 'none'
+        })
+    })
+})
+    const thread_z = <%- JSON.stringify(threads) %>;
+    const threads_html = document.querySelector('#threads');
+    const all_threads_html = document.querySelectorAll('.allthreads');
+
+    thread_z.forEach(thread => {
+
+
+      if (thread.sticky) {
+        const newhtml = thread.html;
+
+        all_threads_html.forEach(t => {
+          if (t.querySelector('.thread-index-text').innerHTML == thread.html) {
+            const newthread = t
+            newthread.querySelector('.thread').style.border = '1px solid var(--rage)'
+            //newthread.querySelector('.thread').classList.add('shake2')     
+
+            t.remove();
+            threads_html.prepend(t);
           }
-        
-        
+        });
+      }
+    });
+
+
+    const createThreadForm = document.getElementById('modal-form')
+    const buttonThreadForm = document.getElementById('button-thread')
+
+    createThreadForm.addEventListener('submit', async event => {
+      // Prevent the browser from reloading the page
+      event.preventDefault()
+      const text = textarea.value
+      const moshpit = document.querySelector('input[name="moshpit"]').value
+      const post_text = document.querySelector('input[name="post-text"]').value
+      if (!text.trim()) {
+        alert('the comment field cannot be empty')
+        return
+      }
+      const regex = /^[a-z0-9]+$/i
+      if (moshpit.length > 7) {
+        alert('moshpit titles cannot be over 7 characters long')
+        return
+      } else if (!regex.test(moshpit)) {
+        alert('only alphanumeric characters are allowed for moshpit titles')
+        return
+      }
+      const response = await fetch('/api/create/thread', {
+        method: 'POST',
+
+        headers: {
+          'Content-Type': 'application/json'
+        },
+
+        body: JSON.stringify({
+          text: text.trimEnd(),
+          moshpit: moshpit,
+          html: text.trimEnd(),
+          post_text: post_text
         })
       })
-      })
-      
-      const createThreadForm = document.getElementById('modal-form')
-      const buttonThreadForm = document.getElementById('button-thread')
 
-      createThreadForm.addEventListener('submit', async event => {
-        // Prevent the browser from reloading the page
-        event.preventDefault()
-        const text = textarea.value
-        const moshpit = document.querySelector('input[name="moshpit"]').value
-        if (!text.trim()) {
-          alert('the comment field cannot be empty')
-          return
-        }
-        const regex = /^[a-z0-9]+$/i
-        if (moshpit.length > 7) {
-          alert('moshpit titles cannot be over 7 characters long')
-          return
-        } else if (!regex.test(moshpit)) {
-          alert('only alphanumeric characters are allowed for moshpit titles')
-          return
-        }
-        const response = await fetch('/api/create/thread', {
-          method: 'POST',
-
-          headers: {
-            'Content-Type': 'application/json'
-          },
-
-          body: JSON.stringify({
-            text: text.trimEnd(),
-            moshpit: moshpit,
-            html: text.trimEnd()
-          })
-        })
-
-        if (!response.ok) {
-          console.error('Failed to create thread')
-          return
-        }
-
+      if (!response.ok) {
         const data = await response.json()
-        window.location.href = `/${data.moshpit.title}/${data.threadId}`
-      })
-      
+        alert(data.error)
+        return
+      }
 
-     const createThread = document.getElementById('create-thread')
-      const modal = document.getElementById('create-thread-box')
-     const createThread2 = document.getElementById('create-thread2')
+      const data = await response.json()
+      window.location.href = `/${data.moshpit.title}/${data.threadId}`
+    })
 
-      createThread.addEventListener('click', event => {
-        event.preventDefault()
-        modal.showModal()
-      })
-       createThread2.addEventListener('click', event => {
-        event.preventDefault()
-        modal.showModal()
-      })
 
-      const closeButton = document.getElementById('close-button')
+    const createThread = document.getElementById('create-thread')
+    const modal = document.getElementById('create-thread-box')
+    const createThread2 = document.getElementById('create-thread2')
 
-      closeButton.addEventListener('click', () => {
-        event.preventDefault()
+    createThread.addEventListener('click', event => {
+      event.preventDefault()
+      modal.showModal()
+    })
+    createThread2.addEventListener('click', event => {
+      event.preventDefault()
+      modal.showModal()
+    })
 
-        modal.close()
-      })
-      const closeButton2 = document.getElementById('close-button-2')
+    const closeButton = document.getElementById('close-button')
 
-      const threadForm = document.getElementById('modal-form')
-      const textarea = document.getElementById('thread-text')
-      
-    </script>
-  </body>
+    closeButton.addEventListener('click', () => {
+      event.preventDefault()
+
+      modal.close()
+    })
+    const closeButton2 = document.getElementById('close-button-2')
+
+    const threadForm = document.getElementById('modal-form')
+    const textarea = document.getElementById('thread-text')
+
+   document.addEventListener('click', async (e) => {
+     const d = e.target.closest('.delete')
+     const db = e.target.closest('.deleteban')
+     const sticky = e.target.closest('.sticky')
+
+if (sticky) {
+       e.preventDefault()
+       const threadid = sticky.dataset.id
+
+       if (threadid) {
+         try {
+           const response = await fetch('/api/sticky', {
+             method: 'POST',
+             headers: {
+               'Content-Type': 'application/json'
+             },
+             body: JSON.stringify({
+               thread_id: threadid,
+               banflag: 0
+             })
+           });
+
+
+           const data = await response.json()
+
+           if (!response.ok) {
+             alert(data.error || 'Failed')
+             return;
+           }
+
+           const post = document.getElementById(threadid)
+           post.style.border = '1px solid var(--rage)'
+
+           
+         } catch (error) {
+           console.error('Shoot error:', error)
+           alert('Failed to shoot post')
+         }
+       }
+
+
+       return;
+     }
+     if (d) {
+       e.preventDefault()
+       const threadid = d.dataset.id
+
+       if (threadid) {
+         try {
+           const response = await fetch('/api/swag', {
+             method: 'POST',
+             headers: {
+               'Content-Type': 'application/json'
+             },
+             body: JSON.stringify({
+               thread_id: threadid,
+               banflag: 0
+             })
+           });
+
+
+           const data = await response.json()
+
+           if (!response.ok) {
+             alert(data.error || 'Failed')
+             return;
+           }
+
+           const post = document.getElementById(threadid)
+
+           if (post) {
+             post.remove()
+           }
+         } catch (error) {
+           console.error('Shoot error:', error)
+           alert('Failed to shoot post')
+         }
+       }
+
+
+       return;
+     }
+     if (db) {
+       e.preventDefault()
+       const threadid = db.dataset.id
+
+       if (threadid) {
+         try {
+           const response = await fetch('/api/swag', {
+             method: 'POST',
+             headers: {
+               'Content-Type': 'application/json'
+             },
+             body: JSON.stringify({
+               thread_id: threadid,
+               banflag: 1
+             })
+           });
+
+
+           const data = await response.json()
+
+           if (!response.ok) {
+             alert(data.error || 'Failed')
+             return;
+           }
+
+           const post = document.getElementById(threadid)
+
+           if (post) {
+             post.remove()
+           }
+         } catch (error) {
+           console.error('Shoot error:', error)
+           alert('Failed to shoot post')
+         }
+       }
+
+
+       return;
+     }
+   })
+
+  </script>
+</body>
+
 </html>

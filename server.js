@@ -2,7 +2,6 @@ const express = require('express')
 const path = require('path')
 const crypto = require('crypto')
 const cookieParser = require('cookie-parser')
-const EventEmitter = require('events')
 const bcrypt = require('bcrypt')
 const {
   getUser,
@@ -23,17 +22,26 @@ const {
   updateThread,
   getNewPosts,
   getSettings,
-  setCachedResults,
   getCachedResults,
   refreshCache,
   deleteOldThreads,
   deleteLowThreads,
-
-} = require('./db-queries')
+  checkPostCreation,
+getPostAdmin,
+  getUserAdmin,
+  moderationAction,
+getModerationStatus,
+deleteOldSlaps,
+getThreadAdmin,
+deletePost,
+deleteThread,
+deleteMoshpit,
+stickyThread
+ } = require('./db-queries')
 const { Reader } = require('@maxmind/geoip2-node')
 
 const app = express()
-const events = new EventEmitter()
+
 app.set('view engine', 'ejs')
 // -------------------------
 // Middleware
@@ -108,7 +116,7 @@ app.get('/api', (req, res) => {
 
 app.get('/', async (req, res) => {
   const threads = await getThreads('moshpit')
-    const user = getUser(req.sessionId)
+    const user = await getUser(req.sessionId)
   const results = await getCachedResults()
   const settings = await getSettings()
   if (!threads || !results ) {
@@ -141,7 +149,7 @@ app.get('/rules', async (req, res) => {
 })
 
 app.get('/moshpits', async (req, res) => {
-  const results = getCachedResults()
+  const results = await getCachedResults()
 
   const settings = await getSettings()
 
@@ -149,9 +157,10 @@ app.get('/moshpits', async (req, res) => {
 })
 
 app.get('/:moshpit', async (req, res) => {
-  const results = getCachedResults()
+  const results = await getCachedResults()
   const { moshpit } = req.params
-  const user = getUser(req.sessionId)
+
+  const user = await getUser(req.sessionId)
   const threads = await getThreads(moshpit)
   const trending = await getTrendingMoshpits()
   const settings = await getSettings()
@@ -161,16 +170,17 @@ app.get('/:moshpit', async (req, res) => {
   //   return res.status(404).send('No threads found, make one?')
   // }
 
-  res.render('index', { threads, moshpit, trending: results.trending, recent: results.recent, user, settings })
+  res.render('index', { threads, moshpit, trending: results.trending, recent: results.recent, user, settings})
 })
 
-app.get('/:moshpit/:thread_id', async (req, res) => {
+app.get('/:moshpit_title/:thread_id', async (req, res) => {
   const { thread_id } = req.params
-  const results = getCachedResults()
+  const { moshpit_title } = req.params
+  const results = await getCachedResults()
   const thread = await getThread(thread_id)
-
+  
   if (!thread) {
-    return res.redirect(`/${encodeURIComponent(moshpit)}`)
+    return res.redirect(`/${moshpit_title}`)
   }
   const user = await getUser(req.sessionId)
   const posts = await getPosts(thread_id)
@@ -212,30 +222,542 @@ app.get('/api/refresh/:moshpit/:thread_id/:last_post', async (req, res) => {
       posts: posts,
     })
 })
+app.post('/api/sticky', async (req, res) => { 
+    const perp = await getUser(req.sessionId)
 
-let banned_words = ['nigger', 'rape', 'rapist', 'spic', 'spics', 'niggers', 'rapists', 'honky', 'chink', 'chinks', 'kike', 'faggot', 'loli', 'shota', 'cp', 'csam', '1488', '14', '88', 'HH', 'hitler', 'adolf', 'tnd', 'tkd', 'tranny', 'troon']
-app.post('/api/create/post', async (req, res, next) => {
+  if (!perp) {
+      return res.status(400).json({
+        error: 'Missing perp'
+      })
+  }
+  console.log(perp.is_owner)
+if (perp.is_admin || perp.is_owner) {
+ const thread_id = req.body.thread_id
+
+if (!thread_id) {
+    return res.status(400).json({
+        error: 'Missing thread id'
+      })
+  }
+  const thread = await getThreadAdmin(thread_id)
+
+  if (!thread) {
+    return res.status(400).json({
+        error: 'Missing thread'
+      })
+  }
+
+  stickyThread(thread)
+return res.status(200)
+}
+  
+return res.status(400).json({
+        error: 'Missing permissions'
+      })
+   
+})
+app.post('/api/swag', async (req, res) => { 
+  const thread_id = req.body.thread_id
+  const banflag = req.body.banflag
+
+if (!thread_id) {
+    return res.status(400).json({
+        error: 'Missing thread id'
+      })
+  }
+  const thread = await getThreadAdmin(thread_id)
+
+  if (!thread) {
+    return res.status(400).json({
+        error: 'Missing thread'
+      })
+  }
+
+  const perp = await getUser(req.sessionId)
+
+  if (!perp) {
+      return res.status(400).json({
+        error: 'Missing perp'
+      })
+  }
+ 
+if (perp.is_admin || perp.is_owner || perp.is_mod) {
+  if (banflag == 0) {
+  deleteThread(thread.id, banflag)
+
+  return res.json({
+      success: true,
+      message: 'THREAD WAS DELETED'
+    })
+}
+
+  const user = await getUserAdmin(thread.author_id)
+
+  if (!user) {
+    return res.status(400).json({
+        error: 'Missing user'
+      })
+  } 
+
+  deleteThread(thread_id, banflag, user, perp)
+
+
+   return res.status(200)
+}
+ return res.status(400).json({
+        error: 'Missing permissions'
+      })
+
+})
+app.post('/api/slap', async (req, res) => {
+     const perp = await getUser(req.sessionId)
+
+    if (!perp) {
+      return res.status(401).json({
+        error: 'You must be logged in'
+      })
+    }
+  try {
+ 
+    const post_id = req.body.post_id
+
+    if (!post_id) {
+      return res.status(400).json({
+        error: 'Missing post_id'
+      })
+    }
+
+    const post = await getPostAdmin(post_id)
+
+    if (!post) {
+      return res.status(404).json({
+        error: 'Post not found'
+      })
+    }
+
+    const user = await getUserAdmin(post.author_id)
+
+    if (!user) {
+      return res.status(404).json({
+        error: 'Post author not found'
+      })
+    }
+
+    const status = await getModerationStatus(
+      user,
+      post.thread_id
+    )
+
+    if (post.slapped) {
+   
+      return res.json({
+      success: true,
+      message: 'USER WAS SLAPPED'
+    })
+    }
+
+   
+    const result = await moderationAction(
+      user,
+      perp,
+      post,
+      null,
+      req.body.action,
+      0,
+      ''
+    )
+
+    if (!result.success) {
+
+      return res.status(422).json({
+        error: result.error
+      })
+    }
+      
+
+    return res.json({
+      success: true,
+      message: 'USER WAS SLAPPED'
+    })
+
+  } catch (err) {
+    console.error('POST /api/slap error:', err)
+
+    return res.status(500).json({
+      error: 'Internal server error'
+    })
+  }
+})
+app.post('/api/shoot', async (req, res) => {
+    const perp = await getUser(req.sessionId)
+
+    if (!perp) {
+      return res.status(401).json({
+        error: 'You must be logged in'
+      })
+    }
+ 
+
+  try {
+
+    const post_id = req.body.post_id
+
+    if (!post_id) {
+      return res.status(400).json({
+        error: 'Missing post_id'
+      })
+    }
+
+    const post = await getPostAdmin(post_id)
+
+    if (!post) {
+      return res.status(404).json({
+        error: 'Post not found'
+      })
+    }
+
+    const user = await getUserAdmin(post.author_id)
+
+    if (!user) {
+      return res.status(404).json({
+        error: 'Post author not found'
+      })
+    }
+
+    const status = await getModerationStatus(
+      user,
+      post.thread_id
+    )
+
+    if (post.shot) {
+      return res.json({
+      success: true,
+      message: 'USER WAS SHOT'
+    })
+    }
+
+    
+    const result = await moderationAction(
+      user,
+      perp,
+      post,
+      null,
+      req.body.action,
+      0,
+      ''
+    )
+
+    if (!result.success) {
+   
+
+      return res.status(422).json({
+        error: result.error
+      })
+    }
+      
+
+    return res.json({
+      success: true,
+      message: 'USER WAS SHOT'
+    })
+
+  } catch (err) {
+    console.error('POST /api/shoot error:', err)
+
+    return res.status(500).json({
+      error: 'Internal server error'
+    })
+  }
+})
+app.post('/api/hide', async (req, res) => {
+    
+
+  try {
+
+    const post_id = req.body.post_id
+    const thread_id = req.body.thread_id
+    if (!post_id && !thread_id) {
+      return res.status(400).json({
+        error: 'Missing id'
+      })
+    }
+
+    const post = await getPostAdmin(post_id)
+    const thread = await getThreadAdmin(thread_id)
+    if (!post && !thread) {
+      return res.status(404).json({
+        error: 'Post not found'
+      })
+    }
+    if (post && thread) {
+      return res.status(422).json({
+        error: 'Cannot have a post and a thread'
+      })
+    }
+
+  if ((post && post.hid === 1) || (thread && thread.hid === 1)) {
+  return res.status(422).json({
+    error: 'Post is already hidden'
+  })
+}
+    let user
+    let objek
+     if (post && !thread) {
+      user = await getUserAdmin(post.author_id)
+      
+      }
+    if (!post && thread) {
+      user = await getUserAdmin(thread.author_id)
+      }
+
+    if (!user) {
+      return res.status(404).json({
+        error: 'Post author not found'
+      })
+    }
+
+  if (post && !thread) {
+      if (post.hid) {
+      return res.json({
+      success: true,
+      message: 'POST HAS BEEN HIDDEN'
+    })
+    }
+      
+      }
+    if (!post && thread) {
+       if (thread.hid) {
+      return res.json({
+      success: true,
+      message: 'THREAD HAS BEEN HIDDEN'
+    })
+    }
+      }
+
+    
+
+    const perp = await getUser(req.sessionId)
+
+    if (!perp) {
+      return res.status(401).json({
+        error: 'You must be logged in'
+      })
+    }
+
+    const result = await moderationAction(
+      user,
+      perp,
+      post,
+      thread,
+      req.body.action,
+      0,
+      ''
+    )
+
+    if (!result.success) {
+     
+
+      return res.status(422).json({
+        error: result.error
+      })
+    }
+      
+
+    return res.json({
+      success: true,
+      message: 'USER HAS BEEN HIDDEN'
+    })
+
+  } catch (err) {
+    console.error('POST /api/hide error:', err)
+
+    return res.status(500).json({
+      error: 'Internal server error'
+    })
+  }
+})
+app.post('/api/delete', async (req, res) => {
+   const perp = await getUser(req.sessionId)
+
+    if (!perp) {
+      return res.status(401).json({
+        error: 'You must be logged in'
+      })
+    }
+  if (perp.is_admin || perp.is_owner || perp.is_mod) {
+  try {
+
+    const post_id = req.body.post_id
+    const thread_id = req.body.thread_id
+    if (!post_id && !thread_id) {
+      return res.status(400).json({
+        error: 'Missing id'
+      })
+    }
+
+    const post = await getPostAdmin(post_id)
+    const thread = await getThreadAdmin(thread_id)
+    if (!post && !thread) {
+      return res.status(404).json({
+        error: 'Post not found'
+      })
+    }
+    if (post && thread) {
+      return res.status(422).json({
+        error: 'Cannot have a post and a thread'
+      })
+    }
+
+    let user
+     if (post && !thread) {
+      user = await getUserAdmin(post.author_id)
+      
+      }
+    if (!post && thread) {
+      user = await getUserAdmin(thread.author_id)
+      }
+
+    if (!user) {
+      return res.status(404).json({
+        error: 'Post author not found'
+      })
+    }
+
+
+    const result = await moderationAction(
+      user,
+      perp,
+      post,
+      thread,
+      req.body.action,
+      0,
+      ''
+    )
+
+    if (!result.success) {
+      return res.status(422).json({
+        error: result.error
+      })
+    }
+
+    return res.json({
+      success: true,
+      message: 'POST HAS BEEN DELETED'
+    })
+
+  } catch (err) {
+    console.error('POST /api/delete error:', err)
+
+    return res.status(500).json({
+      error: 'Internal server error'
+    })
+  }
+}
+  return res.status(422).json({
+        error: 'missing perms'
+      })
+})
+app.post('/api/ban', async (req, res) => {
+   const perp = await getUser(req.sessionId)
+
+    if (!perp) {
+      return res.status(401).json({
+        error: 'You must be logged in'
+      })
+    } 
+  if (perp.is_admin || perp.is_owner || perp.is_mod) {
+ try {
+
+    const post_id = req.body.post_id
+    const thread_id = req.body.thread_id
+    if (!post_id && !thread_id) {
+      return res.status(400).json({
+        error: 'Missing id'
+      })
+    }
+
+    const post = await getPostAdmin(post_id)
+    const thread = await getThreadAdmin(thread_id)
+    if (!post && !thread) {
+      return res.status(404).json({
+        error: 'Post not found'
+      })
+    }
+    if (post && thread) {
+      return res.status(422).json({
+        error: 'Cannot have a post and a thread'
+      })
+    }
+
+    let user
+     if (post && !thread) {
+      user = await getUserAdmin(post.author_id)
+      
+      }
+    if (!post && thread) {
+      user = await getUserAdmin(thread.author_id)
+      }
+
+    if (!user) {
+      return res.status(404).json({
+        error: 'Post author not found'
+      })
+    }
+
+
+    const result = await moderationAction(
+      user,
+      perp,
+      post,
+      thread,
+      req.body.action,
+      0,
+      'manual ban'
+    )
+
+    if (!result.success) {
+      return res.status(422).json({
+        error: result.error
+      })
+    }
+
+    return res.json({
+      success: true,
+      message: 'USER HAS BEEN BANNED'
+    })
+
+  } catch (err) {
+    console.error('POST /api/ban error:', err)
+
+    return res.status(500).json({
+      error: 'Internal server error'
+    })
+  }
+}
+  return res.status(400).json({
+        error: 'Missing permissions'
+      })
+})
+let banned_words = ['admin', 'vip', 'faq', 'rules', 'moshpits', 'login', 'quirks', 'nigger', 'rape', 'rapist', 'spic', 'spics', 'faggy', 'fag', 'niggers', 'rapists', 'honky', 'chink', 'chinks', 'kike', 'faggot', 'loli', 'shota', 'cp', 'csam', '1488', '14', '88', 'HH', 'hitler', 'adolf', 'tnd', 'tkd', 'tranny', 'troon', 'nazi']
+app.post('/api/create/post', async (req, res) => {
   try {
     const text = req.body.text
     const thread_id = req.body.thread_id
     const html = req.body.html
-    
+    const trick = req.body.post_text1
+    const settings = await getSettings()
     if (!text || !text.trim()) {
       return res.status(400).json({
         error: 'Post cannot be empty'
       })
     }
-    if (text.length > 2000) {
+    if (text.length > 4000) {
       return res.status(422).json({
-        error: 'Post too long'
+        error: 'Post too long (4000 chars max)'
       })
     }
 
-    if (text.length > 2000) {
-      return res.status(422).json({
-        error: 'Post too long'
-      })
-    }
+
     if (!thread_id) {
       return res.status(400).json({
         error: 'thread_id cannot be empty'
@@ -249,27 +771,44 @@ app.post('/api/create/post', async (req, res, next) => {
         error: 'User not found'
       })
     }
-
-    let moshpit = await getOrCreateMoshpit(req.body.moshpit)
-
-    if (!moshpit) {
+ if (trick) {
+    banUser(user, 'You have been banned', "Sus activity")
+  }
+     if (!req.body.moshpit) {
       return res.status(400).json({
         error: 'moshpit cannot be empty'
       })
     }
+const containsBannedWord = banned_words.some(word =>
+new RegExp(`\\b${word}\\b`, 'i').test(req.body.moshpit)
+)
 
+if (containsBannedWord) {
+  return res.status(422).json({
+    error: 'moshpit titles cannot contain banned words'
+  })
+}
+
+let moshpit = await getOrCreateMoshpit(req.body.moshpit)
+
+  const check = await checkPostCreation(user, moshpit, 'post', thread_id)
+   if (check.error) {
+  return res.status(422).json({
+    error: check.error
+  })
+}
     const now = Math.floor(Date.now() /1000)
 
     const reader = await Reader.open('./GeoLite2-City.mmdb')
     const response = reader.city('162.204.244.204')
-    // console.log(response)
+
     const lastPost = await getLastPost(thread_id)
 
     const post_number = (lastPost?.post_number ?? 0) + 1
 
     let post = await createPost(
       user.id,
-      '162.204.244.204',
+      req.ip,
       thread_id,
       moshpit.id,
       text,
@@ -279,10 +818,10 @@ app.post('/api/create/post', async (req, res, next) => {
       formatText(html)
     )
     post.ip = ''
-    // console.log(response.country.isoCode)
-    updatePostCount(thread_id, moshpit.title)
-    updateThread(now, thread_id)
-    bumpThread(now, thread_id)
+    // 
+    await updatePostCount(thread_id, moshpit.title)
+    await updateThread(now, thread_id)
+    await bumpThread(now, thread_id)
     if (moshpit.flags == 0) {
       post.country = 'Chiraq'
     }
@@ -300,11 +839,19 @@ app.post('/api/create/thread', async (req, res) => {
   const text = req.body.text
   const html = req.body.html
   let moshpit = req.body.moshpit
-  if (!text || !text.trim()) {
-    return res.status(400).json({
-      error: 'Thread cannot be empty'
-    })
-  }
+  let trick = req.body.post_text
+
+ 
+ if (!text || !text.trim()) {
+      return res.status(400).json({
+        error: 'Thread cannot be empty'
+      })
+    }
+    if (text.length > 4000) {
+      return res.status(422).json({
+        error: 'Thread too long (4000 chars max)'
+      })
+    }
 
   if (!moshpit) {
     moshpit = 'moshpit'
@@ -323,7 +870,7 @@ app.post('/api/create/thread', async (req, res) => {
    
   }
   const containsBannedWord = banned_words.some(word =>
-  moshpit.includes(word)
+new RegExp(`\\b${word}\\b`, 'i').test(moshpit)
 )
 
 if (containsBannedWord) {
@@ -332,14 +879,22 @@ if (containsBannedWord) {
   })
 }
 
-  const user = getUser(req.sessionId)
-  moshpit = getOrCreateMoshpit(moshpit.toLowerCase(), user.id)
-
+  const user = await getUser(req.sessionId)
+   if (trick) {
+    banUser(user, 'You have been banned', "Sus activity")
+  }
+  moshpit = await getOrCreateMoshpit(moshpit.toLowerCase())
+const check = await checkPostCreation(user, moshpit, 'thread')
+   if (check.error) {
+  return res.status(422).json({
+    error: check.error
+  })
+}
   if (user) {
     const now = Math.floor(Date.now() /1000)
     const reader = await Reader.open('./GeoLite2-City.mmdb')
     const response = reader.city('162.204.244.204')
-    const thread = createThread(
+    const thread = await createThread(
       user.id,
       moshpit.title,
       text,
@@ -347,7 +902,7 @@ if (containsBannedWord) {
       now,
       moshpit.id,
       formatText(html),
-      '162.204.244.204',
+      req.ip,
       response.country.isoCode
     )
     // res.json(thread)
@@ -376,9 +931,9 @@ function formatText(post) {
         
        comment = partytext(comment).trimEnd()
         const regex = /@([0-9\s+]+|[OP\s+]+)/g
-        const regex2 = /#([A-Za-z0-9\s+]{1,7})(?![A-Za-z0-9\s+])/g
+        const regex2 = /#(?!quirks(?=$|[^A-Za-z0-9\s+])|faq(?=$|[^A-Za-z0-9\s+])|rules(?=$|[^A-Za-z0-9\s+])|moshpits(?=$|[^A-Za-z0-9\s+])|vip(?=$|[^A-Za-z0-9\s+])|login(?=$|[^A-Za-z0-9\s+])|admin(?=$|[^A-Za-z0-9\s+]))([A-Za-z0-9\s+]{1,7})(?![A-Za-z0-9\s+])/gi
 
-        comment = comment.replaceAll(regex2, `<a href="/$1/" class="pitquote" style="color: var(--rage);">#$1</a>`)
+        comment = comment.replaceAll(regex2, `<a href="#$1" class="pitquote" style="color: var(--rage);">#$1</a>`)
         return comment.replace(
           regex,
           `<a href="#$1" class="quote" data-quoteid="$1" style="color: var(--rage);">@$1</a>`
@@ -535,9 +1090,12 @@ app.use((err, req, res, next) => {
 deleteOldThreads()
 refreshCache()
 deleteLowThreads()
+deleteOldSlaps
 app.listen(3000, () => {
   console.log('Running at http://localhost:3000')
   setInterval(() => {deleteLowThreads()}, 100000)
+  setInterval(() => {deleteOldSlaps()}, 15000)
+
   setInterval(() => { refreshCache() }, 15000)
   setInterval(() => {deleteOldThreads()}, getSettings().decay_timer * 1000)
 })

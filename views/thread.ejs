@@ -1,119 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= moshpit.title %> | <%= thread.comment %></title>
-    <link rel="stylesheet" href="/../stylesheet.css" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <meta name="robots" content="noindex, follow" />
 
-    <link rel="preload" href="../RobotoJAA.woff2" as="font" type="font/woff2" crossorigin>
-    <script src="
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= moshpit.title %> | <%= thread.comment %></title>
+  <link rel="stylesheet" href="/../stylesheet.css" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <meta name="robots" content="noindex, follow" />
+
+  <link rel="preload" href="../RobotoJAA.woff2" as="font" type="font/woff2" crossorigin>
+  <script src="
 https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
 "></script>
-<script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
-  </head>
-  <body>
-  
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
+</head>
 
-    <div class="navbar" id="navbar">
-      <div class="navbar-left">
-        <ul class="nav-list">
-          <li><a href="/">home</a></li>
-          <li>|</li>
-          <li><a href="/rules">rules</a></li>
-          <li>|</li>
-          <li><a href="/faq">faq</a></li>
-          <li>|</li>
-          <li><a href="/quirks">quirks</a></li>
-          <li>|</li>
-          <li><a href="/moshpits">moshpits</a></li>
-        </ul>
-      </div>
-      <div class="navbar-middle">
-        <div class="title">
-          <h2 onclick="window.location.href='/<%= thread.moshpit %>/'">
-            [ <%= thread.moshpit %> ]
-          </h2>
-        </div>
-      </div>
-      <div class="navbar-right">
-        <a href="" id="create-thread">create new thread</a>
+<body>
+
+
+  <div class="navbar" id="navbar">
+    <div class="navbar-left">
+      <ul class="nav-list">
+        <li><a href="/">home</a></li>
+        <li>|</li>
+        <li><a href="/rules">rules</a></li>
+        <li>|</li>
+        <li><a href="/faq">faq</a></li>
+        <li>|</li>
+        <li><a href="/quirks">quirks</a></li>
+        <li>|</li>
+        <li><a href="/moshpits">moshpits</a></li>
+      </ul>
+    </div>
+    <div class="navbar-middle">
+      <div class="title">
+        <h2 onclick="window.location.href='/<%= thread.moshpit %>/'">
+          [ <%= thread.moshpit %> ]
+        </h2>
       </div>
     </div>
+    <div class="navbar-right">
+      <a href="" id="create-thread">create new thread</a>
+    </div>
+  </div>
 
-    <div class="navbar" id="navbar2">
-      <div class="navbar-left">
-        <select name="pages" id="pages" onchange="
+  <div class="navbar" id="navbar2">
+    <div class="navbar-left">
+      <select name="pages" id="pages" onchange="
     if (this.value.startsWith('/')) {
       window.location = this.value
     }
   ">
-         
-            <option value="" selected disabled hidden>pages</option>
-            <option value="/">home</option>
-            <option value="/rules">rules</option>
-            <option value="/faq">faq</option>
-            <option value="/quirks">quirks</option>
-            <option value="/moshpits">moshpits</option>
-          
-        </select>
-      </div>
-      <div class="navbar-middle">
-        <div class="title">
-          <h2 onclick="window.location.href='/<%= thread.moshpit %>/'">
-            [ <%= thread.moshpit %> ]
-          </h2>
-        </div>
-      </div>
-      <div class="navbar-right">
-        <button id="create-thread2">New +</button>
+
+        <option value="" selected disabled hidden>pages</option>
+        <option value="/">home</option>
+        <option value="/rules">rules</option>
+        <option value="/faq">faq</option>
+        <option value="/quirks">quirks</option>
+        <option value="/moshpits">moshpits</option>
+
+      </select>
+    </div>
+    <div class="navbar-middle">
+      <div class="title">
+        <h2 onclick="window.location.href='/<%= thread.moshpit %>/'">
+          [ <%= thread.moshpit %> ]
+        </h2>
       </div>
     </div>
+    <div class="navbar-right">
+      <button id="create-thread2">New +</button>
+    </div>
+  </div>
 
-    <% if (settings.announcement_status) {  %>
-    <div class="announcement">
-      <p id="announcement-text"><%- settings.announcement %></p>
-    </div> <% } %>
+  <% if (settings.announcement_status) {  %>
+  <div class="announcement">
+    <p id="announcement-text"><%- settings.announcement %></p>
+  </div> <% } %>
 
-    <div class="body" id="fakebody">
-      <div class="body-right1">
-        <div class="moshpit-info">
-          <div class="tab-nav-div">
-            <ul class="tab-nav">
-              <li><B>recently created</B></li>
-            </ul>
-          </div>
-          <div>
-            <ul class="info-list">
-              <% recent.forEach(moshpit => { %>
-              <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.post_count + moshpit.thread_count%> <%= moshpit.post_count+ moshpit.thread_count === 1 ? 'post' : 'posts' %></a></li>
-              <% }) %>
-            </ul>
-          </div>
+  <div class="body" id="fakebody">
+    <div class="body-right1">
+      <div class="moshpit-info">
+        <div class="tab-nav-div">
+          <ul class="tab-nav">
+            <li><B>recently created</B></li>
+          </ul>
+        </div>
+        <div>
+          <ul class="info-list">
+            <% recent.forEach(moshpit => { if (!moshpit.hid) { %>
+            <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.post_count + moshpit.thread_count%> <%= moshpit.post_count+ moshpit.thread_count === 1 ? 'post' : 'posts' %></a></li>
+            <% }}) %>
+          </ul>
         </div>
       </div>
+    </div>
     <div class="body-left">
-    <div class="body-thread">
-      <div class="thread-options" id="header">
-        <div class="options-div">
-          <a href="/<%= thread.moshpit %>/">return&nbsp</a>|
-          <a href="" class="update">update&nbsp</a>|
-          <a href="#footer">bottom&nbsp</a>|
-          <a href="" class="reply-button" data-thread-id="">reply</a>
+      <div class="body-thread">
+        <div class="thread-options" id="header">
+          <div class="options-div">
+            <a href="/<%= thread.moshpit %>/">return&nbsp</a>|
+            <a href="" class="update">update&nbsp</a>|
+            <a href="#footer">bottom&nbsp</a>|
+            <a href="" class="reply-button" data-thread-id="">reply</a>
+          </div>
         </div>
-      </div>
-      
-      <div id="post-container">
-        <div class="post" id="OP">
-          <div class="post-header">
-            <div style="display: flex; justify-content: space-between; align-items: center">
-              <div style="display: flex">
-                <% if(posts) { %>
-                <p>OP |&nbsp</p>
-                <% } %>
-                <p><% if (moshpit.flags){ %> <%=  thread.country %> |&nbsp<%}%></p>
+
+        <div id="post-container">
+          <div class="post" id="OP">
+            <div class="post-header" data-headerid="OP">
+              <div style="display: flex; justify-content: space-between; align-items: center">
+                <div style="display: flex">
+                  <% if(posts) { %>
+                  <p>OP |&nbsp</p>
+                  <% } %>
+                  <p><% if (moshpit.flags){ %> <%=  thread.country %> |&nbsp<%}%></p>
                 <p itemprop="" class="timer" title="<%= new Date(thread.created_at * 1000).toLocaleString('en-US', {
                       month: 'short',
                       day: 'numeric',
@@ -121,38 +123,45 @@ https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
                       hour: 'numeric',
                       minute: '2-digit'
                     }) %>" data-time=<%- thread.created_at %>></p>
-              </div>
-              <div style="display: flex; align-items: center">
-                <a href="" class="reply-button" data-thread-id="OP">reply</a
-                >&nbsp|&nbsp
-                <a href="" class="report_a">report</a>
-                <!-- <button style="border-radius: 0px; background-color: var(--bg-color); color: var(--text); border: 1px solid var(--border-color)">+</button> -->
+                </div>
+                <div style="display: flex; align-items: center" class="postheaderoptions">
+                  <% if (thread.author_id != user.id && ( user.is_owner || user.is_admin)) { %>
+                  <a href="" class="info" data-authorid="<%- thread.author_id %>">info</a>&nbsp|&nbsp
+                  <% } %>
+                  <% if (thread.author_id != user.id && (user.is_owner || user.is_admin || user.is_mod)) { %>
+                  <a href="" class="ban" data-postid="<%- thread.id %>" data-type="OP" data-threadid="OP">ban</a>&nbsp|&nbsp
+                  <% } %>
+                  <% if ((user.is_owner || user.is_admin || user.is_mod || user.is_janitor)) { %>
+                  <a href="" class="delete" data-postid="<%- thread.id %>" data-type="OP" data-threadid="OP">delete</a>&nbsp|&nbsp
+                  <% } %>
+                  <% if (( user.is_owner || user.is_admin || user.is_mod || user.is_janitor)) { %>
+                  <a href="" class="hide" data-postid="<%- thread.id %>" data-type="OP">hide</a>&nbsp|&nbsp
+                  <% } %>
+                  <a href="" class="reply-button" data-thread-id="OP">reply</a>&nbsp|&nbsp
+                  <a href="" class="report_a" data-thread-id="OP" data-id="<%- thread.id %>">report</a>
+       
+                </div>
               </div>
             </div>
-          </div>
-          <div class="backpanel">
-            <div class="post-body"><p><%- thread.html %></p></div>
-            
-
-           
-    
-            
-
-          </div>
-           <div class="reply-list">
+            <div class="backpanel" data-postid="OP">
+              <div class="post-body"><p><%- thread.html %></p></div>
+              <div data-alarm="OP" class="hidden" style="color: var(--rage); font-weight: bold; margin-top: 3px;">
+              </div>
+            </div>
+            <div class="replylist hidden">
               <ul class="post-replies"></ul>
             </div>
-        </div>
+          </div>
 
-        
-        <% if (posts) {
+
+          <% if (posts) {
           posts.forEach(post => { %>
-            <div class="post" id="<%= post.post_number %>">
-              <div class="post-header">
-                <div style="display: flex; justify-content: space-between">
-                  <div style="display: flex">
-                    <p><%= post.post_number %> |&nbsp</p>
-                    <p><% if (moshpit.flags){ %> <%=  post.country %> |&nbsp<%}%> </p>
+          <div class="post" id="<%= post.post_number %>">
+            <div class="post-header" data-headerid="<%= post.post_number %>">
+              <div style="display: flex; justify-content: space-between; align-items: center">
+                <div style="display: flex">
+                  <p><%= post.post_number %> |&nbsp</p>
+                  <p><% if (moshpit.flags){ %> <%=  post.country %> |&nbsp<%}%> </p>
                     <p itemprop="" class="timer" title="<%= new Date(thread.created_at * 1000).toLocaleString('en-US', {
                       month: 'short',
                       day: 'numeric',
@@ -160,539 +169,879 @@ https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
                       hour: 'numeric',
                       minute: '2-digit'
                     }) %>" data-time="<%= post.created_at %>"></p>
-                  </div>
-                  <div style="display: flex">
-                    <a href="" class="reply-button" data-thread-id="<%= post.post_number %>">reply</a>&nbsp|&nbsp
-                    <a href="" class="report_a">report</a>
-                  </div>
+                </div>
+                <div style="display: flex; align-items: center" class="postheaderoptions">
+                  <% if (post.author_id != user.id && ( user.is_owner || user.is_admin)) { %>
+                  <a href="" class="info" data-authorid="<%= post.author_id %>">info</a>&nbsp|&nbsp
+                  <% } %>
+                  <% if (post.author_id != user.id && (user.is_owner || user.is_admin || user.is_mod)) { %>
+                  <a href="" class="ban" data-postid="<%= post.id %>" data-type="post" data-threadid="<%- post.number %>">ban</a>&nbsp|&nbsp
+                  <% } %>
+                  <% if ((user.is_owner || user.is_admin || user.is_mod || user.is_janitor)) { %>
+                  <a href="" class="delete" data-postid="<%= post.id %>" data-type="post" data-threadid="<%- post.number %>">delete</a>&nbsp|&nbsp
+                  <% } %>
+                  <% if ((user.id == thread.author_id || user.is_owner || user.is_admin || user.is_mod || user.is_janitor)) { %>
+                  <a href="" class="hide" data-postid="<%= post.id %>" data-type="post">hide</a>&nbsp|&nbsp
+                  <% } %>
+                  <% if (post.author_id != user.id && (user.id == thread.author_id || user.is_owner || user.is_admin)) { %>
+                  <a href="" class="shoot" data-postid="<%= post.id %>">shoot</a>&nbsp|&nbsp
+                  <% } %>
+                  <% if (post.author_id != user.id && (user.id == thread.author_id || user.is_owner || user.is_admin || user.is_mod || user.is_janitor)) { %>
+                  <a href="" class="slap" data-postid="<%= post.id %>">slap</a>&nbsp|&nbsp
+                  <% } %>
+                  <a href="" class="reply-button" data-thread-id="<%= post.post_number %>">reply</a>&nbsp|&nbsp
+                  <a href="" class="report_a" data-thread-id="<%= post.id %>" data-id="<%- post.id %>">report</a>
                 </div>
               </div>
-              
-              
-              <div class="backpanel">
-                <div class="post-body"><p><%- post.html %></p></div>
-                <div class="hidden">
-                  <p style="color: var(--rage); font-weight: bold">
-                    HAVE THE TIME WHEN YOU HOVER - USER WAS SHOT FOR THIS POST
-                  </p>
-                </div>
-              
-                <div class="hidden replylist">
-                  <ul class="post-replies">
-                    <li>5</li>
-                  </ul>
-                </div>
-              </div> 
-            </div> <!-- post  -->
-        <% })} %>
-      </div>
-      <!-- post container -->
+            </div>
 
-      <div class="thread-options" id="footer">
-        <div class="options-div">
-          <a href="/<%= thread.moshpit %>/">return&nbsp</a>|
-          <a href="" class="update">update&nbsp</a>|
-          <a href="#navbar">top&nbsp</a>|
-          <a href="" class="reply-button" data-thread-id="">reply</a>
-        </div>
-      </div>
-      <div class="anchor"></div>
-    </div>
-    </div>
-     <div class="body-right">
-        <div class="moshpit-info">
-          <div class="tab-nav-div">
-            <ul class="tab-nav">
-              <li><B>trending</B></li>
-            </ul>
+
+            <div class="backpanel <% if ((post.hid === 1)) { %> hidden <% } %>" data-postid="<%= post.id %>">
+              <div class="post-body"><p><%- post.html %></p></div>
+              <div data-alarm="<%= post.id %>" class="<% if ((post.slapped === 0 && post.shot ===0)) { %> hidden <% } %>" style="color: var(--rage); font-weight: bold; margin-top: 3px;">
+                <hr style="margin-bottom: 3px; border-color: 1px solid var(--border-color); color: var(--border-color); background-color: var(--border-color)"><% if (post.shot) { %>USER WAS SHOT FOR THIS POST
+                <% } else if (post.slapped) { %>
+                USER WAS SLAPPED FOR THIS POST <% } %>
+
+              </div>
+
+
+            </div>
+
+              <div class="hidden replylist">
+                <ul class="post-replies">
+
+                </ul>
+              </div>
           </div>
-          <div>
-            <ul class="info-list">
-              <% trending.forEach(moshpit => { %>
-              <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.recent_count %> <%= moshpit.recent_count === 1 ? 'post in the last hour' : 'posts in the last hour' %></a></li>
-              <% }) %>
-            </ul>
+          <% })} %>
+        </div>
+
+
+        <div class="thread-options" id="footer">
+          <div class="options-div">
+            <a href="/<%= thread.moshpit %>/">return&nbsp</a>|
+            <a href="" class="update">update&nbsp</a>|
+            <a href="#navbar">top&nbsp</a>|
+            <a href="" class="reply-button" data-thread-id="">reply</a>
           </div>
         </div>
+        <div class="anchor"></div>
       </div>
-      </div>
-    <dialog id="create-thread-box">
-      <div class="modal-top">
-        <div><p>new thread</p></div>
-        <div><button id="close-button">x</button></div>
-      </div>
-      <form id="modal-form">
-        <hr />
+    </div>
+    <div class="body-right">
+      <div class="moshpit-info">
+        <div class="tab-nav-div">
+          <ul class="tab-nav">
+            <li><B>trending</B></li>
+          </ul>
+        </div>
         <div>
-          <div class="modal-input">
-            <label for="">comment</label
-            ><textarea
-              name="text"
-              id="thread-text"
-              style="height: 400px; width: 96.4%"
-            ></textarea>
-          </div>
-
-          <div class="modal-input">
-            <label for="">moshpit (board)</label
-            ><input
-              type="text"
-              name="moshpit"
-              value="<%= thread.moshpit %>"
-              placeholder="if left blank your thread will go onto /moshpit/ <= 7 chars"
-            />
-          </div>
-
-          <div class="modal-input">
-            <label for="">signature</label
-            ><input
-              type="text"
-              placeholder="put a secure password here to sign your post"
-            />
-          </div>
-          <div><button type="submit" id="button-thread">submit</button></div>
-          <input type="hidden" name="post-text" id="post-text" />
+          <ul class="info-list">
+            <% trending.forEach(moshpit => { if (!moshpit.hid) { %>
+            <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.recent_count %> <%= moshpit.recent_count === 1 ? 'post in the last hour' : 'posts in the last hour' %></a></li>
+            <% }}) %>
+          </ul>
         </div>
-      </form>
-    </dialog>
-
-    <dialog id="report-box">
-      <div class="modal-top">
-        <div><p>report</p></div>
-        <div><button id="close-button-2">x</button></div>
       </div>
+    </div>
+  </div>
+  <dialog id="create-thread-box">
+    <div class="modal-top">
+      <div>
+        <p>new thread</p>
+      </div>
+      <div><button id="close-button">x</button></div>
+    </div>
+    <form id="modal-form">
       <hr />
-      <form id="modal-form-report">
+      <div>
+        <div class="modal-input">
+          <label for="">comment</label><textarea name="text" id="thread-text" style="height: 400px; width: 96.4%"></textarea>
+        </div>
+
+        <div class="modal-input">
+          <label for="">moshpit (board)</label><input type="text" name="moshpit" value="<%= thread.moshpit %>" placeholder="if left blank your thread will go onto /moshpit/ <= 7 chars" />
+        </div>
+
+        <div class="modal-input">
+          <label for="">signature</label><input type="text" placeholder="put a secure password here to sign your post" />
+        </div>
+        <div><button type="submit" id="button-thread">submit</button></div>
+        <input type="hidden" name="post-text" id="post-text" />
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="report-box">
+    <div class="modal-top">
+      <div>
+        <p>report</p>
+      </div>
+      <div><button id="close-button-2">x</button></div>
+    </div>
+    <hr />
+    <form id="modal-form-report">
+      <div>
+        <label for="rule-select">which rule was violated?</label>
+        <select name="reported_rule" id="rule-select">
+          <option value="" selected disabled hidden>
+            --please choose an option--
+          </option>
+          <option value="1">
+            1. dont post anything that violates local or US law
+          </option>
+          <option value="2">2. dont do or advocate for in site or out of site raids</option>
+          <option value="3">3. dont spam</option>
+          <option value="4">
+            4. dont advertise anything you get monetary gain from
+          </option>
+          <option value="5">5. dont post offtopic threads or replies</option>
+          <option value="6">6. dont dox</option>
+          <option value="7">7. dont send false reports</option>
+          <option value="8">8. dont evade bans</option>
+          <option value="9">9. dont advocate for pedophilia or zoophilia</option>
+          <option value="10">
+            10. dont link to or request nsfw or harmful (malware for example) content
+          </option>
+        </select>
+        <label>false reports = ban</label>
+        <button type="submit">submit</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="myPopup" class="popup hidden">
+    <div id="myPopupHeader" class="popup-header">
+      <p>reply</p>
+      <button id="close-button3">x</button>
+    </div>
+    <div style="background-color: var(--panel); padding: 3px">
+      <form action="" id="reply-form">
+        <textarea name="reply" id="reply-textarea"></textarea>
         <div>
-          <label for="rule-select">which rule was violated?</label>
-          <select name="reported_rule" id="rule-select">
-            <option value="" selected disabled hidden>
-              --please choose an option--
-            </option>
-            <option value="1">
-              1. dont post anything that violates local or US law
-            </option>
-            <option value="2">2. dont post here if you are under the age of 18</option>
-            <option value="3">3. dont spam</option>
-            <option value="4">
-              4. dont advertise anything you get monetary gain from
-            </option>
-            <option value="5">5. dont post offtopic threads or replies</option>
-            <option value="6">6. dont dox or raid</option>
-            <option value="7">7. dont send false reports</option>
-            <option value="8">8. dont evade bans</option>
-            <option value="9">9. dont advocate for pedophilia or zoophilia</option>
-            <option value="10">
-              10. dont link to or request nsfw or harmful (malware for example) content
-            </option>
-          </select>
-          <label>false reports = ban</label>
-          <button type="submit">submit</button>
+          <div>
+            <label for="reply-sig" style="margin: 0px 0px 0px -5px">signature</label>
+            <input id="reply-sig" type="text" placeholder="put a secure password here to sign your post" style="width: 100%" />
+          </div>
+          <input type="hidden" name="post-text1" id="post-text1" />
+
+          <div style="display: flex; justify-content: right; margin-top: 5px">
+            <button id="submit-reply" type="submit">submit</button>
+          </div>
         </div>
       </form>
-    </dialog>
-
-    <div id="myPopup" class="popup hidden">
-      <div id="myPopupHeader" class="popup-header">
-        <p>reply</p>
-        <button id="close-button3">x</button>
-      </div>
-      <div style="background-color: var(--panel); padding: 3px">
-        <form action="" id="reply-form">
-          <textarea name="reply" id="reply-textarea"></textarea>
-          <div>
-            <div>
-              <label for="reply-sig" style="margin: 0px 0px 0px -5px"
-                >signature</label
-              >
-              <input
-                id="reply-sig"
-                type="text"
-                placeholder="put a secure password here to sign your post"
-                style="width: 100%"
-              />
-            </div>
-            <div style="display: flex; justify-content: right; margin-top: 5px">
-              <button id="submit-reply" type="submit">submit</button>
-            </div>
-          </div>
-        </form>
-      </div>
     </div>
+  </div>
 
-    <script defer>
-      dayjs.extend(window.dayjs_plugin_relativeTime);
-      let timers = document.querySelectorAll('.timer')
-      timers.forEach((t) => {
-        t.textContent= dayjs.unix(Number(t.dataset.time)).fromNow()
-      })
-      let timerid; 
-  function timerup() {
-    if (!timerid) [
-timerid = setInterval(() => {
+  <script defer>
+    dayjs.extend(window.dayjs_plugin_relativeTime);
+    let timers = document.querySelectorAll('.timer')
+    timers.forEach((t) => {
+      t.textContent = dayjs.unix(Number(t.dataset.time)).fromNow()
+    })
+    let timerid;
+
+    function timerup() {
+      if (!timerid)[
+        timerid = setInterval(() => {
           timers = document.querySelectorAll('.timer')
-          
+
           timers.forEach((t) => {
+
+            t.textContent = dayjs.unix(Number(t.dataset.time)).fromNow()
+          })
+        }, 1000)
+      ]
+    }
+    timerup()
+
+
+    function updateReplyLinks() {
+      document.querySelectorAll('.replylist').forEach(el => {
+    el.classList.add('hidden');
+});
+    
+    document.querySelectorAll('.post-replies').forEach(el => {
+        el.replaceChildren()
+    });
+    
+    const replies = new Map()
+
+    document.querySelectorAll('.post').forEach(post => {
+        const replierId = post.id
+
+        const quotedPosts = new Set()
+
+        post.querySelectorAll('.post-body .quote').forEach(quote => {
+            const quotedId = quote.dataset.quoteid.trim();
           
-        t.textContent= dayjs.unix(Number(t.dataset.time)).fromNow()
-        } )
-      }, 1000) 
-    ]
-  }
-      timerup()
-       
-        // Source - https://stackoverflow.com/a/11381730
-// Posted by Michael Zaporozhets, modified by community. See post 'Timeline' for change history
-// Retrieved 2026-09-28, License - CC BY-SA 4.0
-
-window.mobileAndTabletCheck = function() {
-  let check = false;
-  (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))) check = true;})(navigator.userAgent||navigator.vendor||window.opera);
-  return check;
-};
-
-      
-      const updaters = document.querySelectorAll('.update')
-
-      updaters.forEach(u => {
-        u.addEventListener('click', async event => {
-          event.preventDefault()
-          await getNewPosts()
-        })
-      })
-      function quote(post_id) {
-
-      }
-      const quotes = document.querySelectorAll('.quote')
-      window.addEventListener("scroll", () => {
-        let tochange = document.querySelectorAll('.backpanel')
-        tochange.forEach(panel => {
-          panel.style.backgroundColor = 'var(--panel)'
-        })
-        let todelete = document.querySelectorAll('.hoverquote')
+            // Prevent >>10 >>10 from creating two entries
+            quotedPosts.add(quotedId)
+            
+        });
         
-        todelete.forEach(hover => {
-          if (hover) {
+        for (const quotedId of quotedPosts) {
+            if (!replies.has(quotedId)) {
+                replies.set(quotedId, [])
+            }
+
+            replies.get(quotedId).push(replierId)
+        }
+    });
+    
+    // Render
+    for (const [quotedId, replierIds] of replies) {
+        const targetPost = document.getElementById(quotedId)
+        if (!targetPost) continue
+
+        const container = targetPost.querySelector('.post-replies');
+        targetPost.querySelector('.replylist').classList.remove('hidden')
+        for (const replierId of replierIds) {
+          if (replierId == quotedId) continue
+            const li = document.createElement('li');
+            const link = document.createElement('a')
+            link.classList.add('quote')
+            link.dataset.quoteid = replierId
+            link.style.color = 'var(--rage)'
+            link.href = `#${replierId}`;
+            link.innerHTML = `@${replierId}&nbsp`;
+            li.appendChild(link)
+            container.appendChild(li);
+        }
+    }
+}
+updateReplyLinks()
+    const updaters = document.querySelectorAll('.update')
+
+    updaters.forEach(u => {
+      u.addEventListener('click', async event => {
+        event.preventDefault()
+        await getNewPosts()
+      })
+    })
+
+    function quote(post_id) {
+
+    }
+    const quotes = document.querySelectorAll('.quote')
+    window.addEventListener("scroll", () => {
+      let tochange = document.querySelectorAll('.backpanel')
+      tochange.forEach(panel => {
+        panel.style.backgroundColor = 'var(--panel)'
+      })
+      let todelete = document.querySelectorAll('.hoverquote')
+
+      todelete.forEach(hover => {
+        if (hover) {
           hover.remove()
 
-          }
+        }
 
-        })
+      })
+
+
+
+    }, {
+      passive: true
+    });
+
+    document.addEventListener('pointerover', (e) => {
+      const quote = e.target.closest(".quote")
+      if (!quote) return;
+      console.log('pointer1')
+      if (e.pointerType !== "mouse") return;
+      
+
+      const quoteid = quote.dataset.quoteid;
+
+      let quoted
+
+      if (Number(quoteid) == quoteid) {
+        quoted = document.getElementById(Number(quoteid))
+      } else {
+        quoted = document.getElementById('OP')
+
+      }
+      if (isVisible(quoted)) {
+        quoted.querySelector(".backpanel").style.backgroundColor = 'var(--gradient)'
+      } else {
+
+
+        let quotepost = quoted.cloneNode(true)
+        quotepost.style.position = 'fixed'
         
-
-        
-        }, { passive: true });
-
-        document.addEventListener('pointerover', (e) => {
-          const quote = e.target.closest(".quote")
-         
-    if (!quote) return;
-    if (e.pointerType !== "mouse") return;
-
-    const quoteid = quote.dataset.quoteid;
-
-          let quoted
-          
-          if (Number(quoteid) == quoteid) {
-              quoted = document.getElementById(Number(quoteid))
-          } else {
-              quoted = document.getElementById('OP')
-
-          }
-          if (isVisible(quoted)) {
-            quoted.querySelector(".backpanel").style.backgroundColor = 'var(--gradient)'
-          } else {
-            let quotepost = quoted.cloneNode(true)
-            quotepost.style.position = 'fixed'
-            
-            quotepost.style.left = '50%'
-            quotepost.style.top = '50%'
-            quotepost.style.transform = 'translate(-50%, -50%)'
-            quotepost.classList.add('hoverquote')
-            quotepost.style.minWidth = '400px'
-            quotepost.style.maxHeight = '100vh'
-            quotepost.style.overflow = 'hidden'
-            quotepost.style.width = '68%'
-            quotepost.style.border = '1px solid var(--rage)'
-            quotepost.dataset.oldid = quoteid
-            quotepost.id = quoteid + 'hover'
-            const body = document.getElementById('fakebody')
-            body.appendChild(quotepost)
-          }
+        quotepost.style.left = '50%'
+        quotepost.style.top = '50%'
+        quotepost.style.transform = 'translate(-50%, -50%)'
+        quotepost.classList.add('hoverquote')
+        quotepost.style.minWidth = '400px'
+        quotepost.style.maxHeight = '100vh'
+        quotepost.style.overflow = 'hidden'
+        quotepost.style.width = '69%'
+        quotepost.style.border = '1px solid var(--rage)'
+        quotepost.dataset.oldid = quoteid
+        quotepost.id = quoteid + 'hover'
+        const body = document.getElementById('fakebody')
+        body.appendChild(quotepost)
+      }
     })
-        
-        
-     
-            
-          
-          
-          
-     
-        document.addEventListener('pointerout', e => {
-           const quote = e.target.closest(".quote")
-         
-    if (!quote) return;
-    if (e.pointerType !== "mouse") return;
 
-    const quoteid = quote.dataset.quoteid;
 
-          let quoted
-          
-          if (Number(quoteid) == quoteid) {
-              quoted = document.getElementById(Number(quoteid))
-          } else {
-              quoted = document.getElementById('OP')
 
-          }
-          if (isVisible(quoted)) {
-            quoted.querySelector(".backpanel").style.backgroundColor = 'var(--panel)'
-          } else {
-            let quoteposts = document.getElementById(quoteid + 'hover')
-            if (quoteposts) {
+
+    document.addEventListener('pointerout', e => {
+      const quote = e.target.closest(".quote")
+
+      if (!quote) return;
+      if (e.pointerType !== "mouse") return;
+
+      const quoteid = quote.dataset.quoteid;
+
+      let quoted
+
+      if (Number(quoteid) == quoteid) {
+        quoted = document.getElementById(Number(quoteid))
+      } else {
+        quoted = document.getElementById('OP')
+
+      }
+      if (isVisible(quoted)) {
+        quoted.querySelector(".backpanel").style.backgroundColor = 'var(--panel)'
+      } else {
+        let quoteposts = document.getElementById(quoteid + 'hover')
+        if (quoteposts) {
           quoteposts.remove()
 
+        }
+      }
+
+
+    })
+
+    const posts = document.querySelectorAll('.post')
+
+    function hidePost(event, id) {
+      if (event.target.closest('a')) {
+    return
+  }
+      if (id == 'OP') {
+             const post = document.querySelector(`#OP`)
+              if (!post) {
+                return
+              }
+            const panel = post.querySelector('.backpanel')
+            if (!panel) {
+                return
+              }
+            panel.classList.toggle('hidden')
+      } else if (!isNaN(Number(id)))  {
+            const post = document.getElementById(String(id))
+              if (!post) {
+                return
+              }
+            const panel = post.querySelector('.backpanel')
+            if (!panel) {
+                return
+              }
+            panel.classList.toggle('hidden')
+      }
+      
+    }
+    const report = document.querySelector('.report_a')
+    const report_modal = document.getElementById('report-box')
+
+
+    document.addEventListener('click', async e => {
+      const quote = e.target.closest('.quote');
+      const report_button = e.target.closest('.report_a');
+      const slap = e.target.closest('.slap');
+      const shoot = e.target.closest('.shoot');
+      const hide = e.target.closest('.hide');
+      const deleter = e.target.closest('.delete');
+      const ban = e.target.closest('.ban');
+      const info = e.target.closest('.info');
+      const backpanels = document.querySelectorAll('.backpanel')
+      const header = e.target.closest('.post-header')
+      const reply = e.target.closest('.reply-button')
+      // SLAP
+
+      if (slap) {
+        e.preventDefault();
+
+        const slapid = slap.dataset.postid;
+
+        if (slapid) {
+          try {
+            const response = await fetch('/api/slap', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                post_id: slapid,
+                action: 'slap'
+              })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+              alert(data.error || 'Failed to slap post');
+              return;
             }
+
+            const postiq = document.querySelector(
+              `[data-alarm="${slapid}"]`
+            );
+
+            if (postiq) {
+              postiq.innerHTML =
+                '<hr style="margin-bottom: 3px;border-color: 1px solid var(--border-color); color: var(--border-color); background-color: var(--border-color)">*SMACK*';
+
+              postiq.classList.remove('hidden');
+            }
+          } catch (error) {
+            console.error('Slap error:', error);
+            alert('Failed to slap post');
           }
-          
-          
-        })
+        }
 
-
-      const report = document.getElementById('report_a')
-      const report_modal = document.getElementById('report-box')
-
-      if (report) {
-        report.addEventListener('click', event => {
-          
-          
-        })
-      }
-        document.addEventListener('click', e => {
-         
-           const quote = e.target.closest(".quote")
-          const report_button = e.target.closest('.report_a')
-    if (quote) { 
-const quoteid = quote.dataset.quoteid;
-
-          let quoted
-          if (Number(quoteid) == quoteid) {
-                quoted = document.getElementById(Number(quoteid))
-          } else {
-              quoted = document.getElementById('OP')
-
-          }
-          if (isVisible(quoted)) {
-            quoted.querySelector(".backpanel").style.backgroundColor = 'var(--panel)'
-          } else {
-            let quoteposts = document.getElementById(quoteid + 'hover')
-          quoteposts.remove()
-          }
-    }
-
-    if (report_button) {
-      e.preventDefault()
-      report_modal.showModal()
-    }
-    
-  
-
-    
-          
-
-        })
-       
-     
-
-      function isVisible(el) {
-        const rect = el.getBoundingClientRect()
-        const xaxis = rect.x >= 0 && rect.right <= window.innerWidth
-        const yaxis = rect.top >= 0 && rect.bottom <= window.innerHeight
-        return xaxis && yaxis
+        return;
       }
 
-       const createThread = document.getElementById('create-thread')
-      const modal = document.getElementById('create-thread-box')
-     const createThread2 = document.getElementById('create-thread2')
 
-      createThread.addEventListener('click', event => {
-        event.preventDefault()
-        modal.showModal()
+      // SHOOT
+
+      if (shoot) {
+        console.log('boom')
+        e.preventDefault();
+
+        const shootid = shoot.dataset.postid;
+
+        if (shootid) {
+          try {
+            const response = await fetch('/api/shoot', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                post_id: shootid,
+                action: 'shoot'
+              })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+              alert(data.error || 'Failed to shoot post');
+              return;
+            }
+
+            const postiq = document.querySelector(
+              `[data-alarm="${shootid}"]`
+            );
+
+            if (postiq) {
+              postiq.innerHTML =
+                '<hr style="margin-bottom: 3px;border-color: 1px solid var(--border-color); color: var(--border-color); background-color: var(--border-color)">*BANG*';
+
+              postiq.classList.remove('hidden');
+            }
+          } catch (error) {
+            console.error('Shoot error:', error);
+            alert('Failed to shoot post');
+          }
+        }
+
+        return;
+      }
+
+      // HIDE 
+      if (hide) {
+        e.preventDefault();
+
+        let slapid = hide.dataset.postid;
+        let thread_id;
+        let num = slapid
+        if (slapid) {
+          if (hide.dataset.type == 'OP') {
+            thread_id = slapid
+            slapid = null
+          } else if (!isNaN(Number(slapid))) {
+            thread_id = null
+          }
+          try {
+            const response = await fetch('/api/hide', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                post_id: slapid,
+                thread_id: thread_id,
+                action: 'hide'
+              })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+              alert(data.error || 'Failed to hide post');
+              return;
+            }
+            backpanels.forEach(panel => {
+              if (panel.dataset.postid) {
+                if (panel.dataset.postid === 'OP') {
+                  panel.classList.add('hidden')
+                } else if (panel.dataset.postid === num) {
+                   panel.classList.add('hidden')
+                }
+              }
+            })
+           
+          } catch (error) {
+            console.error('Hide error:', error);
+            alert('Failed to hide post');
+          }
+        }
+
+        return;
+      }
+      // DELETE
+      if (deleter) {
+        e.preventDefault();
+
+        let slapid = deleter.dataset.postid;
+        let thread_id;
+        let num = slapid
+        if (slapid) {
+          if (deleter.dataset.type == 'OP') {
+            thread_id = slapid
+            slapid = null
+          } else if (!isNaN(Number(slapid))) {
+            thread_id = null
+          }
+          try {
+            const response = await fetch('/api/delete', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                post_id: slapid,
+                thread_id: thread_id,
+                action: 'delete'
+              })
+            });
+            
+            const data = await response.json();
+
+            if (!response.ok) {
+              alert(data.error || 'Failed to delete post');
+              return;
+            }
+            console.log(deleter)
+            document.getElementById(deleter.dataset.threadid).remove()
+          
+           
+          } catch (error) {
+            console.error('Delete error:', error);
+            alert('Failed to delete post');
+          }
+        }
+
+        return;
+      }
+      // DELETE
+      if (ban) {
+        e.preventDefault();
+
+        let slapid = ban.dataset.postid;
+        let thread_id;
+        let num = slapid
+        if (slapid) {
+          if (ban.dataset.type == 'OP') {
+            thread_id = slapid
+            slapid = null
+          } else if (!isNaN(Number(slapid))) {
+            thread_id = null
+          }
+          try {
+            const response = await fetch('/api/ban', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                post_id: slapid,
+                thread_id: thread_id,
+                action: 'ban'
+              })
+            });
+            
+            const data = await response.json();
+
+            if (!response.ok) {
+              alert(data.error || 'Failed to ban user');
+              return;
+            }
+            console.log('banned user')
+          
+           
+          } catch (error) {
+            console.error('Ban error:', error);
+            alert('Failed to ban user');
+          }
+        }
+
+        return;
+      }
+      // QUOTE
+
+      if (quote) {
+        const quoteid = quote.dataset.quoteid;
+
+        let quoted;
+
+        if (Number(quoteid) == quoteid) {
+          quoted = document.getElementById(Number(quoteid));
+        } else {
+          quoted = document.getElementById('OP');
+        }
+
+        if (quoted && isVisible(quoted)) {
+          quoted.querySelector('.backpanel').style.backgroundColor =
+            'var(--panel)'
+        } else {
+          const quoteposts = document.getElementById(quoteid + 'hover');
+
+          if (quoteposts) {
+            quoteposts.remove()
+          }
+        }
+      }
+
+
+      // REPORT
+
+      if (report_button) {
+        e.preventDefault()
+        report_modal.showModal()
+      }
+
+      // REPLY BUTTON
+      if (reply) {
+        e.preventDefault()
+        if (reply.dataset.threadId) {
+          areatext.value += `@${reply.dataset.threadId} \n`
+
+        } else {
+          areatext.value = ``
+        }
+        popup.classList.remove('hidden')
+        areatext.focus()
+      }
+
+
+      // HEADER
+
+      if (header) {
+        if (e.target.closest('a')) {
+          return
+        }
+
+        hidePost(e, header.dataset.headerid)
+
+      }
+    });
+
+    function isVisible(el) {
+      const rect = el.getBoundingClientRect()
+      const xaxis = rect.x >= 0 && rect.right <= window.innerWidth
+      const yaxis = rect.top >= 0 && rect.bottom <= window.innerHeight
+      return xaxis && yaxis
+    }
+
+    const createThread = document.getElementById('create-thread')
+    const modal = document.getElementById('create-thread-box')
+    const createThread2 = document.getElementById('create-thread2')
+
+    createThread.addEventListener('click', event => {
+      event.preventDefault()
+      modal.showModal()
+    })
+    createThread2.addEventListener('click', event => {
+      event.preventDefault()
+      modal.showModal()
+    })
+    const createThreadForm = document.getElementById('modal-form')
+    const buttonThreadForm = document.getElementById('button-thread')
+    const textarea = document.getElementById('thread-text')
+    createThreadForm.addEventListener('submit', async event => {
+      // Prevent the browser from reloading the page
+      event.preventDefault()
+      const text = textarea.value
+      const moshpit = document.querySelector('input[name="moshpit"]').value
+      const post_text = document.querySelector('input[name="post-text"]').value
+      if (!text.trim()) {
+        alert('the comment field cannot be empty')
+        return
+      }
+      const regex = /^[a-z0-9]+$/i
+      if (moshpit.length > 7) {
+        alert('moshpit titles cannot be over 7 characters long')
+        return
+      } else if (!regex.test(moshpit)) {
+        alert('only alphanumeric characters are allowed for moshpit titles')
+        return
+      }
+      const response = await fetch('/api/create/thread', {
+        method: 'POST',
+
+        headers: {
+          'Content-Type': 'application/json'
+        },
+
+        body: JSON.stringify({
+          text: text.trimEnd(),
+          moshpit: moshpit,
+          html: text.trimEnd(),
+          post_text: post_text
+        })
       })
-       createThread2.addEventListener('click', event => {
-        event.preventDefault()
-        modal.showModal()
-      })
-      const createThreadForm = document.getElementById('modal-form')
-      const buttonThreadForm = document.getElementById('button-thread')
-      const textarea = document.getElementById('thread-text')
-      createThreadForm.addEventListener('submit', async event => {
-        // Prevent the browser from reloading the page
-        event.preventDefault()
-        const text = textarea.value
-        const moshpit = document.querySelector('input[name="moshpit"]').value
-        if (!text.trim()) {
-          return
-        }
-        
-        if (!text.trim()) {
-          alert('the comment field cannot be empty')
-          return
-        }
-        const regex = /^[a-z0-9]+$/i
-        if (moshpit.length > 7) {
-          alert('moshpit titles cannot be over 7 characters long')
-          return
-        } else if (!regex.test(moshpit)) {
-          alert('only alphanumeric characters are allowed for moshpit titles')
-          return
-        }
-        const response = await fetch('/api/create/thread', {
+
+      if (!response.ok) {
+        const data = await response.json()
+        alert(data.error)
+        return
+      }
+
+      const data = await response.json()
+      window.location.href = `/${data.moshpit.title}/${data.threadId}`
+    })
+
+
+    const closeButton = document.getElementById('close-button')
+    closeButton.addEventListener('click', event => {
+      event.preventDefault()
+      modal.close()
+    })
+
+    const closeButton2 = document.getElementById('close-button-2')
+    closeButton2.addEventListener('click', event => {
+      event.preventDefault()
+      report_modal.close()
+    })
+
+    const popup = document.getElementById('myPopup')
+    const areatext = document.getElementById('reply-textarea')
+    const closeButton3 = document.getElementById('close-button3')
+
+    closeButton3.addEventListener('click', event => {
+      event.preventDefault()
+      areatext.value = ''
+      areatext.style.width = ''
+      areatext.style.height = ''
+      popup.classList.add('hidden')
+    })
+
+    makeElementMovable(document.getElementById('myPopup'))
+
+    //reply box pop up when you click the reply to post button
+    
+    // idk i stole it 
+    function makeElementMovable(element) {
+      let pos1 = 0,
+        pos2 = 0,
+        pos3 = 0,
+        pos4 = 0
+      const header = document.getElementById(element.id + 'Header')
+      if (header) {
+        header.onmousedown = dragMouseDown
+      } else {
+        element.onmousedown = dragMouseDown
+      }
+
+      function dragMouseDown(e) {
+        e = e || window.event
+        e.preventDefault()
+        pos3 = e.clientX
+        pos4 = e.clientY
+        document.onmousemove = elementDrag
+        document.onmouseup = closeDragElement
+      }
+
+      function elementDrag(e) {
+        e = e || window.event
+        e.preventDefault()
+        pos1 = pos3 - e.clientX
+        pos2 = pos4 - e.clientY
+        pos3 = e.clientX
+        pos4 = e.clientY
+        element.style.top = element.offsetTop - pos2 + 'px'
+        element.style.left = element.offsetLeft - pos1 + 'px'
+      }
+
+      function closeDragElement() {
+        document.onmousemove = null
+        document.onmouseup = null
+      }
+    }
+
+    const replyForm = document.getElementById('reply-form')
+    const reply_textarea = document.getElementById('reply-textarea')
+    const post_text1 = document.querySelector('input[name="post-text1"]').value
+
+    replyForm.addEventListener('submit', async event => {
+      console.log('replied!')
+      event.preventDefault()
+      const text = reply_textarea.value
+
+      if (!text.trim()) return
+
+      try {
+        const response = await fetch('/api/create/post', {
           method: 'POST',
-
           headers: {
             'Content-Type': 'application/json'
           },
-
           body: JSON.stringify({
             text: text.trimEnd(),
-            moshpit: moshpit,
-            html: text.trimEnd()
+            moshpit: '<%= thread.moshpit %>',
+            thread_id: '<%= thread.id %>',
+            html: text.trimEnd(),
+            post_text1: post_text1
           })
         })
 
         if (!response.ok) {
-          console.error('Failed to create thread')
+          const data = await response.json()
+          alert(data.error)
           return
         }
-
         const data = await response.json()
-        window.location.href = `/${data.moshpit.title}/${data.threadId}`
-      })
 
-
-      const closeButton = document.getElementById('close-button')
-      closeButton.addEventListener('click', event => {
-        event.preventDefault()
-        modal.close()
-      })
-
-      const closeButton2 = document.getElementById('close-button-2')
-      closeButton2.addEventListener('click', event => {
-        event.preventDefault()
-        report_modal.close()
-      })
-
-      const popup = document.getElementById('myPopup')
-      const areatext = document.getElementById('reply-textarea')
-      const closeButton3 = document.getElementById('close-button3')
-
-      closeButton3.addEventListener('click', event => {
-        event.preventDefault()
-        areatext.value = ''
-        areatext.style.width = ''
-        areatext.style.height = ''
+        reply_textarea.value = ''
         popup.classList.add('hidden')
-      })
-
-      makeElementMovable(document.getElementById('myPopup'))
-
-      //reply box pop up when you click the reply to post button
-      document.querySelectorAll('.reply-button').forEach(a => {
-        a.addEventListener('click', event => {
-          event.preventDefault()
-          areatext.value += a.dataset.threadId
-            ? '@' + a.dataset.threadId + '\n'
-            : ''
-          popup.classList.remove('hidden')
-          areatext.focus()
-        })
-      })
-      // idk i stole it 
-      function makeElementMovable(element) {
-        let pos1 = 0,
-          pos2 = 0,
-          pos3 = 0,
-          pos4 = 0
-        const header = document.getElementById(element.id + 'Header')
-        if (header) {
-          header.onmousedown = dragMouseDown
-        } else {
-          element.onmousedown = dragMouseDown
-        }
-
-        function dragMouseDown(e) {
-          e = e || window.event
-          e.preventDefault()
-          pos3 = e.clientX
-          pos4 = e.clientY
-          document.onmousemove = elementDrag
-          document.onmouseup = closeDragElement
-        }
-
-        function elementDrag(e) {
-          e = e || window.event
-          e.preventDefault()
-          pos1 = pos3 - e.clientX
-          pos2 = pos4 - e.clientY
-          pos3 = e.clientX
-          pos4 = e.clientY
-          element.style.top = element.offsetTop - pos2 + 'px'
-          element.style.left = element.offsetLeft - pos1 + 'px'
-        }
-
-        function closeDragElement() {
-          document.onmousemove = null
-          document.onmouseup = null
-        }
+        await getNewPosts()
+      } catch (error) {
+        alert('Failed to create post: ' + error)
       }
-
-      const replyForm = document.getElementById('reply-form')
-      const reply_textarea = document.getElementById('reply-textarea')
-
-      replyForm.addEventListener('submit', async event => {
-        event.preventDefault()
-        const text = reply_textarea.value
-
-        if (!text.trim()) return
-
-        try {
-          const response = await fetch('/api/create/post', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              text: text.trimEnd(),
-              moshpit: '<%= thread.moshpit %>',
-              thread_id: '<%= thread.id %>',
-              html: text.trimEnd()
-            })
-          })
-
-          if (!response.ok) {
-            console.error('Failed to create post')
-            return
-          }
-          const data = await response.json()
-       
-          reply_textarea.value = ''
-          popup.classList.add('hidden')
-          await getNewPosts()
-        } catch (error) {
-          alert('Failed to create post: ' + error)
-        } 
-      })
-async function getNewPosts() {
+    })
+    async function getNewPosts() {
       try {
         const after = getLastPostId()
-       
+
         if (after === null) {
           console.log('no last post')
-          
+
           return
         }
 
         const response = await fetch(
-          `/api/refresh/<%= moshpit.title %>/<%= thread.id %>/${encodeURIComponent(after)}`,
-          {
+          `/api/refresh/<%= moshpit.title %>/<%= thread.id %>/${encodeURIComponent(after)}`, {
             method: 'GET',
             headers: {
               'Accept': 'application/json'
@@ -702,6 +1051,8 @@ async function getNewPosts() {
         )
 
         if (!response.ok) {
+          const data = await response.json()
+          alert(data.error)
           throw new Error(
             `Failed to get new posts: ${response.status} ${response.statusText}`
           )
@@ -709,34 +1060,37 @@ async function getNewPosts() {
 
         const data = await response.json()
 
-        const posts = Array.isArray(data)
-          ? data
-          : Array.isArray(data.posts)
-            ? data.posts
-            : []
-        
+        const posts = Array.isArray(data) ?
+          data :
+          Array.isArray(data.posts) ?
+          data.posts :
+          []
+
         for (const post of posts) {
           if (!post || post.post_number === undefined) {
-              console.log('post doesnt exists')
+            console.log('post doesnt exists')
 
             continue
           }
 
           if (postAlreadyExists(post.post_number)) {
-          
+
             continue
           }
-          
-      
+
+
           addPost(post)
-    
-          
+
+
         }
+        updateReplyLinks()
+
       } catch (error) {
         console.error('Error getting new posts:', error)
       }
     }
-      function getLastPostId() {
+
+    function getLastPostId() {
       const postElements = document.querySelectorAll('.post[id]')
 
       if (!postElements.length) {
@@ -747,6 +1101,7 @@ async function getNewPosts() {
 
       return lastPost.id
     }
+
     function postAlreadyExists(postId) {
       if (postId === null || postId === undefined) {
         return false
@@ -755,68 +1110,114 @@ async function getNewPosts() {
       return document.getElementById(String(postId)) !== null
     }
 
-      function addPost(post) {
-        const postElements = document.querySelectorAll('.post')
-        const template = postElements[0]
+    function addPost(post) {
+      const postElements = document.querySelectorAll('.post')
+      const template = postElements[0]
 
-       
 
-        const newPost = template.cloneNode(true)
-        const header = newPost.querySelector('.post-header')
-        const headerInfo = header.querySelector('div > div')
 
-        if (headerInfo) {
-          const pall = headerInfo.querySelectorAll('p')
-          if (pall[0]) {
-            pall[0].innerHTML = `${post.post_number} |&nbsp`
-          }
-          if (<%= moshpit.flags%>) {
-            pall[1].innerHTML = `${post.country} |&nbsp`
-          }
+      const newPost = template.cloneNode(true)
+      
+      
+const header = newPost.querySelector('.post-header')
+      const headerInfo = header.querySelector('div > div')
+newPost.id = String(post.post_number)
+
+if (header) {
+    header.dataset.headerid = String(post.post_number)
+}
+
+const backpanel = newPost.querySelector('.backpanel')
+if (backpanel) {
+    backpanel.dataset.postid = String(post.id)
+    backpanel.classList.remove('hidden')
+}
+
+const alarm = newPost.querySelector('[data-alarm]')
+if (alarm) {
+    alarm.dataset.alarm = String(post.id)
+}
+      if (headerInfo) {
+        const pall = headerInfo.querySelectorAll('p')
+        
+        if (pall[0]) {
+          pall[0].innerHTML = `${post.post_number} |&nbsp`
         }
-
-        const postbody = newPost.querySelector('.post-body')
-        if (postbody) {
-          postbody.innerHTML = post.html.trimEnd()
-   
+        if (<%= moshpit.flags%>) {
+          pall[1].innerHTML = `${post.country} |&nbsp`
         }
-
-        const date = newPost.querySelector('[itemprop]')
-        if (date) {
-          date.dataset.time = post.created_at
-     
-        }
-
-        const replyButton = newPost.querySelector('.reply-button')
-        if (replyButton) {
-          replyButton.dataset.threadId = post.post_number
-          replyButton.addEventListener('click', event => {
-            event.preventDefault()
-            areatext.value += `@${post.post_number} \n`
-            popup.classList.remove('hidden')
-            areatext.focus()
-          })
-        }
-
-        const threadContainer = document.getElementById('post-container')
-        newPost.id = post.post_number
-        threadContainer.appendChild(newPost)
-        clearInterval(timerid)
-          timerid = null
-          timers = document.querySelectorAll('.timer')
-          timers.forEach((t) => {
-          
-        t.textContent= dayjs.unix(Number(t.dataset.time)).fromNow() 
-        })
-        timerup()
       }
 
-   
+      const postbody = newPost.querySelector('.post-body')
+      if (postbody) {
+        postbody.innerHTML = post.html.trimEnd()
+
+      }
+
+      const date = newPost.querySelector('[itemprop]')
+      if (date) {
+        date.dataset.time = post.created_at
+
+      }
+
+      const replyButton = newPost.querySelector('.reply-button')
+      if (replyButton) {
+        replyButton.dataset.threadId = post.post_number
       
-      
-    </script>
-  </body>
+      }
+      newPost.querySelector('.post-replies').replaceChildren()
+      if (newPost.querySelector('.postheaderoptions')) {
+        const author_id = post.author_id;
+
+        let html = '';
+
+        if (author_id != <%- user.id %> && (<%- user.is_owner || user.is_admin %>)) {
+          html += `<a href="" class="info" data-authorid="${post.author_id}">info</a>&nbsp;|&nbsp;`;
+        }
+
+        if (author_id != <%- user.id %> && (<%- user.is_owner || user.is_admin || user.is_mod %>)) {
+          html += `<a href="" class="ban" data-postid="${post.id}" data-type="post" data-threadid="${post.post_number}">ban</a>&nbsp;|&nbsp;`;
+        }
+
+        if (<%- user.is_owner || user.is_admin || user.is_mod || user.is_janitor %>) {
+          html += `<a href="" class="delete" data-postid="${post.id}" data-type="post" data-threadid="${post.post_number}">delete</a>&nbsp;|&nbsp;`;
+        }
+
+        if (
+          
+          (<%- user.id === thread.author_id || user.is_owner || user.is_admin || user.is_mod || user.is_janitor %>)
+        ) {
+          html += `<a href="" class="hide" data-type="post" data-postid="${post.id}">hide</a>&nbsp;|&nbsp;`;
+        }
+
+        if (
+          
+          (author_id != <%- user.id %> && (<%-  user.id === thread.author_id || user.is_owner || user.is_admin %>))
+        ) {
+          html += `<a href="" class="shoot" data-postid="${post.id}">shoot</a>&nbsp;|&nbsp;
+                 `;
+        }
+
+        if ((author_id != <%- user.id %> && (<%-  user.id === thread.author_id || user.is_owner || user.is_admin || user.is_mod || user.is_janitor  %>))) {
+          html += `<a href="" class="slap" data-postid="${post.id}">slap</a>&nbsp;|&nbsp;`
+        }
+
+        html += `<a href="" class="reply-button" data-thread-id="${post.post_number}">reply</a>&nbsp;|&nbsp;
+             <a href="" class="report_a">report</a>`;
+        newPost.querySelector('.postheaderoptions').innerHTML = html;
+      }
+      const threadContainer = document.getElementById('post-container')
+      threadContainer.appendChild(newPost)
+      clearInterval(timerid)
+      timerid = null
+      timers = document.querySelectorAll('.timer')
+      timers.forEach((t) => {
+
+        t.textContent = dayjs.unix(Number(t.dataset.time)).fromNow()
+      })
+      timerup()
+    }
+  </script>
+</body>
+
 </html>
-
-
-

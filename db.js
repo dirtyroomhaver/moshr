@@ -38,7 +38,7 @@ db.prepare(`
 db
     .prepare(
       `
-        INSERT OR IGNORE INTO users (session_id, code, pin_hash, is_admin)
+        INSERT OR IGNORE INTO users (session_id, code, pin_hash, is_owner)
         VALUES (?, ?, ?, ?)
     `
     )

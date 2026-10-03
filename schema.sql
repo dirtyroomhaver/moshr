@@ -14,14 +14,10 @@ CREATE TABLE IF NOT EXISTS cached_results (
 
 CREATE TABLE IF NOT EXISTS slaps (
     victim_id INTEGER,
-    slaper_id INTEGER,
     ip TEXT,
     thread_id INTEGER,
     created_at INTEGER NOT NULL DEFAULT (unixepoch()),
     FOREIGN KEY (victim_id)
-        REFERENCES users(id)
-        ON DELETE SET NULL,
-    FOREIGN KEY (slaper_id)
         REFERENCES users(id)
         ON DELETE SET NULL,
     FOREIGN KEY (thread_id)
@@ -31,14 +27,10 @@ CREATE TABLE IF NOT EXISTS slaps (
 
 CREATE TABLE IF NOT EXISTS shots (
     victim_id INTEGER,
-    shooter_id INTEGER,
     ip TEXT,
     thread_id INTEGER,
     created_at INTEGER NOT NULL DEFAULT (unixepoch()),
     FOREIGN KEY (victim_id)
-        REFERENCES users(id)
-        ON DELETE SET NULL,
-    FOREIGN KEY (shooter_id)
         REFERENCES users(id)
         ON DELETE SET NULL,
     FOREIGN KEY (thread_id)
@@ -93,13 +85,13 @@ CREATE TABLE IF NOT EXISTS site_settings (
     silenced INTEGER NOT NULL DEFAULT 0 CHECK (silenced IN (0, 1)),
 
     slowmode INTEGER NOT NULL DEFAULT 0 CHECK (slowmode IN (0, 1)),
-    slowmode_multiplier INTEGER NOT NULL DEFAULT 1,
+    slowmode_multiplier REAL NOT NULL DEFAULT 1.0,
     thread_limit INTEGER NOT NULL DEFAULT 5,
     new_poster_timer_thread INTEGER NOT NULL DEFAULT 0,
     new_poster_timer_posts INTEGER NOT NULL DEFAULT 0,
 
     post_cooldown_thread INTEGER NOT NULL DEFAULT 180,
-    post_cooldown_post INTEGER NOT NULL DEFAULT 10,
+    post_cooldown_post INTEGER NOT NULL DEFAULT 5,
     bump_limit INTEGER NOT NULL DEFAULT 300,
     decay_timer INTEGER NOT NULL DEFAULT 604800,
     report_cooldown INTEGER NOT NULL DEFAULT 10,
@@ -176,8 +168,6 @@ CREATE TABLE IF NOT EXISTS moshpits (
     slowmode INTEGER NOT NULL DEFAULT 0
         CHECK (slowmode IN (0, 1)),
 
-    slowmode_timer INTEGER,
-
     author_id INTEGER,
 
     new_poster_timer_thread INTEGER,
@@ -245,7 +235,7 @@ CREATE TABLE IF NOT EXISTS threads (
     sticky INTEGER NOT NULL DEFAULT 0
         CHECK (sticky IN (0, 1)),
 
-    bump_limit_enabled INTEGER NOT NULL DEFAULT 0
+    bump_limit_enabled INTEGER NOT NULL DEFAULT 1
         CHECK (bump_limit_enabled IN (0, 1)),
 
     unique_ips INTEGER NOT NULL DEFAULT 1,
@@ -270,7 +260,8 @@ CREATE INDEX IF NOT EXISTS idx_threads_moshpit
     ON threads(moshpit);
 
 CREATE INDEX IF NOT EXISTS idx_threads_author
-    ON threads(author_id);
+ON threads(author_id);
+
 
 CREATE INDEX IF NOT EXISTS idx_threads_bumped_at
     ON threads(bumped_at);
@@ -335,8 +326,8 @@ CREATE INDEX IF NOT EXISTS idx_posts_thread
 CREATE INDEX IF NOT EXISTS idx_posts_board
     ON posts(board_id);
 
-CREATE INDEX IF NOT EXISTS idx_posts_author
-    ON posts(author_id);
+CREATE INDEX IF NOT EXISTS idx_posts_author_board_created
+ON posts(author_id, board_id, created_at DESC);
 
 CREATE INDEX IF NOT EXISTS idx_posts_created_at
     ON posts(created_at);
@@ -406,7 +397,7 @@ CREATE TABLE IF NOT EXISTS bans (
 
     user_id INTEGER,
     ip TEXT,
-
+    session_id TEXT,
     board_id INTEGER,
     post_id INTEGER,
 

@@ -2,19 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self';">
+   
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="stylesheet.css" />
 <link rel="icon" type="image/png" href="/favicon.png">
     <title>faq - moshr</title>
+    <link rel="preload" href="../RobotoJAA.woff2" as="font" type="font/woff2" crossorigin>
+
   </head>
 
   <body>
-    <div class="navbar">
+    <div class="navbar" id="navbar">
       <div class="navbar-left">
         <ul class="nav-list">
-           <li><a href="/">home</a></li>
+            <li><a href="/">home</a></li>
           <p>|</p>
           <li><a href="/rules">rules</a></li>
           <p>|</p>
@@ -31,8 +33,35 @@
         </div>
       </div>
       <div class="navbar-right">
- 
-        <a href="" id="create-thread" class="hidden">create new thread</a>
+         
+      </div>
+    </div>
+    <div class="navbar" id="navbar2">
+      <div class="navbar-left">
+        <select name="pages" id="pages" onchange="
+    if (this.value.startsWith('/')) {
+      window.location = this.value
+    }
+  ">
+         
+            <option value="" selected disabled hidden>pages</option>
+            <option value="/">home</option>
+            <option value="/rules">rules</option>
+            <option value="/faq">faq</option>
+            <option value="/quirks">quirks</option>
+            <option value="/moshpits">moshpits</option>
+          
+        </select>
+      </div>
+      <div class="navbar-middle">
+        <div class="title">
+          <h2 onclick="window.location.href='/moshpit/'">
+            [  moshr.net ]
+          </h2>
+        </div>
+      </div>
+      <div class="navbar-right">
+        
       </div>
     </div>
    <% if (settings.announcement_status) {  %>
@@ -50,9 +79,9 @@
           </div>
           <div>
             <ul class="info-list">
-              <% recent.forEach(moshpit => { %>
+              <% recent.forEach(moshpit => { if (!moshpit.hid) { %>
               <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.post_count + moshpit.thread_count%> <%= moshpit.post_count+ moshpit.thread_count === 1 ? 'post' : 'posts' %></a></li>
-              <% }) %>
+              <% }}) %>
             </ul>
           </div>
         </div>
@@ -61,13 +90,14 @@
         <!-- <h3 style="margin-left: 7px;margin-top: 2px;color: #d2d6dc">faq</h3> -->
         <div class="misc-text">
         <h3>what is moshr?</h3> 
-        moshr is an ephemeral real-time anonymous text-only forum. you do not need an account to post here.  
+        moshr is an anonymous text-only forum. you do not need an account to post here.  
         <h3>how do i post?</h3> 
         to make a new thread simply click on the "create new thread" button in the top right corner.  to post in a thread simply click the "create new post" button at the top of the thread or click reply on someones post.  
         <h3>what is a moshpit?</h3> 
         a moshpit is a sub-forum dedicated to a specific topic 
         <h3>how do i make a moshpit?</h3> 
-        you dont, moshpits are based on user activity. all you need is one thread for a moshpit to become active 
+        simply type whatever you want the moshpit name (needs to be 7 characters or under) to be while making a new thread.
+        moshpits are based on user activity. all you need is one thread for a moshpit to become active.
         a thread gets scheduled for deletion after 7 days of existence 
         <h3>what is a quirk?</h3> 
         a typing quirk. basically something that modifies text to make it more exciting
@@ -77,10 +107,11 @@
         this site is a bit of an experiment. by not having rules communities will determine and enforce what they find socially acceptable on their own
         <h3>where can i find ascii/shift-jis art?</h3> 
         <a href="https://aahub.org/" target="_blank"><u>https://aahub.org/</u></a> and <a href="https://aa.mozz.us/utf8art/scroller.shtml" target="_blank"><u>https://aa.mozz.us/utf8art/scroller.shtml</u></a>  
-        <h3>how do i link to another moshpit</h3> 
+        <h3>how do i link to another moshpit?</h3> 
         #moshpit_name   
         <h3>how can i support the site?</h3> 
-        by being active, by sharing the site with friends, and by donating.   
+        by being active, by sharing the site with friends, or by donating monero to the address below. <br>
+        4392zNHicMVNs49Md7sHpWeFpj3UhZiyThXTH6EHMxYU9FPxRRfVJpWTGo2f1UjQCDU8HDqXuZjk34QQGAHKaohK7uEF5T6   
         
         
         </div>
@@ -95,131 +126,16 @@
           </div>
           <div>
             <ul class="info-list">
-              <% trending.forEach(moshpit => { %>
+              <% trending.forEach(moshpit => { if (!moshpit.hid) { %>
               <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.recent_count %> <%= moshpit.recent_count === 1 ? 'post in the last hour' : 'posts in the last hour' %></a></li>
-              <% }) %>
+              <% }}) %>
             </ul>
           </div>
         </div>
       </div>
     </div>
-    <dialog id="create-thread-box">
-      <form id="modal-form">
-        <div class="modal-top">
-          <div><p>new thread</p></div>
-          <div><button id="close-button">x</button></div>
-        </div>
-        <hr />
-        <div>
-          <div class="modal-input">
-            <label for="">comment</label
-            ><textarea
-              name="text"
-              id="thread-text"
-              style="height: 400px; width: 96.4%"
-              placeholder="write "
-            ></textarea>
-          </div>
-          <hr />
-          <div class="modal-input">
-            <label for="">moshpit (board)</label
-            ><input
-              type="text"
-              placeholder="if left blank your thread will go onto the homepage"
-            />
-          </div>
-          <hr />
-          <div class="modal-input">
-            <label for="">signature</label
-            ><input
-              type="text"
-              placeholder="put a secure password here to sign your post"
-            />
-          </div>
-          <input type="hidden" name="post-text" id="post-text" />
-        </div>
-      </form>
-    </dialog>
+    
 
-    <!-- <form id="thread-form">
-      <textarea
-        id="thread-text"
-        name="text"
-        placeholder="Write a thread..."
-      ></textarea>
-
-      <button type="submit">Post</button>
-    </form> -->
-
-    <script>
-      // const form = document.getElementById('thread-form')
-      // const textarea = document.getElementById('thread-text')
-      // const threads = document.getElementById('threads')
-      const createThread = document.getElementById('create-thread')
-      const modal = document.getElementById('create-thread-box')
-      //modal.showModal();
-
-      createThread.addEventListener('click', () => {
-        event.preventDefault()
-        modal.showModal()
-      })
-
- 
-      const closeButton = document.getElementById('close-button')
-
-      closeButton.addEventListener('click', () => {
-        event.preventDefault()
-        modal.close()
-      })
-      // form.addEventListener('submit', async event => {
-      //   // Prevent the browser from reloading the page
-      //   event.preventDefault()
-
-      //   const text = textarea.value
-
-      //   if (!text.trim()) {
-      //     return
-      //   }
-
-      //   const response = await fetch('/api/threads', {
-      //     method: 'POST',
-
-      //     headers: {
-      //       'Content-Type': 'application/json'
-      //     },
-
-      //     body: JSON.stringify({
-      //       text: text
-      //     })
-      //   })
-
-      //   if (!response.ok) {
-      //     console.error('Failed to create thread')
-      //     return
-      //   }
-
-      //   textarea.value = ''
-      // })
-
-      // const events = new EventSource('/api/events')
-
-      // events.addEventListener('new-thread', event => {
-      //   const thread = JSON.parse(event.data)
-
-      //   addThread(thread)
-      // })
-
-      // function addThread(thread) {
-      //   const article = document.createElement('article')
-
-      //   const text = document.createElement('p')
-
-      //   text.textContent = thread.thread_text
-
-      //   article.appendChild(text)
-
-      //   threads.prepend(article)
-      // }
-    </script>
+   
   </body>
 </html>

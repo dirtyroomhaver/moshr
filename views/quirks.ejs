@@ -6,12 +6,14 @@
     <link rel="stylesheet" href="stylesheet.css" />
 <link rel="icon" type="image/png" href="/favicon.png">
     <title>quirks - moshr</title>
+    <link rel="preload" href="../RobotoJAA.woff2" as="font" type="font/woff2" crossorigin>
 
+</head>
   <body>
-    <div class="navbar">
+    <div class="navbar" id="navbar">
       <div class="navbar-left">
         <ul class="nav-list">
-          <li><a href="/">home</a></li>
+            <li><a href="/">home</a></li>
           <p>|</p>
           <li><a href="/rules">rules</a></li>
           <p>|</p>
@@ -29,7 +31,34 @@
       </div>
       <div class="navbar-right">
          
-        <a href="" id="create-thread" class="hidden">create new thread</a>
+      </div>
+    </div>
+    <div class="navbar" id="navbar2">
+      <div class="navbar-left">
+        <select name="pages" id="pages" onchange="
+    if (this.value.startsWith('/')) {
+      window.location = this.value
+    }
+  ">
+         
+            <option value="" selected disabled hidden>pages</option>
+            <option value="/">home</option>
+            <option value="/rules">rules</option>
+            <option value="/faq">faq</option>
+            <option value="/quirks">quirks</option>
+            <option value="/moshpits">moshpits</option>
+          
+        </select>
+      </div>
+      <div class="navbar-middle">
+        <div class="title">
+          <h2 onclick="window.location.href='/moshpit/'">
+            [  moshr.net ]
+          </h2>
+        </div>
+      </div>
+      <div class="navbar-right">
+        
       </div>
     </div>
    <% if (settings.announcement_status) {  %>
@@ -47,9 +76,9 @@
           </div>
           <div>
             <ul class="info-list">
-              <% recent.forEach(moshpit => { %>
+              <% recent.forEach(moshpit => { if (!moshpit.hid) { %>
               <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.post_count + moshpit.thread_count%> <%= moshpit.post_count+ moshpit.thread_count === 1 ? 'post' : 'posts' %></a></li>
-              <% }) %>
+              <% }}) %>
             </ul>
           </div>
         </div>
@@ -365,84 +394,14 @@
           </div>
           <div>
             <ul class="info-list">
-              <% trending.forEach(moshpit => { %>
+              <% trending.forEach(moshpit => { if (!moshpit.hid) { %>
               <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.recent_count %> <%= moshpit.recent_count === 1 ? 'post in the last hour' : 'posts in the last hour' %></a></li>
-              <% }) %>
+              <% }}) %>
             </ul>
           </div>
         </div>
       </div>
     </div>
-    <dialog id="create-thread-box">
-      <div class="modal-top">
-        <div><p>new thread</p></div>
-        <div><button id="close-button">x</button></div>
-      </div>
-      <form id="modal-form">
-        <hr />
-        <div>
-          <div class="modal-input">
-            <label for="">comment</label
-            ><textarea
-              name="text"
-              id="thread-text"
-              style="height: 400px; width: 96.4%"
-            ></textarea>
-          </div>
-
-          <div class="modal-input">
-            <label for="">moshpit (board)</label
-            ><input
-              type="text"
-              name="moshpit"
-              placeholder="if left blank your thread will go onto the homepage"
-            />
-          </div>
-
-          <div class="modal-input">
-            <label for="">signature</label
-            ><input
-              type="text"
-              placeholder="put a secure password here to sign your post"
-            />
-          </div>
-          <div><button type="submit" id="button-thread">submit</button></div>
-          <input type="hidden" name="post-text" id="post-text" />
-        </div>
-      </form>
-    </dialog>
-    <!-- <form id="thread-form">
-      <textarea
-        id="thread-text"
-        name="text"
-        placeholder="Write a thread..."
-      ></textarea>
-
-      <button type="submit">Post</button>
-    </form> -->
-
-    <script>
-      
-  const createThread = document.getElementById('create-thread')
-      const modal = document.getElementById('create-thread-box')
-      //modal.showModal();
-
-      createThread.addEventListener('click', () => {
-        event.preventDefault()
-        modal.showModal()
-      })
-
-      const closeButton = document.getElementById('close-button')
-
-      closeButton.addEventListener('click', () => {
-        event.preventDefault()
-
-        modal.close()
-      })
     
-
-
-     
-    </script>
   </body>
 </html>

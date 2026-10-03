@@ -6,20 +6,20 @@
     color-scheme: light dark;
 
 
-    --bg-color: light-dark(#f8faff, #272834);
+    --bg-color: light-dark(#f8faff, #121212);
     --accent-color: light-dark(#393736, #d2d6dc);
-    --gradient: light-dark(#d5d5d5, #111216);
+    --gradient: light-dark(#d5d5d5, #000000);
 
-    --panel: light-dark(#ececec, #1c1b27);
+    --panel: light-dark(#ececec, #191919);
     --text: light-dark(#232323, #d7d7d7);
     --bar: light-dark(#adff9d, #adff9d);
-    --rage: light-dark(#b20000, #cc2626);
-    --greentext: light-dark(#4a7524, #8bb444);
+    --rage: light-dark(#b20000, #ed5c5c);
+    --greentext: light-dark(#4a7524, #a7d882);
     --back: light-dark(#d5d5d5, #8b8b8b);
-    --border-color: light-dark(#232323, #acacac);
-    --e: light-dark(#ececec, #d2d6dc);
-    --ee: light-dark(#d5d5d5, #acacac);
-    --mt: light-dark(#232323, #232323);
+    --border-color: light-dark(#232323, #4d4d4d);
+    --e: light-dark(#ececec, #191919);
+    --ee: light-dark(#d5d5d5, #000000);
+    --mt: light-dark(#232323, #d7d7d7);
 }
 
 
@@ -75,10 +75,9 @@
 }
 
 body {
-    background-image: linear-gradient(var(--gradient),
-            var(--bg-color));
-    background-size: 100% 20%;
+    background-image: linear-gradient(var(--gradient),var(--bg-color));
     background-repeat: no-repeat;
+    background-size: 100vw 100vh;
     background-color: var(--bg-color);
     position: relative;
     font-family: RobotoJAA, Monapo,Mona,IPAMonaPGothic,"MS Pgothic", "ＭＳ Ｐゴシック", sans-serif;
@@ -106,6 +105,7 @@ span {
     line-height: 1; /* Makes the line height match the font size exactly */
   margin: 0;  
 }
+
 
 /* =========================================================
    3. NAVIGATION
@@ -244,6 +244,12 @@ span {
      padding: 0px 7px 0px 7px;
     
 }
+.body-right2 {
+   
+    min-width: 300px;
+     padding: 0px 7px 0px 7px;
+    
+}
 .body-right1 {
    
     min-width: 300px;
@@ -302,14 +308,17 @@ flex-direction: column;
     position: relative
 }
 
-#threads a {
+#threads .allthreads {
+    display: block;
     overflow-wrap: break-word;
     max-width: 100%;
     min-width: 100%;
+    width: 100%;
 }
 
 .thread:hover {
-    transform: scale(1.003);
+  
+    animation: shake-2 0.15s infinite;
 }
 
 .thread-text {
@@ -370,6 +379,7 @@ flex-direction: column;
               justify-content: space-between;
               flex-direction: column;
               padding: 7px;
+            border-top: 1px solid var(--border-color);
 }
 .replylist {
     background-image: linear-gradient(
@@ -378,6 +388,8 @@ flex-direction: column;
                 );
                 border-top: 1px solid var(--border-color);
                 width: 100%;
+                padding-bottom: 5px;
+                
 }
 .post-header {
     display: flex;
@@ -386,7 +398,7 @@ flex-direction: column;
     background-image:
         linear-gradient(var(--panel), var(--gradient));
 
-    border-bottom: 1px solid var(--border-color);
+    /* border-bottom: 1px solid var(--border-color); */
 
     padding: 5px;
     box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.1);
@@ -396,14 +408,17 @@ flex-direction: column;
 
 .post-replies {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0 5px;
     list-style-type: none;
-    justify-content: start;
-
-    gap: 5px;
     margin: 0 5px;
-    padding-top: 2px;
+    padding-top: 5px;
 }
 
+.post-replies li {
+    display: block;
+}
 #post-container {
    
      width: 100%;
@@ -513,7 +528,7 @@ flex-direction: column;
 .search input {
     width: 10vw;
     border-radius: 0px;
-    border: 1px solid var(--accent-color);
+    border: 1px solid var(--border-color);
     background-color: var(--bg-color)
 }
 
@@ -813,7 +828,7 @@ s:hover {
 }
 
 .shake2 {
-    animation: shake-1 0.12s infinite;
+    animation: shake-2 0.12s infinite;
     font-weight: bold;
 }
 
@@ -1079,7 +1094,9 @@ s:hover {
     .extra-post {
         width: 98vw;
     }
-   
+    .body-right1 {
+        display: none
+    }
 
 }
 
