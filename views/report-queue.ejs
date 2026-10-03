@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>info</title>
+    <title>reports</title>
     <link rel="stylesheet" href="stylesheet.css" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="robots" content="noindex, follow"><meta http-equiv="Content-Security-Policy" content="default-src 'self';">
 </head>
 <body>
+   <% if (user.is_owner) { %>
     <div class="navbar">
       <div class="navbar-left">
         <ul class="nav-list">
-          <li><a href="/mod-portal.html">settings</a></li>
+             <li><a href="/mod-portal">settings</a></li>
           <p>|</p>
-          <li><a href="/mod-actions.html">actions</a></li>
+          <li><a href="/report-queue">reports</a></li>
           <p>|</p>
-          <li><a href="/report-queue.html">reports</a></li>
-          <p>|</p>
-          <li><a href="/user-appeals.html">appeals</a></li>
+          <li><a href="/user-info">info</a></li>
         </ul>
       </div>
       
@@ -27,14 +26,15 @@
       <!-- <h2 style="margin-left: 7px;margin-top: 2px;color: #d2d6dc">faq</h2> -->
       <div class="body-admin">
         <div >
-            <form action="">
-                <input type="text" placeholder="username">
-                <input type="text" placeholder="password">
-                <button type="submit">login</button>
-            </form>
+           
         </div>
       </div>
     </div>
+    
+    <script>
+  
+</script>
+    <% } %>
     
   </body>
 </html>

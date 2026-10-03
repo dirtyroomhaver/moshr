@@ -1,6 +1,4 @@
-/* =========================================================
-   1. THEME / VARIABLES
-   ========================================================= */
+
 
 :root {
     color-scheme: light dark;
@@ -22,10 +20,6 @@
     --mt: light-dark(#232323, #d7d7d7);
 }
 
-
-/* =========================================================
-   2. RESET / GLOBAL
-   ========================================================= */
 
 
 * {
@@ -102,15 +96,18 @@ td {
 
 span {
     display:inline-block;
-    line-height: 1; /* Makes the line height match the font size exactly */
+    line-height: 1; 
   margin: 0;  
 }
 
-
-/* =========================================================
-   3. NAVIGATION
-   ========================================================= */
-
+.signature {
+    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--greentext); 
+  word-wrap: break-word;
+  font-size: 14px
+}
 .navbar {
     display: flex;
     align-items: center;
@@ -181,9 +178,7 @@ span {
 #navbar2 {
     display: none;
 }
-/* =========================================================
-   4. TABS
-   ========================================================= */
+
 
 .tab-nav {
     display: flex;
@@ -206,9 +201,6 @@ span {
     border-bottom: 1px solid var(--border-color)
 }
 
-/* =========================================================
-   5. PAGE LAYOUT
-   ========================================================= */
 
 .body {
     display: flex;
@@ -230,11 +222,7 @@ span {
     &::-webkit-scrollbar {
         display: none;
     }
-
-    /* Hide scrollbar for Firefox */
     scrollbar-width: none;
-
-    /* Hide scrollbar for IE and legacy Edge */
     -ms-overflow-style: none;
 }
 
@@ -276,10 +264,6 @@ span {
     align-items: center;
 }
 
-
-/* =========================================================
-   6. THREAD INDEX
-   ========================================================= */
 
 #threads {
     display: flex;
@@ -360,9 +344,6 @@ flex-direction: column;
     padding: 5px 0px 12px 0px;
 }
 
-/* =========================================================
-   7. POSTS
-   ========================================================= */
 
 .post {
     border: 1px solid var(--border-color);
@@ -478,9 +459,6 @@ flex-direction: column;
 }
 
 
-/* =========================================================
-   8. THREAD / SITE INFO
-   ========================================================= */
 
 .moshpit-name {
     display: flex;
@@ -520,11 +498,6 @@ flex-direction: column;
     line-height: 1.4;
 }
 
-
-/* =========================================================
-   9. SEARCH
-   ========================================================= */
-
 .search input {
     width: 10vw;
     border-radius: 0px;
@@ -532,10 +505,6 @@ flex-direction: column;
     background-color: var(--bg-color)
 }
 
-
-/* =========================================================
-   10. FORMS / MODALS
-   ========================================================= */
 
 #rule-select {
     width: 200px;
@@ -599,10 +568,6 @@ label {
     margin: 3px;
 }
 
-
-/* =========================================================
-   11. CREATE THREAD / REPORT MODALS
-   ========================================================= */
 #create-thread2 {
     border: 1px solid var(--border-color);
     border-radius: 0px;
@@ -669,10 +634,6 @@ label {
 }
 
 
-/* =========================================================
-   12. POPUPS
-   ========================================================= */
-
 .popup {
     position: fixed;
 
@@ -717,9 +678,6 @@ label {
 }
 
 
-/* =========================================================
-   13. CODE
-   ========================================================= */
 
 .code {
     white-space: pre-wrap;
@@ -734,10 +692,6 @@ label {
     color: var(--text);
 }
 
-
-/* =========================================================
-   14. SPECIAL TEXT
-   ========================================================= */
 s {
     color: #000;
     background: #000;
@@ -814,10 +768,6 @@ s:hover {
     color: white;
 }
 
-
-/* =========================================================
-   15. ANIMATIONS
-   ========================================================= */
 
 .shake-1 {
     animation: shake-1 0.12s infinite;
@@ -1056,9 +1006,7 @@ s:hover {
     display: none;
     font-size: 16px;
 }
-/* =========================================================
-   16. RESPONSIVE
-   ========================================================= */
+
 
 @media (max-width: 1300px) {
 

@@ -54,13 +54,14 @@ function createPost (
   post_number,
   country,
   updated_at,
-  html
+  html,
+  sig
 ) {
   return db
     .prepare(
       `
-        INSERT INTO posts (author_id, ip, thread_id, board_id, comment, post_number, country, updated_at, html)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO posts (author_id, ip, thread_id, board_id, comment, post_number, country, updated_at, html, sig)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         RETURNING *
     `
     )
@@ -73,13 +74,14 @@ function createPost (
       post_number,
       country,
       updated_at,
-      html
+      html,
+      sig
     )
 }
 
 function getPosts(thread_id) {
   return db.prepare(`
-    SELECT author_id, id, thread_id, board_id, post_number, created_at, updated_at, comment, hid, html, shot, slapped, country FROM posts WHERE thread_id = ? ORDER BY post_number ASC
+    SELECT author_id, sig, id, thread_id, board_id, post_number, created_at, updated_at, comment, hid, html, shot, slapped, country FROM posts WHERE thread_id = ? ORDER BY post_number ASC
     `).all(thread_id)
 }
 function getPostAdmin(post_id) {
@@ -90,13 +92,13 @@ function getPostAdmin(post_id) {
 
 function getLastPost(thread_id) {
   return db.prepare(`
-    SELECT author_id, id, thread_id, board_id, post_number, created_at, updated_at, comment, hid, html, shot, slapped, country FROM posts WHERE thread_id = ? ORDER BY post_number DESC LIMIT 1
+    SELECT author_id, sig, id, thread_id, board_id, post_number, created_at, updated_at, comment, hid, html, shot, slapped, country FROM posts WHERE thread_id = ? ORDER BY post_number DESC LIMIT 1
     `).get(thread_id)
 }
 
 function getNewPosts(thread_id, last_post) {
     return db.prepare(`
-    SELECT author_id, id, thread_id, board_id, post_number, created_at, updated_at, comment, hid, html, shot, slapped, country FROM posts WHERE thread_id = ? AND post_number >= ? ORDER BY post_number ASC
+    SELECT author_id, sig, id, thread_id, board_id, post_number, created_at, updated_at, comment, hid, html, shot, slapped, country FROM posts WHERE thread_id = ? AND post_number >= ? ORDER BY post_number ASC
     `).all(thread_id, last_post)
 }
 // -------------------------
@@ -106,7 +108,7 @@ function getUser (cookie) {
   return db
     .prepare(
       `
-        SELECT *
+        SELECT id, country, is_owner, is_admin, is_mod, is_janitor, is_vip
         FROM users
         WHERE session_id = ?
     `
@@ -125,6 +127,19 @@ function getUserAdmin (user_id) {
     )
     .get(user_id)
 }
+
+function getUserAdminCookie (session) {
+  return db
+    .prepare(
+      `
+        SELECT *
+        FROM users
+        WHERE session_id = ?
+    `
+    )
+    .get(session)
+}
+
 
 function createUser (session_id, ip, country) {
   return db
@@ -150,6 +165,7 @@ function createAdmin (session_id, code, pin_hash) {
     .get(session_id, code, pin_hash)
 }
 function banUser (user, reason, rule) {
+  db.prepare(`UPDATE or IGNORE users SET banned = 1 WHERE id = ? AND banned = 0;`).run(user.id)
   return db
     .prepare(
       `
@@ -202,19 +218,19 @@ function updatePostCount(thread_id, moshpit) {
   transaction()
 
 }
-function createThread (a, b, c, d, e, board_id, html, ip, country) {
+function createThread (a, b, c, d, e, board_id, html, ip, country, sig) {
   db.prepare(`UPDATE moshpits SET thread_count = thread_count + 1 WHERE title = ?`).run(b)
   return db
     .prepare(
       `
         INSERT INTO threads (author_id, 
         moshpit, comment, 
-        updated_at, bumped_at, board_id, html, ip, country)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        updated_at, bumped_at, board_id, html, ip, country, sig)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         RETURNING *
     `
     )
-    .get(a, b, c, d, e, board_id, html, ip, country)
+    .get(a, b, c, d, e, board_id, html, ip, country, sig)
 }
 function bumpThread (bumped_at, thread_id) {
 
@@ -355,7 +371,7 @@ function getThread (id) {
   return db
     .prepare(
       `
-    SELECT author_id, id, post_count, comment, created_at, updated_at, bumped_at, board_id, moshpit, html, country, hid, locked, sticky FROM threads WHERE id = ?
+    SELECT author_id, id, post_count, comment, created_at, updated_at, bumped_at, board_id, moshpit, html, sig, country, hid, locked, sticky FROM threads WHERE id = ?
     `
     )
     .get(id)
@@ -1737,6 +1753,27 @@ function stickyThread(thread) {
 
   }
 }
+
+function report(reporter, violator, rule, post_id = null, thread_id = null) {
+  db.prepare(`INSERT INTO reports (reporter_id, violator_id, rule_broken, post_id, thread_id) VALUES (?, ?, ?, ?, ?)`).run(reporter, violator, rule, post_id, thread_id )
+}
+
+function updatePerms(user_id) {
+  db.prepare(`UPDATE users SET is_owner = 1 WHERE id = ?`).run(user_id)
+}
+
+function updateSettings(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) {
+  db.prepare(`UPDATE site_settings SET
+    max_threads = ?, max_posts = ?, frozen = ?, silenced = ?, slowmode = ?,
+    slowmode_multiplier = ?, thread_limit = ?, new_poster_timer_thread = ?,
+    new_poster_timer_posts = ?, post_cooldown_thread = ?, post_cooldown_post = ?,
+    bump_limit = ?, decay_timer = ?, report_cooldown = ?, announcement = ?, 
+    announcement_status = ? WHERE id = 1`).run(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p)
+}
+
+function getReports() {
+  return db.prepare(`SELECT * FROM reports WHERE report_status = 'pending'`).all()
+}
 module.exports = {
   getUser,
   createUser,
@@ -1771,5 +1808,10 @@ module.exports = {
   deletePost,
   deleteThread,
   deleteMoshpit,
-  stickyThread
+  stickyThread,
+  report,
+  getUserAdminCookie,
+  updatePerms,
+  updateSettings,
+  getReports
 }

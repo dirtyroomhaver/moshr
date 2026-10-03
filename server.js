@@ -36,7 +36,13 @@ getThreadAdmin,
 deletePost,
 deleteThread,
 deleteMoshpit,
-stickyThread
+stickyThread,
+report,
+  getUserAdminCookie,
+  updatePerms,
+  updateSettings,
+  getReports
+
  } = require('./db-queries')
 const { Reader } = require('@maxmind/geoip2-node')
 
@@ -112,6 +118,121 @@ app.use(express.static(__dirname))
 
 app.get('/api', (req, res) => {
   res.redirect('/')
+})
+
+app.get('/login-page', async (req, res) => {
+  const user = await getUser(req.sessionId)
+  if (!user ) {
+    return res.status(404).send('Not logged in?')
+  }
+  res.render('login-page', { user })
+})
+app.get('/mod-portal', async (req, res) => {
+  const user = await getUser(req.sessionId)
+  const settings = await getSettings()
+  if (!user || !settings ) {
+    return res.status(404).send('Not logged in?')
+  }
+  res.render('mod-portal', { user, settings })
+})
+app.post('/api/settings', async (req, res) => {
+  const maxt = req.body.maxt
+  const maxp = req.body.maxp
+  const frozen = req.body.frozen
+  const silenced = req.body.silenced
+  const slowmode = req.body.slowmode
+  const slowmult = req.body.slowmult
+  const threadlimit = req.body.threadlimit
+  const newposterthread = req.body.newposterthread
+  const newposterpost = req.body.newposterpost
+  const cooldownthread = req.body.cooldownthread
+  const cooldownpost = req.body.cooldownpost
+  const bumplimit = req.body.bumplimit
+  const decay = req.body.decay
+  const reportcool = req.body.reportcool
+  const anntext = req.body.anntext
+  const annflag = req.body.annflag
+
+  try {
+    const user = await getUserAdminCookie(req.sessionId)
+
+    if (user.is_owner) {
+      updateSettings(maxt, maxp, frozen, silenced, slowmode, slowmult, threadlimit, newposterthread, newposterpost, cooldownthread, cooldownpost, bumplimit, decay, reportcool, anntext, annflag)
+      return res.status(200).json({
+        success: true
+      })
+    }
+
+    return res.status(400).json({
+      error: 'Invalid credentials'
+    })
+
+  } catch (error) {
+    console.error(error)
+
+    return res.status(500).json({
+      error: 'Internal server error'
+    })
+  }
+})
+app.post('/api/login', async (req, res) => {
+  const code = req.body.username
+  const pin = req.body.password
+
+  try {
+    const user = await getUserAdminCookie(req.sessionId)
+
+    if (user.is_owner) {
+      return res.status(400).json({
+        error: 'Already logged in'
+      })
+    }
+
+    const owner = await getUserAdmin(1)
+
+    const compare = await bcrypt.compare(pin, owner.pin_hash)
+
+    if (owner.code == code && compare) {
+      await updatePerms(user.id)
+
+      return res.status(200).json({
+        success: true
+      })
+    }
+
+    return res.status(400).json({
+      error: 'Invalid credentials'
+    })
+
+  } catch (error) {
+    console.error(error)
+
+    return res.status(500).json({
+      error: 'Internal server error'
+    })
+  }
+})
+
+app.get('/report-queue', async (req, res) => {
+  const user = await getUser(req.sessionId)
+  const reports = await getReports()
+  if (!user ) {
+    return res.status(404).send('Not logged in?')
+  }
+  res.render('report-queue', { user, reports })
+})
+app.get('/user-info', async (req, res) => {
+  const user = await getUser(req.sessionId)
+  if (!user ) {
+    return res.status(404).send('Not logged in?')
+  }
+  res.render('user-info', { user })
+})
+app.get('/quirks', async (req, res) => {
+  const results = await getCachedResults()
+  const settings = await getSettings()
+
+  res.render('quirks', {trending: results.trending, recent: results.recent, settings})
 })
 
 app.get('/', async (req, res) => {
@@ -221,6 +342,83 @@ app.get('/api/refresh/:moshpit/:thread_id/:last_post', async (req, res) => {
   return res.json({
       posts: posts,
     })
+})
+app.post('/api/report', async (req, res) => {
+  const post_id = req.body.post_id
+  const thread_id = req.body.thread_id
+  const rule = req.body.rule
+
+
+  const perp = await getUser(req.sessionId)
+
+  if (!perp) {
+      return res.status(400).json({
+        error: 'Missing perp'
+      })
+  }
+
+  try {
+
+    if (!post_id && !thread_id) {
+      return res.status(400).json({
+        error: 'Missing id'
+      })
+    }
+
+    const post = await getPostAdmin(post_id)
+    const thread = await getThreadAdmin(thread_id)
+    if (!post && !thread) {
+      return res.status(404).json({
+        error: 'Post not found'
+      })
+    }
+    if (post && thread) {
+      return res.status(422).json({
+        error: 'Cannot have a post and a thread'
+      })
+    }
+
+    let user
+    
+     if (post && !thread) {
+      user = await getUserAdmin(post.author_id)
+      
+      }
+    if (!post && thread) {
+      user = await getUserAdmin(thread.author_id)
+      }
+
+    if (!user) {
+      return res.status(404).json({
+        error: 'Post author not found'
+      })
+    }
+    const perp = await getUser(req.sessionId)
+
+    if (!perp) {
+      return res.status(401).json({
+        error: 'You must be logged in'
+      })
+    }
+
+    report(perp.id, user.id, rule, post_id, thread_id)
+   
+      
+
+    return res.json({
+      success: true,
+      message: 'POST REPORTED'
+    })
+
+  } catch (err) {
+    console.error('POST /api/report error:', err)
+
+    return res.status(500).json({
+      error: 'Internal server error'
+    })
+  }
+
+
 })
 app.post('/api/sticky', async (req, res) => { 
     const perp = await getUser(req.sessionId)
@@ -745,7 +943,7 @@ app.post('/api/create/post', async (req, res) => {
     const thread_id = req.body.thread_id
     const html = req.body.html
     const trick = req.body.post_text1
-    const settings = await getSettings()
+    let sig = req.body.sig
     if (!text || !text.trim()) {
       return res.status(400).json({
         error: 'Post cannot be empty'
@@ -806,16 +1004,23 @@ let moshpit = await getOrCreateMoshpit(req.body.moshpit)
 
     const post_number = (lastPost?.post_number ?? 0) + 1
 
+if (sig) {
+  sig = crypto.createHash("sha256").update(sig).digest("hex");
+} else {
+  sig = ''
+}
+
     let post = await createPost(
       user.id,
       req.ip,
       thread_id,
       moshpit.id,
-      text,
+      censorText(text),
       post_number,
       response.country.isoCode,
       now,
-      formatText(html)
+      formatText(html),
+      sig
     )
     post.ip = ''
     // 
@@ -840,7 +1045,7 @@ app.post('/api/create/thread', async (req, res) => {
   const html = req.body.html
   let moshpit = req.body.moshpit
   let trick = req.body.post_text
-
+  let sig = req.body.sig
  
  if (!text || !text.trim()) {
       return res.status(400).json({
@@ -890,6 +1095,12 @@ const check = await checkPostCreation(user, moshpit, 'thread')
     error: check.error
   })
 }
+
+if (sig) {
+  sig = crypto.createHash("sha256").update(sig).digest("hex");
+} else {
+  sig = ''
+}
   if (user) {
     const now = Math.floor(Date.now() /1000)
     const reader = await Reader.open('./GeoLite2-City.mmdb')
@@ -897,13 +1108,14 @@ const check = await checkPostCreation(user, moshpit, 'thread')
     const thread = await createThread(
       user.id,
       moshpit.title,
-      text,
+      censorText(text),
       now,
       now,
       moshpit.id,
       formatText(html),
       req.ip,
-      response.country.isoCode
+      response.country.isoCode,
+      sig
     )
     // res.json(thread)
     return res.json({
@@ -917,6 +1129,26 @@ const check = await checkPostCreation(user, moshpit, 'thread')
     error: 'Error'
   })
 })
+function censorText(post) {
+  comment = post
+   comment = comment.replaceAll(/niggers/ig, 'n%(@#)$')
+comment = comment.replaceAll(/nigger/ig, 'n%(@#)')
+comment = comment.replaceAll(/faggots/ig, 'f^##^@7')
+comment = comment.replaceAll(/faggot/ig, 'f^##^@')
+comment = comment.replaceAll(/chinks/ig, 'c*#!#@')
+comment = comment.replaceAll(/chink/ig, 'c#%!@')
+comment = comment.replaceAll(/honkies/ig, 'h^@!#%')
+comment = comment.replaceAll(/honky/ig, 'h^@!#')
+comment = comment.replaceAll(/spics/ig, 's%#@!$')
+comment = comment.replaceAll(/\bspic\b/ig, 's%#@!')
+comment = comment.replaceAll(/trannies/ig, 't#@!^%')
+comment = comment.replaceAll(/tranny/ig, 't#@!^')
+comment = comment.replaceAll(/troons/ig, 't^@!#')
+comment = comment.replaceAll(/troon/ig, 't^@!#')
+comment = comment.replaceAll(/kikes/ig, 'k!#@$')
+comment = comment.replaceAll(/kike/ig, 'k!#@')
+return comment
+}
 function formatText(post) {
         let comment = ''
         if (!post) {
@@ -930,6 +1162,24 @@ function formatText(post) {
         comment = comment.replaceAll(escaper, `$1&lt;$2`)
         
        comment = partytext(comment).trimEnd()
+      comment = comment.replaceAll(/niggers/ig, 'n%(@#)$')
+comment = comment.replaceAll(/nigger/ig, 'n%(@#)')
+comment = comment.replaceAll(/faggots/ig, 'f^##^@7')
+comment = comment.replaceAll(/faggot/ig, 'f^##^@')
+comment = comment.replaceAll(/chinks/ig, 'c*#!#@')
+comment = comment.replaceAll(/chink/ig, 'c#%!@')
+comment = comment.replaceAll(/honkies/ig, 'h^@!#%')
+comment = comment.replaceAll(/honky/ig, 'h^@!#')
+comment = comment.replaceAll(/spics/ig, 's%#@!$')
+comment = comment.replaceAll(/\bspic\b/ig, 's%#@!')
+comment = comment.replaceAll(/trannies/ig, 't#@!^%')
+comment = comment.replaceAll(/tranny/ig, 't#@!^')
+comment = comment.replaceAll(/troons/ig, 't^@!#')
+comment = comment.replaceAll(/troon/ig, 't^@!#')
+comment = comment.replaceAll(/kikes/ig, 'k!#@$')
+comment = comment.replaceAll(/kike/ig, 'k!#@')
+      
+
         const regex = /@([0-9\s+]+|[OP\s+]+)/g
         const regex2 = /#(?!quirks(?=$|[^A-Za-z0-9\s+])|faq(?=$|[^A-Za-z0-9\s+])|rules(?=$|[^A-Za-z0-9\s+])|moshpits(?=$|[^A-Za-z0-9\s+])|vip(?=$|[^A-Za-z0-9\s+])|login(?=$|[^A-Za-z0-9\s+])|admin(?=$|[^A-Za-z0-9\s+]))([A-Za-z0-9\s+]{1,7})(?![A-Za-z0-9\s+])/gi
 

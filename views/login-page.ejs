@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+    <link rel="stylesheet" href="stylesheet.css" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="robots" content="noindex, follow">
+   
+
+</head>
+<body>
+    <div class="body">
+      <!-- <h2 style="margin-left: 7px;margin-top: 2px;color: #d2d6dc">faq</h2> -->
+      <div class="body-admin">
+        <div >
+            <form id="formform">
+                <input type="text" id="username" placeholder="username">
+                <input type="password" id="password" placeholder="current-password">
+                <button type="submit">submit</button>
+            </form>
+        </div>
+      </div>
+    </div>
+    <script>
+      const form = document.querySelector('#formform')
+      form.addEventListener('submit', async event => {
+        event.preventDefault()
+       
+      
+      const username = document.querySelector('#username').value
+      const password = document.querySelector('#password').value
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            username: username,
+            password: password
+          })
+        })
+   window.location.replace('/mod-portal')
+        if (!response.ok) {
+          alert('failed login, if you are not me please stop trying to log in brah')
+          return
+        }
+        
+    
+      } catch (error) {
+        alert('Failed to login: ' + error)
+      }
+    })
+    </script>
+  </body>
+  
+</html>

@@ -144,9 +144,24 @@ https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
               </div>
             </div>
             <div class="backpanel" data-postid="OP">
-              <div class="post-body"><p><%- thread.html %></p></div>
+              <div class="post-body"><p><%- thread.html  %></p></div>
+                <div class="bombaclot">
+               <% if (thread.sig || thread.slapped || thread.shot) { %>
+               
+                <hr class="" style="margin-bottom: 3px; margin-top: 3px; border-color: 1px solid var(--border-color); color: var(--border-color); background-color: var(--border-color)"> 
+                  
+               
+                <% } %>
+                   </div>
               <div data-alarm="OP" class="hidden" style="color: var(--rage); font-weight: bold; margin-top: 3px;">
+              
               </div>
+              <div class="clot">
+                <% if (thread.sig) { %>
+                <p class="signature" title="<%- thread.sig %>">signature: <%- thread.sig %></p>
+                
+              <% } %>
+                </div>
             </div>
             <div class="replylist hidden">
               <ul class="post-replies"></ul>
@@ -190,7 +205,7 @@ https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
                   <a href="" class="slap" data-postid="<%= post.id %>">slap</a>&nbsp|&nbsp
                   <% } %>
                   <a href="" class="reply-button" data-thread-id="<%= post.post_number %>">reply</a>&nbsp|&nbsp
-                  <a href="" class="report_a" data-thread-id="<%= post.id %>" data-id="<%- post.id %>">report</a>
+                  <a href="" class="report_a" data-thread-id="<%= post.post_number %>" data-id="<%- post.id %>">report</a>
                 </div>
               </div>
             </div>
@@ -198,12 +213,26 @@ https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
 
             <div class="backpanel <% if ((post.hid === 1)) { %> hidden <% } %>" data-postid="<%= post.id %>">
               <div class="post-body"><p><%- post.html %></p></div>
-              <div data-alarm="<%= post.id %>" class="<% if ((post.slapped === 0 && post.shot ===0)) { %> hidden <% } %>" style="color: var(--rage); font-weight: bold; margin-top: 3px;">
-                <hr style="margin-bottom: 3px; border-color: 1px solid var(--border-color); color: var(--border-color); background-color: var(--border-color)"><% if (post.shot) { %>USER WAS SHOT FOR THIS POST
+               <div class="bombaclot">
+               <% if (post.sig || post.slapped || post.shot) { %>
+               
+                <hr class="" style="margin-bottom: 3px; margin-top: 3px; border-color: 1px solid var(--border-color); color: var(--border-color); background-color: var(--border-color)"> 
+                  
+               
+                <% } %>
+                   </div>
+              <div data-alarm="<%= post.id %>" class="<% if ((post.slapped === 0 && post.shot ===0)) { %> hidden <% } %>" style="color: var(--rage); font-weight: bold; margin-top: 3px; margin-bottom: 3px">
+                <% if (post.shot) { %>USER WAS SHOT FOR THIS POST
                 <% } else if (post.slapped) { %>
                 USER WAS SLAPPED FOR THIS POST <% } %>
-
+              
               </div>
+              <div class="clot">
+                <% if (post.sig) { %>
+                <p class="signature" title="<%- post.sig %>">signature: <%- post.sig %></p>
+                
+              <% } %>
+                </div>
 
 
             </div>
@@ -265,7 +294,7 @@ https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
         </div>
 
         <div class="modal-input">
-          <label for="">signature</label><input type="text" placeholder="put a secure password here to sign your post" />
+          <label for="">signature</label><input type="text" name="sig" placeholder="put a secure password here to sign your post" />
         </div>
         <div><button type="submit" id="button-thread">submit</button></div>
         <input type="hidden" name="post-text" id="post-text" />
@@ -286,7 +315,7 @@ https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
         <label for="rule-select">which rule was violated?</label>
         <select name="reported_rule" id="rule-select">
           <option value="" selected disabled hidden>
-            --please choose an option--
+            --please choose a rule--
           </option>
           <option value="1">
             1. dont post anything that violates local or US law
@@ -322,7 +351,7 @@ https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
         <div>
           <div>
             <label for="reply-sig" style="margin: 0px 0px 0px -5px">signature</label>
-            <input id="reply-sig" type="text" placeholder="put a secure password here to sign your post" style="width: 100%" />
+            <input id="reply-sig" name="sig" type="text" placeholder="put a secure password here to sign your post" style="width: 100%" />
           </div>
           <input type="hidden" name="post-text1" id="post-text1" />
 
@@ -335,7 +364,9 @@ https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
   </div>
 
   <script defer>
-    dayjs.extend(window.dayjs_plugin_relativeTime);
+    if (window.dayjs_plugin_relativeTime) {
+    dayjs.extend(window.dayjs_plugin_relativeTime)
+}
     let timers = document.querySelectorAll('.timer')
     timers.forEach((t) => {
       t.textContent = dayjs.unix(Number(t.dataset.time)).fromNow()
@@ -376,7 +407,6 @@ https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
         post.querySelectorAll('.post-body .quote').forEach(quote => {
             const quotedId = quote.dataset.quoteid.trim();
           
-            // Prevent >>10 >>10 from creating two entries
             quotedPosts.add(quotedId)
             
         });
@@ -390,7 +420,7 @@ https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
         }
     });
     
-    // Render
+
     for (const [quotedId, replierIds] of replies) {
         const targetPost = document.getElementById(quotedId)
         if (!targetPost) continue
@@ -430,6 +460,9 @@ updateReplyLinks()
       tochange.forEach(panel => {
         panel.style.backgroundColor = 'var(--panel)'
       })
+      document.querySelectorAll('.post-header').forEach(header => {
+        header.style.backgroundImage = 'linear-gradient(var(--panel), var(--gradient))'
+      })
       let todelete = document.querySelectorAll('.hoverquote')
 
       todelete.forEach(hover => {
@@ -465,6 +498,10 @@ updateReplyLinks()
       }
       if (isVisible(quoted)) {
         quoted.querySelector(".backpanel").style.backgroundColor = 'var(--gradient)'
+        if ( quoted.querySelector(".backpanel").classList.contains('hidden')) {
+        quoted.querySelector(".post-header").style.backgroundImage = 'linear-gradient(var(--gradient), var(--ee))'
+
+        }
       } else {
 
 
@@ -481,6 +518,7 @@ updateReplyLinks()
         quotepost.style.width = '69%'
         quotepost.style.border = '1px solid var(--rage)'
         quotepost.dataset.oldid = quoteid
+        quotepost.querySelector(".backpanel").classList.remove('hidden')
         quotepost.id = quoteid + 'hover'
         const body = document.getElementById('fakebody')
         body.appendChild(quotepost)
@@ -508,6 +546,7 @@ updateReplyLinks()
       }
       if (isVisible(quoted)) {
         quoted.querySelector(".backpanel").style.backgroundColor = 'var(--panel)'
+        quoted.querySelector(".post-header").style.backgroundImage = 'linear-gradient(var(--panel), var(--gradient))'
       } else {
         let quoteposts = document.getElementById(quoteid + 'hover')
         if (quoteposts) {
@@ -535,7 +574,7 @@ updateReplyLinks()
                 return
               }
             panel.classList.toggle('hidden')
-      } else if (!isNaN(Number(id)))  {
+      } else {
             const post = document.getElementById(String(id))
               if (!post) {
                 return
@@ -550,7 +589,44 @@ updateReplyLinks()
     }
     const report = document.querySelector('.report_a')
     const report_modal = document.getElementById('report-box')
+    const reportform = document.querySelector('#modal-form-report')
+   
+    reportform.addEventListener('submit', async e => {
+      e.preventDefault()
+       const rule = document.querySelector('#rule-select').value
+       let threadid
+       let postid
+       if (report_modal.dataset.threadId && !report_modal.dataset.postId) {
+        threadid = report_modal.dataset.threadId
+         postid = null
+       } else if ((!report_modal.dataset.threadId && report_modal.dataset.postId)) {
+         threadid = null
+         postid = report_modal.dataset.postId
+       }
+      
+      if (!rule) {
+        return
+      }
+      const response = await fetch('/api/report', {
+        method: 'POST',
 
+        headers: {
+          'Content-Type': 'application/json'
+        },
+
+        body: JSON.stringify({
+          thread_id: threadid.trim(),
+          post_id: postid.trim(),
+          rule: rule
+        })
+      })
+      if (!response.ok) {
+        alert('failed to report')
+        return
+      }
+
+      return
+    })
 
     document.addEventListener('click', async e => {
       const quote = e.target.closest('.quote');
@@ -659,56 +735,61 @@ updateReplyLinks()
       }
 
       // HIDE 
-      if (hide) {
-        e.preventDefault();
 
-        let slapid = hide.dataset.postid;
-        let thread_id;
-        let num = slapid
-        if (slapid) {
-          if (hide.dataset.type == 'OP') {
-            thread_id = slapid
-            slapid = null
-          } else if (!isNaN(Number(slapid))) {
-            thread_id = null
-          }
-          try {
-            const response = await fetch('/api/hide', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                post_id: slapid,
-                thread_id: thread_id,
-                action: 'hide'
-              })
-            });
+if (hide) {
+  e.preventDefault();
 
-            const data = await response.json();
+  let postId = hide.dataset.postid;
+  let threadId = null;
 
-            if (!response.ok) {
-              alert(data.error || 'Failed to hide post');
-              return;
-            }
-            backpanels.forEach(panel => {
-              if (panel.dataset.postid) {
-                if (panel.dataset.postid === 'OP') {
-                  panel.classList.add('hidden')
-                } else if (panel.dataset.postid === num) {
-                   panel.classList.add('hidden')
-                }
-              }
-            })
-           
-          } catch (error) {
-            console.error('Hide error:', error);
-            alert('Failed to hide post');
-          }
-        }
+  if (!postId) {
+    return;
+  }
 
-        return;
-      }
+  if (hide.dataset.type === 'OP') {
+    threadId = postId;
+    postId = null;
+  }
+
+  try {
+    const response = await fetch('/api/hide', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        post_id: postId,
+        thread_id: threadId,
+        action: 'hide'
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.error || 'Failed to hide post');
+      return;
+    }
+
+    const post = hide.closest('.post');
+
+    if (!post) {
+      return;
+    }
+
+    const panel = post.querySelector('.backpanel');
+
+    if (panel) {
+      panel.classList.add('hidden');
+    }
+
+  } catch (error) {
+    console.error('Hide error:', error);
+    alert('Failed to hide post');
+  }
+
+  return;
+}
       // DELETE
       if (deleter) {
         e.preventDefault();
@@ -814,6 +895,8 @@ updateReplyLinks()
         if (quoted && isVisible(quoted)) {
           quoted.querySelector('.backpanel').style.backgroundColor =
             'var(--panel)'
+        quoted.querySelector('.post-header').style.backgroundImage = 'linear-gradient(var(--panel), var(--gradient))'
+
         } else {
           const quoteposts = document.getElementById(quoteid + 'hover');
 
@@ -829,6 +912,13 @@ updateReplyLinks()
       if (report_button) {
         e.preventDefault()
         report_modal.showModal()
+        if (report_button.dataset.threadId == 'OP') {
+          report_modal.dataset.threadId = report_button.dataset.id
+          report_modal.dataset.postId = ''
+        } else {
+          report_modal.dataset.thread = ''
+          report_modal.dataset.postId = report_button.dataset.id
+        }
       }
 
       // REPLY BUTTON
@@ -853,7 +943,7 @@ updateReplyLinks()
         }
 
         hidePost(e, header.dataset.headerid)
-
+        
       }
     });
 
@@ -876,13 +966,15 @@ updateReplyLinks()
       event.preventDefault()
       modal.showModal()
     })
+    
     const createThreadForm = document.getElementById('modal-form')
     const buttonThreadForm = document.getElementById('button-thread')
     const textarea = document.getElementById('thread-text')
     createThreadForm.addEventListener('submit', async event => {
-      // Prevent the browser from reloading the page
       event.preventDefault()
       const text = textarea.value
+      const sig = document.querySelector('input[name="sig"]').value
+
       const moshpit = document.querySelector('input[name="moshpit"]').value
       const post_text = document.querySelector('input[name="post-text"]').value
       if (!text.trim()) {
@@ -908,7 +1000,8 @@ updateReplyLinks()
           text: text.trimEnd(),
           moshpit: moshpit,
           html: text.trimEnd(),
-          post_text: post_text
+          post_text: post_text,
+          sig: sig
         })
       })
 
@@ -993,11 +1086,13 @@ updateReplyLinks()
     const replyForm = document.getElementById('reply-form')
     const reply_textarea = document.getElementById('reply-textarea')
     const post_text1 = document.querySelector('input[name="post-text1"]').value
-
+   
     replyForm.addEventListener('submit', async event => {
+      
       console.log('replied!')
       event.preventDefault()
       const text = reply_textarea.value
+    const signature = document.getElementById('reply-sig').value
 
       if (!text.trim()) return
 
@@ -1012,7 +1107,8 @@ updateReplyLinks()
             moshpit: '<%= thread.moshpit %>',
             thread_id: '<%= thread.id %>',
             html: text.trimEnd(),
-            post_text1: post_text1
+            post_text1: post_text1,
+            sig: signature
           })
         })
 
@@ -1132,6 +1228,16 @@ if (backpanel) {
     backpanel.dataset.postid = String(post.id)
     backpanel.classList.remove('hidden')
 }
+backpanel.querySelector('.clot').innerHTML = ''
+backpanel.querySelector('.bombaclot').innerHTML = ''
+
+
+if (post.sig || post.slapped || post.shot) {
+  backpanel.querySelector('.bombaclot').innerHTML = `<hr class="" style="margin-bottom: 3px; margin-top: 3px; border-color: 1px solid var(--border-color); color: var(--border-color); background-color: var(--border-color)">` 
+}
+if (post.sig) {
+  backpanel.querySelector('.clot').innerHTML = `<p class="signature" title="${post.sig}">signature: ${post.sig}</p>` 
+}
 
 const alarm = newPost.querySelector('[data-alarm]')
 if (alarm) {
@@ -1203,7 +1309,7 @@ if (alarm) {
         }
 
         html += `<a href="" class="reply-button" data-thread-id="${post.post_number}">reply</a>&nbsp;|&nbsp;
-             <a href="" class="report_a">report</a>`;
+             <a href="" class="report_a" data-thread-id="${post.post_number}" data-id="${post.id}">report</a>`;
         newPost.querySelector('.postheaderoptions').innerHTML = html;
       }
       const threadContainer = document.getElementById('post-container')

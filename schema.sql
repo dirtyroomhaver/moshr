@@ -347,7 +347,8 @@ CREATE TABLE IF NOT EXISTS reports (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
     reporter_id INTEGER,
-    post_id INTEGER NOT NULL,
+    post_id INTEGER,
+    thread_id INTEGER,
     violator_id INTEGER NOT NULL,
     report_time INTEGER NOT NULL DEFAULT (unixepoch()),
 
@@ -364,9 +365,6 @@ CREATE TABLE IF NOT EXISTS reports (
         REFERENCES users(id)
         ON DELETE SET NULL,
 
-    FOREIGN KEY (post_id)
-        REFERENCES posts(id)
-        ON DELETE CASCADE,
 FOREIGN KEY (violator_id)
     REFERENCES users(id)
     ON DELETE CASCADE,

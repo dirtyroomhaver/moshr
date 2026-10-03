@@ -184,7 +184,7 @@
         </div>
 
         <div class="modal-input">
-          <label for="">signature</label><input type="text" placeholder="put a secure password here to sign your post" />
+          <label for="">signature</label><input type="text" name="sig" placeholder="put a secure password here to sign your post" />
         </div>
         <div><button type="submit" id="button-thread">submit</button></div>
         <input type="hidden" name="post-text" id="post-text" />
@@ -250,9 +250,10 @@ searchbars.forEach(bar => {
     const buttonThreadForm = document.getElementById('button-thread')
 
     createThreadForm.addEventListener('submit', async event => {
-      // Prevent the browser from reloading the page
+
       event.preventDefault()
       const text = textarea.value
+      const sig = document.querySelector('input[name="sig"]').value
       const moshpit = document.querySelector('input[name="moshpit"]').value
       const post_text = document.querySelector('input[name="post-text"]').value
       if (!text.trim()) {
@@ -278,7 +279,8 @@ searchbars.forEach(bar => {
           text: text.trimEnd(),
           moshpit: moshpit,
           html: text.trimEnd(),
-          post_text: post_text
+          post_text: post_text,
+          sig: sig
         })
       })
 
@@ -289,7 +291,7 @@ searchbars.forEach(bar => {
       }
 
       const data = await response.json()
-      window.location.href = `/${data.moshpit.title}/${data.threadId}`
+     window.location.href = `/${data.moshpit.title}/${data.threadId}`
     })
 
 

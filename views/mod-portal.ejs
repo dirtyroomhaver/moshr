@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>info</title>
+    <link rel="stylesheet" href="stylesheet.css" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="robots" content="noindex, follow">
+<body>
+    <% if (user.is_owner) { %>
+    <div class="navbar">
+      <div class="navbar-left">
+        <ul class="nav-list">
+          <li><a href="/mod-portal">settings</a></li>
+          <p>|</p>
+          <li><a href="/report-queue">reports</a></li>
+          <p>|</p>
+          <li><a href="/user-info">info</a></li>
+        </ul>
+      </div>
+      
+    </div>
+    <div class="body">
+      <!-- <h2 style="margin-left: 7px;margin-top: 2px;color: #d2d6dc">faq</h2> -->
+      <div class="body-admin">
+        <div >
+            <form action="" id="formform">
+                 <label for="">max threads</label>
+                <input type="number" id="maxt" value="<%= settings.max_threads %>" placeholder="max threads">
+                 <label for="">max posts</label>
+                <input type="number" id="maxp" value="<%= settings.max_posts %>" placeholder="max threads">
+                 <label for="">frozen</label>
+                <input type="number" id="frozen"  value="<%= settings.frozen %>" placeholder="frozen">
+                 <label for="">silenced</label>
+                <input type="number" id="silenced" value="<%= settings.silenced %>" placeholder="silenced?">
+                 <label for="">slowmode</label>
+                <input type="number" id="slowmode" value="<%= settings.slowmode %>" placeholder="slowmode?">
+                 <label for="">slowmode multiplier</label>
+                <input type="number" id="slowmult" value="<%= settings.slowmode_multiplier %>" placeholder="slowmult?">
+                 <label for="">threadlimit</label>
+                <input type="number" id="threadlimit" value="<%= settings.thread_limit %>" placeholder="threadlimit?">
+                <label for="">new poster timer thread</label>
+                <input type="number" id="newposterthread" value="<%= settings.new_poster_timer_thread  %>" placeholder="newposterthread?">
+                <label for="">new poster timer post</label>
+                <input type="number" id="newposterpost" value="<%= settings.new_poster_timer_posts %>" placeholder="newposterposts?">
+                <label for="">thread cooldown</label>
+                <input type="number" id="cooldownthread" value="<%= settings.post_cooldown_thread %>" placeholder="cooldownthread?">
+                <label for="">post cooldown</label>
+                <input type="number" id="cooldownpost" value="<%= settings.post_cooldown_post %>" placeholder="cooldownposts?">
+                <label for="">bump limit</label>
+                <input type="number" id="bumplimit" value="<%= settings.bump_limit %>" placeholder="bumplimit?">
+             <label for="">decaytimer</label>
+                <input type="number" id="decay" value="<%= settings.decay_timer %>" placeholder="slowmode?">
+                <label for="">report cooldown</label>
+                <input type="number" id="reportcool" value="<%= settings.report_cooldown %>" placeholder="slowmode?">
+                <label for="">announcement text</label>
+                <input type="text" id="anntext" value="<%= settings.announcement %>" placeholder="announcement text?">
+                <label for="">slowmode</label>
+                <input type="number" id="annflag" value="<%= settings.announcement_status %>" placeholder="slowmode?">
+
+                <button type="submit">submit</button>
+            </form>
+        </div>
+      </div>
+    </div>
+    <script>
+  const form = document.querySelector('#formform')
+
+  form.addEventListener('submit', async event => {
+    event.preventDefault()
+
+    const maxt = document.querySelector('#maxt').value
+    const maxp = document.querySelector('#maxp').value
+    const frozen = document.querySelector('#frozen').value
+    const silenced = document.querySelector('#silenced').value
+    const slowmode = document.querySelector('#slowmode').value
+    const slowmult = document.querySelector('#slowmult').value
+    const threadlimit = document.querySelector('#threadlimit').value
+    const newposterthread = document.querySelector('#newposterthread').value
+    const newposterpost = document.querySelector('#newposterpost').value
+    const cooldownthread = document.querySelector('#cooldownthread').value
+    const cooldownpost = document.querySelector('#cooldownpost').value
+    const bumplimit = document.querySelector('#bumplimit').value
+    const decay = document.querySelector('#decay').value
+    const reportcool = document.querySelector('#reportcool').value
+    const anntext = document.querySelector('#anntext').value
+    const annflag = document.querySelector('#annflag').value
+
+    try {
+      const response = await fetch('/api/settings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          maxt,
+          maxp,
+          frozen,
+          silenced,
+          slowmode,
+          slowmult,
+          threadlimit,
+          newposterthread,
+          newposterpost,
+          cooldownthread,
+          cooldownpost,
+          bumplimit,
+          decay,
+          reportcool,
+          anntext,
+          annflag
+        })
+      })
+
+      if (!response.ok) {
+        alert('failed update')
+        return
+      }
+
+      alert('updated!')
+
+    } catch (error) {
+      alert('Failed update: ' + error)
+    }
+  })
+</script>
+    <% } %>
+  </body>
+</html>
