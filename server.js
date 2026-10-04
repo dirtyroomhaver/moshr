@@ -425,35 +425,35 @@ app.get('/:moshpit_title/:thread_id', async (req, res) => {
 // -------------------------
 // API routes
 // -------------------------
-app.get('/api/refresh/:moshpit/:thread_id/:last_post', async (req, res) => {
-  const { thread_id } = req.params
-  let { last_post } = req.params
-  let { moshpit } = req.params
-  if (!thread_id) {
-      return res.status(400).json({
-        error: 'thread_id cannot be empty'
-      })
-    }
+// app.get('/api/refresh/:moshpit/:thread_id/:last_post', async (req, res) => {
+//   const { thread_id } = req.params
+//   let { last_post } = req.params
+//   let { moshpit } = req.params
+//   if (!thread_id) {
+//       return res.status(400).json({
+//         error: 'thread_id cannot be empty'
+//       })
+//     }
 
-  if (!last_post) {
-      return res.status(400).json({
-        error: 'last_post cannot be empty'
-      })
-    }
-  if (last_post === 'OP') {
-      last_post = '1'
-    }
-  let posts = await getNewPosts(thread_id, last_post)
-  let moshpitcreate = await getOrCreateMoshpit(moshpit)
-   if (moshpitcreate.flags == 0) {
-      posts.forEach(post => {
-        post.country = 'nigga stop looking here bitch'
-      })
-    }
-  return res.json({
-      posts: posts,
-    })
-})
+//   if (!last_post) {
+//       return res.status(400).json({
+//         error: 'last_post cannot be empty'
+//       })
+//     }
+//   if (last_post === 'OP') {
+//       last_post = '1'
+//     }
+//   let posts = await getNewPosts(thread_id, last_post)
+//   let moshpitcreate = await getOrCreateMoshpit(moshpit)
+//    if (moshpitcreate.flags == 0) {
+//       posts.forEach(post => {
+//         post.country = 'nigga stop looking here bitch'
+//       })
+//     }
+//   return res.json({
+//       posts: posts,
+//     })
+// })
 app.post('/api/report', async (req, res) => {
   const post_id = req.body.post_id
   const thread_id = req.body.thread_id

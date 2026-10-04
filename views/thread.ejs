@@ -447,7 +447,7 @@ updateReplyLinks()
     updaters.forEach(u => {
       u.addEventListener('click', async event => {
         event.preventDefault()
-        await getNewPosts()
+        location.reload()
       })
     })
 
