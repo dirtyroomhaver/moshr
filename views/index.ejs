@@ -117,7 +117,7 @@
     <div class="body-left">
       <div id="threads">
         <% threads.forEach(thread => { if (thread.hid)  { } else { %>
-        <div onclick="window.location.href='/<%= thread.moshpit %>/<%= thread.id %>'" class="allthreads" id="<%- thread.id %>">
+        <a onclick="window.location.href='/<%= thread.moshpit %>/<%= thread.id %>'" class="allthreads" id="<%- thread.id %>">
           <div class="thread  <% if (thread.sticky) { %> shaker <%}%>">
             <div class="thread-text">
               <p class="thread-index-text"><%- thread.html %></p>
@@ -139,7 +139,7 @@
           <div style="display: flex;">
         <a href="" class="delete" data-id="<%- thread.id %>">delete</a>&nbsp|&nbsp<a href="" class="deleteban" data-id="<%- thread.id %>">delete + ban</a>&nbsp|&nbsp<a href="" class="sticky" data-id="<%- thread.id %>">sticky</a>
 
-          </div> <% } %>
+          </a> <% } %>
         </div>
        
         <% }}) %>
