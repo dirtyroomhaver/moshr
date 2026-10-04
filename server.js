@@ -79,7 +79,12 @@ app.use(async (req, res, next) => {
     if (!cuser) {
       const ip = req.ip
       const reader = await Reader.open('./GeoLite2-City.mmdb')
-      const response = reader.city(req.ip)
+      let response
+    try {
+     response = reader.city(req.ip)
+} catch (error) {
+    console.log(`GeoIP lookup failed for ${ip}:`, error.message)
+}
   
       if (sessionId) {
         const user = await createUser(sessionId, ip, response.country.isoCode)
@@ -1120,8 +1125,12 @@ let moshpit = await getOrCreateMoshpit(req.body.moshpit)
     const now = Math.floor(Date.now() /1000)
 
     const reader = await Reader.open('./GeoLite2-City.mmdb')
-    const response = reader.city(req.ip)
-
+    let response
+    try {
+     response = reader.city(req.ip)
+} catch (error) {
+    console.log(`GeoIP lookup failed for ${ip}:`, error.message)
+}
     const lastPost = await getLastPost(thread_id)
 
     const post_number = (lastPost?.post_number ?? 0) + 1
@@ -1226,7 +1235,13 @@ if (sig) {
   if (user) {
     const now = Math.floor(Date.now() /1000)
     const reader = await Reader.open('./GeoLite2-City.mmdb')
-    const response = reader.city(req.ip)
+    let response
+    try {
+     response = reader.city(req.ip)
+} catch (error) {
+    console.log(`GeoIP lookup failed for ${ip}:`, error.message)
+}
+    
     const thread = await createThread(
       user.id,
       moshpit.title,
