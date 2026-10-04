@@ -144,7 +144,7 @@ https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
               </div>
             </div>
             <div class="backpanel" data-postid="OP">
-              <div class="post-body"><p class="inline" style="display: inline-block"><%- thread.html  %></p></div>
+              <div class="post-body"><p><%- thread.html  %></p></div>
                 <div class="bombaclot">
                <% if (thread.sig || thread.slapped || thread.shot) { %>
                
@@ -212,7 +212,7 @@ https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
 
 
             <div class="backpanel <% if ((post.hid === 1)) { %> hidden <% } %>" data-postid="<%= post.id %>">
-              <div class="post-body"><p class="inline" style="display: inline-block"><%- post.html %></p></div>
+              <div class="post-body"><p><%- post.html %></p></div>
                <div class="bombaclot">
                <% if (post.sig || post.slapped || post.shot) { %>
                

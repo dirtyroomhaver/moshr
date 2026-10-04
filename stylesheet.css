@@ -738,7 +738,7 @@ s {
 }
 .greentext {
     color: var(--greentext);
-    display:inherit;
+    display:inline-block;
 }
 .rage {
     color: var(--rage); display:inherit;
