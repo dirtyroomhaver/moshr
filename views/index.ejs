@@ -14,7 +14,14 @@
 </head>
 
 <body>
+<% 
+  function spanify(text) {
+    comment = text.replaceAll('\<a', '\<span')
+    comment = comment.replaceAll('\</a', '\</span')
 
+    return comment
+  }
+  %>
 
 
   <div class="navbar" id="navbar2">
@@ -117,10 +124,10 @@
     <div class="body-left">
       <div id="threads">
         <% threads.forEach(thread => { if (thread.hid)  { } else { %>
-        <div onclick="window.location.href='/<%= thread.moshpit %>/<%= thread.id %>'" class="allthreads" id="<%- thread.id %>">
+        <a href='/<%= thread.moshpit %>/<%= thread.id %>' class="allthreads" id="<%- thread.id %>">
           <div class="thread  <% if (thread.sticky) { %> shaker <%}%>">
             <div class="thread-text">
-              <p class="thread-index-text"><%- thread.html %></p>
+              <p class="thread-index-text"><%- spanify(thread.html) %></p>
             </div>
             <div class="bot-thread">
               <div class="thread-update">
@@ -137,10 +144,10 @@
           </div>
            <% if (user.is_admin || user.is_owner || user.is_mod) { %>
           <div style="display: flex;">
-        <a href="" class="delete" data-id="<%- thread.id %>">delete</a>&nbsp|&nbsp<a href="" class="deleteban" data-id="<%- thread.id %>">delete + ban</a>&nbsp|&nbsp<a href="" class="sticky" data-id="<%- thread.id %>">sticky</a>
+        <span href="" class="delete" data-id="<%- thread.id %>">delete</span>&nbsp|&nbsp<span href="" class="deleteban" data-id="<%- thread.id %>">delete + ban</span>&nbsp|&nbsp<span href="" class="sticky" data-id="<%- thread.id %>">sticky</span>
 
           </div> <% } %>
-        </div>
+        </a>
        
         <% }}) %>
       </div>

@@ -361,8 +361,7 @@ app.get('/', async (req, res) => {
     return res.status(404).send('No threads found, make one?')
   }
   const moshpit = 'moshpit'
-  console.log('threads:', threads)
-console.log('user:', user)
+
 
   res.render('index', { threads, moshpit, trending: results.trending, recent: results.recent, popular: results.popular, user, settings })
 })
@@ -559,7 +558,7 @@ app.post('/api/sticky', async (req, res) => {
         error: 'Missing perp'
       })
   }
-  console.log(perp.is_owner)
+ 
 if (perp.is_admin || perp.is_owner) {
  const thread_id = req.body.thread_id
 
