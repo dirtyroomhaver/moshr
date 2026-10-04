@@ -734,7 +734,7 @@ s {
     font-weight:bolder;
     font-size: 2rem;
     position: absolute;
-    display: block;
+    display: inline-block;
 }
 .greentext {
     color: var(--greentext);
