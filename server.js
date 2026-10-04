@@ -1119,10 +1119,8 @@ let moshpit = await getOrCreateMoshpit(req.body.moshpit)
 }
     const now = Math.floor(Date.now() /1000)
 
+    const reader = await Reader.open('./GeoLite2-City.mmdb')
    
-
-    
-}
     const lastPost = await getLastPost(thread_id)
 
     const post_number = (lastPost?.post_number ?? 0) + 1
@@ -1225,8 +1223,7 @@ if (sig) {
 }
   if (user) {
     const now = Math.floor(Date.now() /1000)
-  
-    
+   
     const thread = await createThread(
       user.id,
       moshpit.title,
@@ -1236,7 +1233,7 @@ if (sig) {
       moshpit.id,
       formatText(html),
       req.ip,
-      'usa',
+      'USA',
       sig
     )
     // res.json(thread)
