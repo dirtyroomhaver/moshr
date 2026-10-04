@@ -339,32 +339,47 @@ searchbars.forEach(bar => {
      const d = e.target.closest('.delete')
      const db = e.target.closest('.deleteban')
      const sticky = e.target.closest('.sticky')
+
 if (sticky) {
-    e.preventDefault()
+      e.preventDefault()
 
-    console.log('STICKY CLICK')
-    console.log('ID:', sticky.dataset.id)
+       const threadid = sticky.dataset.id
 
-    const threadid = sticky.dataset.id
+       if (threadid) {
+         try {
+           const response = await fetch('/api/sticky', {
+             method: 'POST',
+             headers: {
+               'Content-Type': 'application/json'
+             },
+             body: JSON.stringify({
+               thread_id: threadid,
+               banflag: 0
+             })
+           });
 
-    try {
-        console.log('SENDING REQUEST')
 
-        const response = await fetch('/api/sticky', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                thread_id: threadid,
-                banflag: 0
-            })
-        })
+           const data = await response.json()
 
-        console.log('RESPONSE:', response.status)
+           if (!response.ok) {
+             alert(data.error || 'Failed')
+             return;
+           }
 
-        const data = await response.json()
-        console.log('DATA:', data)
+           const post = document.getElementById(threadid)
+           post.style.border = '1px solid var(--rage)'
+           
+
+           
+         } catch (error) {
+           console.error('Shoot error:', error)
+           alert('Failed to shoot post')
+         }
+       }
+
+
+       return;
+     }
      if (d) {
       e.preventDefault()
        const threadid = d.dataset.id
@@ -405,8 +420,7 @@ if (sticky) {
        return;
      }
      if (db) {
-      e.preventDefault()
-
+      
        const threadid = db.dataset.id
 
        if (threadid) {
