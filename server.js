@@ -82,6 +82,10 @@ app.use(async (req, res, next) => {
       let ip
          
       try {
+         console.log('conn' + req.connection.remoteAddress)
+      console.log('sock' + req.socket.remoteAddress)
+      console.log('cs' + req.headers['x-forwarded-for'])
+      console.log('head' + req.headers['x-forwarded-for'])
           ip = 
               req.connection.remoteAddress || 
               req.socket.remoteAddress ||
@@ -1135,7 +1139,7 @@ let moshpit = await getOrCreateMoshpit(req.body.moshpit)
     try {
       console.log('conn' + req.connection.remoteAddress)
       console.log('sock' + req.socket.remoteAddress)
-      console.log('cs' + req.connection.socket.remoteAddress)
+      console.log('cs' + req.headers['x-forwarded-for'])
       console.log('head' + req.headers['x-forwarded-for'])
      response = reader.city(req.connection.remoteAddress || 
               req.socket.remoteAddress ||
