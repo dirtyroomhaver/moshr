@@ -209,11 +209,7 @@ function spanify(text) {
 
     return comment
   }
-  document.addEventListener('click', e => {
-    if (e.target.closest('.pitquote') || e.target.closest('.pitquote'))
-    e.preventDefault()
-    reload()
-  })
+  
     const timers = document.querySelectorAll('.timer')
     timers.forEach((t) => {
       t.textContent = dayjs.unix(Number(t.dataset.time)).fromNow()
@@ -343,47 +339,34 @@ searchbars.forEach(bar => {
      const d = e.target.closest('.delete')
      const db = e.target.closest('.deleteban')
      const sticky = e.target.closest('.sticky')
-
 if (sticky) {
+    e.preventDefault()
 
-       const threadid = sticky.dataset.id
+    console.log('STICKY CLICK')
+    console.log('ID:', sticky.dataset.id)
 
-       if (threadid) {
-         try {
-           const response = await fetch('/api/sticky', {
-             method: 'POST',
-             headers: {
-               'Content-Type': 'application/json'
-             },
-             body: JSON.stringify({
-               thread_id: threadid,
-               banflag: 0
-             })
-           });
+    const threadid = sticky.dataset.id
 
+    try {
+        console.log('SENDING REQUEST')
 
-           const data = await response.json()
+        const response = await fetch('/api/sticky', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                thread_id: threadid,
+                banflag: 0
+            })
+        })
 
-           if (!response.ok) {
-             alert(data.error || 'Failed')
-             return;
-           }
+        console.log('RESPONSE:', response.status)
 
-           const post = document.getElementById(threadid)
-           post.style.border = '1px solid var(--rage)'
-           
-
-           
-         } catch (error) {
-           console.error('Shoot error:', error)
-           alert('Failed to shoot post')
-         }
-       }
-
-
-       return;
-     }
+        const data = await response.json()
+        console.log('DATA:', data)
      if (d) {
+      e.preventDefault()
        const threadid = d.dataset.id
 
        if (threadid) {
@@ -422,6 +405,8 @@ if (sticky) {
        return;
      }
      if (db) {
+      e.preventDefault()
+
        const threadid = db.dataset.id
 
        if (threadid) {
