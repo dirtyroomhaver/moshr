@@ -1133,12 +1133,17 @@ let moshpit = await getOrCreateMoshpit(req.body.moshpit)
     let response
     let country
     try {
+      console.log('conn' + req.connection.remoteAddress)
+      console.log('sock' + req.socket.remoteAddress)
+      console.log('cs' + req.connection.socket.remoteAddress)
+      console.log('head' + req.headers['x-forwarded-for'])
      response = reader.city(req.connection.remoteAddress || 
               req.socket.remoteAddress ||
             req.connection.socket.remoteAddress || req.headers['x-forwarded-for'])
      country = response.country.isoCode
     } catch (error) { 
       country = '???'
+
     }
     const lastPost = await getLastPost(thread_id)
 
