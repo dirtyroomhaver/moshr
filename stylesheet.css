@@ -705,12 +705,14 @@ s {
 }
 .big {
     font-size: 2rem;
+    display:inline-block;
 }
 .greentext {
-    color: var(--greentext)
+    color: var(--greentext);
+    display:inline-block;
 }
 .rage {
-    color: var(--rage);
+    color: var(--rage); display:inline-block;
 }
 
 .gay {
@@ -729,7 +731,7 @@ s {
     color: transparent;
 
     animation: rainbow_animation 0.5s infinite;
-
+display:inline-block;
     background-size: 400% 100%;
 }
 
@@ -746,7 +748,7 @@ s {
     color: transparent;
 
     animation: rainbow_animation 0.35s infinite;
-
+display:inline-block;
     background-size: 400% 100%;
 }
 
@@ -760,7 +762,7 @@ s {
     background-clip: text;
 
     color: transparent;
-
+display:inline-block;
     animation: rainbow_animation 0.2s infinite;
 
     background-size: 400% 100%;
@@ -806,50 +808,58 @@ s:hover {
 
 .vert {
     animation: vertical-shaking 0.25s infinite;
+    display:inline-block;
 }
 
 .verta {
     animation: vertical-shaking 0.25s infinite;
+    display:inline-block;
 }
 
 .hori {
     animation: horizontal-shaking 0.25s infinite;
+    display:inline-block;
 }
 
 .hori1 {
     animation: horizontal-shaking 0.25s infinite;
+    display:inline-block;
 }
 
 .hori2 {
     animation: horizontal-shaking 0.25s infinite;
     font-weight: bold;
+    display:inline-block;
 }
 
 .hori3 {
     animation: horizontal-shaking 0.25s infinite;
     font-weight: bold;
     font-size: 2rem;
+    display:inline-block;
 }
 .hori3a {
     animation: horizontal-shaking 0.25s infinite;
     font-weight: bold;
     font-size: 2rem;
     position: absolute;
+    display:inline-block;
 }
 .italic1 {
     font-style: italic;
+    display:inline-block;
 }
 
 .italic2 {
 
     font-style: italic;
-
+display:inline-block;
     font-weight: bold;
 }
 
 .italic3 {
     font-style: italic;
-
+display:inline-block;
     font-weight: bold;
     font-size: 2rem;
 }
@@ -857,17 +867,19 @@ s:hover {
 .glow {
     animation: glow 0.3s ease-in-out infinite alternate;
     /* color: var(--text); */
+    display:inline-block;
 }
 
 .schizo {
     animation: skew-x-shaking 0.5s infinite;
+    display:inline-block;
 }
 .schizoa {
     animation: skew-x-shaking 0.5s infinite;
-
+    display:inline-block;
 }
 span {
-    display:inline-block;
+    
     line-height: 1; 
   margin: 0;  
 }
