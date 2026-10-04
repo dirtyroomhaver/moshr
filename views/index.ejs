@@ -209,7 +209,11 @@ function spanify(text) {
 
     return comment
   }
-  
+  document.addEventListener('click', e => {
+    if (e.target.closest('.pitquote') || e.target.closest('.pitquote'))
+    e.preventDefault()
+    reload()
+  })
     const timers = document.querySelectorAll('.timer')
     timers.forEach((t) => {
       t.textContent = dayjs.unix(Number(t.dataset.time)).fromNow()
@@ -245,14 +249,16 @@ searchbars.forEach(bar => {
         const newhtml = thread.html;
 
         all_threads_html.forEach(t => {
-          console.log(t.querySelector('.thread-index-text').innerHTML == spanify(thread.html))
+          console.log(t.querySelector('.thread-index-text').innerHTML)
+          console.log(spanify(thread.html))
           if (t.querySelector('.thread-index-text').innerHTML == spanify(thread.html)) {
+            console.log('matched')
             const newthread = t
             newthread.querySelector('.thread').style.border = '1px solid var(--rage)'
             //newthread.querySelector('.thread').classList.add('shake2')     
 
             t.remove();
-            threads_html.prepend(t);
+            threads_html.prepend(newthread);
           }
         });
       }
