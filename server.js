@@ -82,14 +82,7 @@ app.use(async (req, res, next) => {
       let ip
          
       try {
-         console.log('conn' + req.connection.remoteAddress)
-      console.log('sock' + req.socket.remoteAddress)
-      console.log('cs' + req.headers['x-forwarded-for'])
-      console.log('head' + req.headers['x-forwarded-for'])
-          ip = 
-              req.connection.remoteAddress || 
-              req.socket.remoteAddress ||
-            req.connection.socket.remoteAddress || req.headers['x-forwarded-for'] ;
+          ip = req.headers['x-forwarded-for'];
       } catch (error) {
         ip = 'unknown'
       }
@@ -1137,10 +1130,6 @@ let moshpit = await getOrCreateMoshpit(req.body.moshpit)
     let response
     let country
     try {
-      console.log('conn' + req.connection.remoteAddress)
-      console.log('sock' + req.socket.remoteAddress)
-      console.log('cs' + req.connection.socket.remoteAddress)
-      console.log('head' + req.headers['x-forwarded-for'])
      response = reader.city(req.headers['x-forwarded-for'])
      country = response.country.isoCode
     } catch (error) { 
@@ -1159,9 +1148,7 @@ if (sig) {
 
     let post = await createPost(
       user.id,
-      req.connection.remoteAddress || 
-              req.socket.remoteAddress ||
-            req.connection.socket.remoteAddress || req.headers['x-forwarded-for'],
+      req.headers['x-forwarded-for'],
       thread_id,
       moshpit.id,
       censorText(text),
@@ -1255,9 +1242,7 @@ if (sig) {
     let response
     let country
     try {
-     response = reader.city(req.connection.remoteAddress || 
-              req.socket.remoteAddress ||
-            req.connection.socket.remoteAddress || req.headers['x-forwarded-for'])
+     response = reader.city(req.headers['x-forwarded-for'])
      country = response.country.isoCode
 } catch (error) { 
       country = '???'
@@ -1273,9 +1258,7 @@ if (sig) {
       now,
       moshpit.id,
       formatText(html),
-      req.connection.remoteAddress || 
-              req.socket.remoteAddress ||
-            req.connection.socket.remoteAddress || req.headers['x-forwarded-for'],
+      req.headers['x-forwarded-for'],
       country,
       sig
     )
