@@ -339,7 +339,7 @@ searchbars.forEach(bar => {
      const sticky = e.target.closest('.sticky')
 
 if (sticky) {
-       e.preventDefault()
+
        const threadid = sticky.dataset.id
 
        if (threadid) {
@@ -378,7 +378,6 @@ if (sticky) {
        return;
      }
      if (d) {
-       e.preventDefault()
        const threadid = d.dataset.id
 
        if (threadid) {
@@ -417,7 +416,6 @@ if (sticky) {
        return;
      }
      if (db) {
-       e.preventDefault()
        const threadid = db.dataset.id
 
        if (threadid) {
