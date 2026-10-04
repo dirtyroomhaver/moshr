@@ -79,7 +79,6 @@ app.use(async (req, res, next) => {
 
     if (!cuser) {
       const ip = req.ip
-      const reader = await Reader.open('./GeoLite2-City.mmdb')
 
     
 
