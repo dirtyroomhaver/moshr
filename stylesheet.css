@@ -95,7 +95,7 @@ td {
 }
 
 span {
-    display:inline-block;
+    display:block;
     line-height: 1; 
   margin: 0;  
 }
