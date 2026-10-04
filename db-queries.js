@@ -141,16 +141,16 @@ function getUserAdminCookie (session) {
 }
 
 
-function createUser (session_id, ip, country) {
+function createUser (session_id, ip) {
   return db
     .prepare(
       `
-        INSERT INTO users (session_id, ip, country)
-        VALUES (?, ?, ?)
+        INSERT INTO users (session_id, ip)
+        VALUES (?, ?)
         RETURNING *
     `
     )
-    .get(session_id, ip, country)
+    .get(session_id, ip)
 }
 
 function createAdmin (session_id, code, pin_hash) {
