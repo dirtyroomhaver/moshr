@@ -44,7 +44,8 @@ report,
   getReports,
   updateReport,
   deletePORT,
-  deleteAllReports
+  deleteAllReports,
+  getThreadsThread
 
  } = require('./db-queries')
 const { Reader } = require('@maxmind/geoip2-node')

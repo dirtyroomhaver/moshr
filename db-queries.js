@@ -390,6 +390,15 @@ function getThreads (moshpit) {
   return db
     .prepare(
       `
+    SELECT id, post_count, comment, created_at, updated_at, bumped_at, board_id, moshpit, html, country, hid, locked, sticky FROM threads WHERE moshpit = ? ORDER BY bumped_at DESC LIMIT 150
+    `
+    )
+    .all(moshpit)
+}
+function getThreadsThread (moshpit) {
+  return db
+    .prepare(
+      `
     SELECT author_id, id, post_count, comment, created_at, updated_at, bumped_at, board_id, moshpit, html, country, hid, locked, sticky FROM threads WHERE moshpit = ? ORDER BY bumped_at DESC LIMIT 150
     `
     )
@@ -1863,5 +1872,6 @@ module.exports = {
   getReports,
   updateReport,
   deletePORT,
-  deleteAllReports
+  deleteAllReports,
+  getThreadsThread
 }
