@@ -206,9 +206,6 @@
     })
     const timers = document.querySelectorAll('.timer')
     timers.forEach((t) => {
-      t.addEventListener('hover', e => {
-
-      })
       t.textContent = dayjs.unix(Number(t.dataset.time)).fromNow()
     })
 
@@ -319,7 +316,7 @@ searchbars.forEach(bar => {
 
     const closeButton = document.getElementById('close-button')
 
-    closeButton.addEventListener('click', () => {
+    closeButton.addEventListener('click', (event) => {
       event.preventDefault()
 
       modal.close()

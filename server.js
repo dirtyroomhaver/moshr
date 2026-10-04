@@ -86,6 +86,8 @@ app.use(async (req, res, next) => {
       try {
         response = reader.city(req.ip)
       } catch (error) {
+        response = reader.city('192.0.2.123')
+
         console.log(`GeoIP lookup failed for ${ip}:`, error.message)
       }
 
@@ -111,7 +113,7 @@ app.use(async (req, res, next) => {
 
     next()
   } catch (error) {
-    console.log('failure')
+    console.log(error)
     next(error)
   }
 })
@@ -1131,6 +1133,8 @@ let moshpit = await getOrCreateMoshpit(req.body.moshpit)
     try {
      response = reader.city(req.ip)
 } catch (error) {
+        response = reader.city('192.0.2.123')
+
     console.log(`GeoIP lookup failed for ${req.ip}:`, error.message)
 }
     const lastPost = await getLastPost(thread_id)
@@ -1239,7 +1243,9 @@ if (sig) {
     let response
     try {
      response = reader.city(req.ip)
-} catch (error) {
+} catch (error) { 
+         response = reader.city('192.0.2.123')
+
     console.log(`GeoIP lookup failed for ${req.ip}:`, error.message)
 }
     
