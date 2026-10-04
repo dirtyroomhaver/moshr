@@ -209,14 +209,7 @@ function spanify(text) {
 
     return comment
   }
-    document.addEventListener('click', e => {
-      console.log('click')
-      if (e.target.closest('.pitquote') || e.target.closest('.quote')) {
-      console.log('fire')
-
-        e.preventDefault()
-      }
-    })
+  
     const timers = document.querySelectorAll('.timer')
     timers.forEach((t) => {
       t.textContent = dayjs.unix(Number(t.dataset.time)).fromNow()
@@ -252,6 +245,7 @@ searchbars.forEach(bar => {
         const newhtml = thread.html;
 
         all_threads_html.forEach(t => {
+          console.log(t.querySelector('.thread-index-text').innerHTML == spanify(thread.html))
           if (t.querySelector('.thread-index-text').innerHTML == spanify(thread.html)) {
             const newthread = t
             newthread.querySelector('.thread').style.border = '1px solid var(--rage)'
