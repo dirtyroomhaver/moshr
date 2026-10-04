@@ -196,7 +196,7 @@ app.post('/api/login', async (req, res) => {
       })
     }
 
-    const owner = await getUserAdmin(1)
+    const owner = await getUserAdminCookie('1')
 
     const compare = await bcrypt.compare(pin, owner.pin_hash)
 
