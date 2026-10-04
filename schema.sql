@@ -351,9 +351,9 @@ CREATE TABLE IF NOT EXISTS reports (
     thread_id INTEGER,
     violator_id INTEGER NOT NULL,
     report_time INTEGER NOT NULL DEFAULT (unixepoch()),
-
+    html TEXT,
     rule_broken TEXT,
-
+    victim_ip TEXT,
     report_status TEXT NOT NULL DEFAULT 'pending'
         CHECK (report_status IN ('pending', 'reviewing', 'resolved', 'dismissed')),
     ban_count INTEGER,
@@ -370,7 +370,14 @@ FOREIGN KEY (violator_id)
     ON DELETE CASCADE,
     FOREIGN KEY (resolved_by)
         REFERENCES users(id)
-        ON DELETE SET NULL
+        ON DELETE SET NULL,
+        FOREIGN KEY (thread_id)
+    REFERENCES threads(id)
+    ON DELETE CASCADE,
+
+FOREIGN KEY (post_id)
+    REFERENCES posts(id)
+    ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_reports_post

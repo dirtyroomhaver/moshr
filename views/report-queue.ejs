@@ -6,10 +6,23 @@
     <title>reports</title>
     <link rel="stylesheet" href="stylesheet.css" />
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <meta name="robots" content="noindex, follow"><meta http-equiv="Content-Security-Policy" content="default-src 'self';">
+    <meta name="robots" content="noindex, follow">
 </head>
 <body>
-   <% if (user.is_owner) { %>
+   <% if (user.is_owner) { 
+    const rules = [
+  "dont post anything that violates local or US law",
+  "dont do or advocate for in site or out of site raids",
+  "dont spam, abuse ascii art, or abuse whitespace",
+  "dont advertise anything you get monetary gain from",
+  "dont post offtopic threads or replies",
+  "dont dox",
+  "dont send false reports",
+  "dont evade bans",
+  "dont advocate for pedophilia or zoophilia",
+  "dont link to or request nsfw or harmful (malware for example) content"
+]
+    %>
     <div class="navbar">
       <div class="navbar-left">
         <ul class="nav-list">
@@ -20,19 +33,50 @@
           <li><a href="/user-info">info</a></li>
         </ul>
       </div>
-      
     </div>
     <div class="body">
-      <!-- <h2 style="margin-left: 7px;margin-top: 2px;color: #d2d6dc">faq</h2> -->
-      <div class="body-admin">
-        <div >
-           
-        </div>
+      <div class="body-left">
+        <% reports.forEach(report => { %>
+          <div class="report-win">
+           <div><%- rules[report.rule_broken - 1] %></div>
+           <hr>
+           <div style="white-space: pre-wrap;word-wrap: break-word;"><%- report.html %></div>
+           <hr>
+           <div style="display: flex;">
+            <a href="" class="delete" data-reporterid="<%- report.reporter_id %>" data-rule="<%- rules[report.rule_broken - 1] %>" data-postid="<%- report.post_id %>" data-threadid="<%- report.thread_id %>">delete</a>---
+            <a href="" class="deleteban" data-reporterid="<%- report.reporter_id %>" data-rule="<%- rules[report.rule_broken - 1] %>" data-postid="<%- report.post_id %>" data-threadid="<%- report.thread_id %>">delete + ban</a>---
+            <a href="" class="reportban" data-reporterid="<%- report.reporter_id %>" data-rule="<%- rules[report.rule_broken - 1] %>" data-postid="<%- report.post_id %>" data-threadid="<%- report.thread_id %>">ban reporter and remove reports</a>---
+            <a href="" class="pass" data-reporterid="<%- report.reporter_id %>" data-rule="<%- rules[report.rule_broken - 1] %>" data-postid="<%- report.post_id %>" data-threadid="<%- report.thread_id %>">not a violation</a>
+            </div>
+          </div>
+        <% }) %>
+        
       </div>
     </div>
-    
-    <script>
-  
+<script>
+  document.querySelectorAll('.delete, .deleteban, .reportban, .pass').forEach(button => {
+    button.addEventListener('click', async event => {
+      event.preventDefault()
+
+      const response = await fetch('/api/queue', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          post_id: button.dataset.postid,
+          thread_id: button.dataset.threadid,
+          rule: button.dataset.rule,
+          action: button.className,
+          reporter_id: button.dataset.reporterid
+        })
+      })
+
+      if (response.ok) {
+        button.closest('.report-win').remove()
+      }
+    })
+  })
 </script>
     <% } %>
     

@@ -41,7 +41,10 @@ report,
   getUserAdminCookie,
   updatePerms,
   updateSettings,
-  getReports
+  getReports,
+  updateReport,
+  deletePORT,
+  deleteAllReports
 
  } = require('./db-queries')
 const { Reader } = require('@maxmind/geoip2-node')
@@ -76,7 +79,7 @@ app.use(async (req, res, next) => {
     if (!cuser) {
       const ip = req.ip
       const reader = await Reader.open('./GeoLite2-City.mmdb')
-      const response = reader.city('162.204.244.204')
+      const response = reader.city(req.ip)
   
       if (sessionId) {
         const user = await createUser(sessionId, ip, response.country.isoCode)
@@ -220,6 +223,114 @@ app.get('/report-queue', async (req, res) => {
     return res.status(404).send('Not logged in?')
   }
   res.render('report-queue', { user, reports })
+})
+
+app.post('/api/queue', async (req, res) => {
+  const post_id = req.body.post_id
+  const thread_id = req.body.thread_id
+  const rule = req.body.rule
+  const action = req.body.action
+  const reporterid = req.body.reporter_id
+ 
+  
+  try {
+    if (!reporterid) {
+      return res.status(400).json({
+        error: 'Missing reporter id'
+      })
+    }
+    if (!post_id && !thread_id) {
+      return res.status(400).json({
+        error: 'Missing id'
+      })
+    }
+    if (!rule) {
+      return res.status(400).json({
+        error: 'missing rule'
+      })
+    }
+     if (!action) {
+      return res.status(400).json({
+        error: 'missing action'
+      })
+    }
+    const post = await getPostAdmin(post_id)
+    const thread = await getThreadAdmin(thread_id)
+    if (!post && !thread) {
+      return res.status(404).json({
+        error: 'Post not found'
+      })
+    }
+    if (post && thread) {
+      return res.status(422).json({
+        error: 'Cannot have a post and a thread'
+      })
+    }
+
+    let user
+    
+     if (post && !thread) {
+      user = await getUserAdmin(post.author_id)
+      
+      }
+    if (!post && thread) {
+      user = await getUserAdmin(thread.author_id)
+      }
+
+    if (!user) {
+      return res.status(404).json({
+        error: 'Post author not found'
+      })
+    }
+    const perp = await getUser(req.sessionId)
+
+    if (!perp) {
+      return res.status(401).json({
+        error: 'You must be logged in'
+      })
+    }
+
+    if (action == 'delete') {
+      updateReport(thread_id, post_id)
+      await moderationAction(user, perp, post, thread, action, 0, '')
+
+    } else if (action == 'deleteban') {
+       await moderationAction(user, perp, post, thread, 'ban', 0, rule)
+       updateReport(thread_id, post_id)
+       deletePORT(thread, post)
+    } else if (action == 'reportban') {
+      let user2 = await getUserAdmin(reporterid)
+if (!user2) {
+      return res.status(401).json({
+        error: 'no reporter found'
+      })
+    }
+      await moderationAction(user2, perp, post, thread, 'ban', 0, 'false reports')
+      updateReport(thread_id, post_id)
+      deleteAllReports(user2.id)
+    } else if (action == 'pass') {
+      updateReport(thread_id, post_id)
+      return res.json({
+        success: true,
+        message: 'POST REPORTED'
+    })
+    }
+   
+      
+
+    return res.json({
+      success: true,
+      message: 'POST REPORTED'
+    })
+
+  } catch (err) {
+    console.error('POST /api/queue error:', err)
+
+    return res.status(500).json({
+      error: 'Internal server error'
+    })
+  }
+
 })
 app.get('/user-info', async (req, res) => {
   const user = await getUser(req.sessionId)
@@ -398,6 +509,17 @@ app.post('/api/report', async (req, res) => {
     if (!perp) {
       return res.status(401).json({
         error: 'You must be logged in'
+      })
+    }
+    if (perp.banned) {
+      return res.status(401).json({
+        error: 'You are banned'
+      })
+    }
+    const settings = await getSettings()
+    if (!settings) {
+       return res.status(401).json({
+        error: 'Settings did not load'
       })
     }
 
@@ -998,7 +1120,7 @@ let moshpit = await getOrCreateMoshpit(req.body.moshpit)
     const now = Math.floor(Date.now() /1000)
 
     const reader = await Reader.open('./GeoLite2-City.mmdb')
-    const response = reader.city('162.204.244.204')
+    const response = reader.city(req.ip)
 
     const lastPost = await getLastPost(thread_id)
 
@@ -1104,7 +1226,7 @@ if (sig) {
   if (user) {
     const now = Math.floor(Date.now() /1000)
     const reader = await Reader.open('./GeoLite2-City.mmdb')
-    const response = reader.city('162.204.244.204')
+    const response = reader.city(req.ip)
     const thread = await createThread(
       user.id,
       moshpit.title,
@@ -1181,9 +1303,9 @@ comment = comment.replaceAll(/kike/ig, 'k!#@')
       
 
         const regex = /@([0-9\s+]+|[OP\s+]+)/g
-        const regex2 = /#(?!quirks(?=$|[^A-Za-z0-9\s+])|faq(?=$|[^A-Za-z0-9\s+])|rules(?=$|[^A-Za-z0-9\s+])|moshpits(?=$|[^A-Za-z0-9\s+])|vip(?=$|[^A-Za-z0-9\s+])|login(?=$|[^A-Za-z0-9\s+])|admin(?=$|[^A-Za-z0-9\s+]))([A-Za-z0-9\s+]{1,7})(?![A-Za-z0-9\s+])/gi
+        const regex2 = /#(?!quirks(?=$|[^A-Za-z0-9])|faq(?=$|[^A-Za-z0-9])|rules(?=$|[^A-Za-z0-9])|moshpits(?=$|[^A-Za-z0-9])|vip(?=$|[^A-Za-z0-9])|login(?=$|[^A-Za-z0-9])|admin(?=$|[^A-Za-z0-9]))([A-Za-z0-9]{1,7})(?![A-Za-z0-9])/gi;
 
-        comment = comment.replaceAll(regex2, `<a href="#$1" class="pitquote" style="color: var(--rage);">#$1</a>`)
+        comment = comment.replaceAll(regex2, `<a href="/$1" class="pitquote" style="color: var(--rage);">#$1</a>`)
         return comment.replace(
           regex,
           `<a href="#$1" class="quote" data-quoteid="$1" style="color: var(--rage);">@$1</a>`

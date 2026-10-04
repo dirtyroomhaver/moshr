@@ -1755,7 +1755,20 @@ function stickyThread(thread) {
 }
 
 function report(reporter, violator, rule, post_id = null, thread_id = null) {
-  db.prepare(`INSERT INTO reports (reporter_id, violator_id, rule_broken, post_id, thread_id) VALUES (?, ?, ?, ?, ?)`).run(reporter, violator, rule, post_id, thread_id )
+  let html
+  let ip
+  if (post_id && !thread_id) {
+   post = getPostAdmin(post_id)
+   html = post.html
+   ip = post.ip
+  } else if (!post_id && thread_id) {
+    thread = getThreadAdmin(thread_id)
+   html = thread.html
+   ip = thread.ip
+  }
+
+  db.prepare(`INSERT INTO reports (reporter_id, violator_id, rule_broken, post_id, thread_id, html, victim_ip) VALUES (?, ?, ?, ?, ?, ?, ?)`).run(reporter, violator, rule, post_id, thread_id, html, ip)
+
 }
 
 function updatePerms(user_id) {
@@ -1772,7 +1785,41 @@ function updateSettings(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) {
 }
 
 function getReports() {
-  return db.prepare(`SELECT * FROM reports WHERE report_status = 'pending'`).all()
+  return db.prepare(`SELECT * FROM reports WHERE report_status = 'pending' ORDER BY report_time ASC`).all()
+}
+
+function updateReport(threadId, postId) {
+  console.log(threadId)
+  console.log(postId)
+  if (threadId) {
+    db.prepare(`
+    UPDATE reports
+    SET report_status = 'resolved'
+    WHERE thread_id = ?
+`).run(
+    threadId
+)
+  } else {
+    db.prepare(`
+    UPDATE reports
+    SET report_status = 'resolved'
+    WHERE post_id = ?
+`).run(
+    postId
+)
+  }
+}
+
+function deletePORT(threadid, postid) {
+  if (threadid) {
+    db.prepare(`DELETE FROM threads WHERE id = ?`).run(threadid.id)
+  } else if (postid) {
+    db.prepare(`DELETE FROM posts WHERE id = ?`).run(postid.id)
+  }
+}
+
+function deleteAllReports(userid) {
+db.prepare(`DELETE FROM reports WHERE reporter_id = ?`).run(userid)
 }
 module.exports = {
   getUser,
@@ -1813,5 +1860,8 @@ module.exports = {
   getUserAdminCookie,
   updatePerms,
   updateSettings,
-  getReports
+  getReports,
+  updateReport,
+  deletePORT,
+  deleteAllReports
 }

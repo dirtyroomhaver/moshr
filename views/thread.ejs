@@ -597,11 +597,11 @@ updateReplyLinks()
        let threadid
        let postid
        if (report_modal.dataset.threadId && !report_modal.dataset.postId) {
-        threadid = report_modal.dataset.threadId
+        threadid = report_modal.dataset.threadId.trim()
          postid = null
        } else if ((!report_modal.dataset.threadId && report_modal.dataset.postId)) {
          threadid = null
-         postid = report_modal.dataset.postId
+         postid = report_modal.dataset.postId.trim()
        }
       
       if (!rule) {
@@ -615,8 +615,8 @@ updateReplyLinks()
         },
 
         body: JSON.stringify({
-          thread_id: threadid.trim(),
-          post_id: postid.trim(),
+          thread_id: threadid,
+          post_id: postid,
           rule: rule
         })
       })
@@ -624,7 +624,7 @@ updateReplyLinks()
         alert('failed to report')
         return
       }
-
+        document.querySelector('#report-box').close()
       return
     })
 
@@ -634,9 +634,12 @@ updateReplyLinks()
       const slap = e.target.closest('.slap');
       const shoot = e.target.closest('.shoot');
       const hide = e.target.closest('.hide');
-      const deleter = e.target.closest('.delete');
-      const ban = e.target.closest('.ban');
-      const info = e.target.closest('.info');
+      <% if (user.is_owner || user.is_admin || user.is_mod) { %>
+         const deleter = e.target.closest('.delete');
+          const ban = e.target.closest('.ban');
+          const info = e.target.closest('.info');
+     <% } %>
+     
       const backpanels = document.querySelectorAll('.backpanel')
       const header = e.target.closest('.post-header')
       const reply = e.target.closest('.reply-button')
@@ -790,6 +793,7 @@ if (hide) {
 
   return;
 }
+<% if (user.is_owner || user.is_admin || user.is_mod) { %>
       // DELETE
       if (deleter) {
         e.preventDefault();
@@ -878,7 +882,7 @@ if (hide) {
         }
 
         return;
-      }
+      }<% } %>
       // QUOTE
 
       if (quote) {
@@ -916,7 +920,7 @@ if (hide) {
           report_modal.dataset.threadId = report_button.dataset.id
           report_modal.dataset.postId = ''
         } else {
-          report_modal.dataset.thread = ''
+          report_modal.dataset.threadId = ''
           report_modal.dataset.postId = report_button.dataset.id
         }
       }
@@ -1276,7 +1280,7 @@ if (alarm) {
         const author_id = post.author_id;
 
         let html = '';
-
+ <% if (user.is_owner || user.is_admin || user.is_mod) { %>
         if (author_id != <%- user.id %> && (<%- user.is_owner || user.is_admin %>)) {
           html += `<a href="" class="info" data-authorid="${post.author_id}">info</a>&nbsp;|&nbsp;`;
         }
@@ -1288,7 +1292,7 @@ if (alarm) {
         if (<%- user.is_owner || user.is_admin || user.is_mod || user.is_janitor %>) {
           html += `<a href="" class="delete" data-postid="${post.id}" data-type="post" data-threadid="${post.post_number}">delete</a>&nbsp;|&nbsp;`;
         }
-
+  <% } %>
         if (
           
           (<%- user.id === thread.author_id || user.is_owner || user.is_admin || user.is_mod || user.is_janitor %>)

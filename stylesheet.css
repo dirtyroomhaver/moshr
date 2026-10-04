@@ -273,7 +273,13 @@ flex-direction: column;
 
 
 }
-
+.report-win {
+    margin: 10px;
+    background-image:
+        linear-gradient(var(--panel), var(--gradient));
+    padding: 5px;
+    border: 1px solid var(--border-color)
+}
 .thread {
     max-height: 45vh;
     display: flex;
@@ -304,7 +310,9 @@ flex-direction: column;
   
     animation: shake-2 0.15s infinite;
 }
-
+.shaker {
+    animation: shake-2 0.15s infinite;
+}
 .thread-text {
     overflow-y: hidden;
     overflow-x: hidden;
