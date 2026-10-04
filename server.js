@@ -79,7 +79,17 @@ app.use(async (req, res, next) => {
     const cuser = await getUser(sessionId)
 
     if (!cuser) {
-      const ip = req.ip
+      let ip
+         
+      try {
+          ip = 
+              req.connection.remoteAddress || 
+              req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress || req.headers['x-forwarded-for'] ;
+      } catch (error) {
+        ip = 'unknown'
+      }
+      
 
     
 
@@ -1123,13 +1133,13 @@ let moshpit = await getOrCreateMoshpit(req.body.moshpit)
     let response
     let country
     try {
-     response = reader.city(req.ip)
+     response = reader.city(req.connection.remoteAddress || 
+              req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress || req.headers['x-forwarded-for'])
      country = response.country.isoCode
-} catch (error) { 
+    } catch (error) { 
       country = '???'
-
-   
-}
+    }
     const lastPost = await getLastPost(thread_id)
 
     const post_number = (lastPost?.post_number ?? 0) + 1
@@ -1142,7 +1152,9 @@ if (sig) {
 
     let post = await createPost(
       user.id,
-      req.ip,
+      req.connection.remoteAddress || 
+              req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress || req.headers['x-forwarded-for'],
       thread_id,
       moshpit.id,
       censorText(text),
@@ -1236,7 +1248,9 @@ if (sig) {
     let response
     let country
     try {
-     response = reader.city(req.ip)
+     response = reader.city(req.connection.remoteAddress || 
+              req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress || req.headers['x-forwarded-for'])
      country = response.country.isoCode
 } catch (error) { 
       country = '???'
@@ -1252,7 +1266,9 @@ if (sig) {
       now,
       moshpit.id,
       formatText(html),
-      req.ip,
+      req.connection.remoteAddress || 
+              req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress || req.headers['x-forwarded-for'],
       country,
       sig
     )
