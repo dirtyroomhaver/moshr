@@ -1278,7 +1278,7 @@ if (alarm) {
       }
       newPost.querySelector('.post-replies').replaceChildren()
       if (newPost.querySelector('.postheaderoptions')) {
-        const author_id = post.author_id;
+        const author_id = -1
 
         let html = '';
  <% if (user.is_owner || user.is_admin || user.is_mod) { %>
