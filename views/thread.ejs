@@ -1125,7 +1125,7 @@ if (hide) {
 
         reply_textarea.value = ''
         popup.classList.add('hidden')
-        reload()
+        location.reload();
         // await getNewPosts()
       } catch (error) {
         alert('Failed to create post: ' + error)
