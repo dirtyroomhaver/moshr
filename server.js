@@ -76,22 +76,25 @@ app.use(async (req, res, next) => {
   try {
     let sessionId = req.cookies.sessionId
     const cuser = await getUser(sessionId)
+
     if (!cuser) {
       const ip = req.ip
       const reader = await Reader.open('./GeoLite2-City.mmdb')
+
       let response
-    try {
-     response = reader.city(req.ip)
-} catch (error) {
-    console.log(`GeoIP lookup failed for ${ip}:`, error.message)
-}
-  
+
+      try {
+        response = reader.city(req.ip)
+      } catch (error) {
+        console.log(`GeoIP lookup failed for ${ip}:`, error.message)
+      }
+
       if (sessionId) {
-        const user = await createUser(sessionId, ip, response.country.isoCode)
+        const user = await createUser(sessionId, ip)
       } else {
         sessionId = crypto.randomUUID()
 
-        const user = await createUser(sessionId, ip, response.country.isoCode)
+        const user = await createUser(sessionId, ip)
       }
 
       res.cookie('sessionId', sessionId, {
@@ -102,17 +105,13 @@ app.use(async (req, res, next) => {
       })
 
       console.log('Created new user:', sessionId)
-    } else {
     }
-
-    // Eventually you can look up the user here:
-    //
-    // req.user = await getUserBySessionId(sessionId);
 
     req.sessionId = sessionId
 
     next()
   } catch (error) {
+    console.log('failure')
     next(error)
   }
 })
@@ -1129,7 +1128,7 @@ let moshpit = await getOrCreateMoshpit(req.body.moshpit)
     try {
      response = reader.city(req.ip)
 } catch (error) {
-    console.log(`GeoIP lookup failed for ${ip}:`, error.message)
+    console.log(`GeoIP lookup failed for ${req.ip}:`, error.message)
 }
     const lastPost = await getLastPost(thread_id)
 
@@ -1177,7 +1176,6 @@ app.post('/api/create/thread', async (req, res) => {
   let moshpit = req.body.moshpit
   let trick = req.body.post_text
   let sig = req.body.sig
- 
  if (!text || !text.trim()) {
       return res.status(400).json({
         error: 'Thread cannot be empty'
