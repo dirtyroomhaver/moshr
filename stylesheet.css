@@ -707,6 +707,35 @@ s {
     font-size: 2rem;
     display:inline-block;
 }
+.shake-1 {
+    animation: shake-1 0.12s infinite;
+}
+
+.shake1 {
+    animation: shake-1 0.12s infinite;
+    display: block;
+}
+
+.shake2 {
+    animation: shake-2 0.12s infinite;
+    font-weight: bold;
+    display: block;
+}
+
+.shake3 {
+    animation: shake-1 0.12s infinite;
+    font-weight: bolder;
+    font-size: 2rem;
+    display: block;
+
+}
+.shake3a {
+    animation: shake-1 0.12s infinite;
+    font-weight:bolder;
+    font-size: 2rem;
+    position: absolute;
+    display: block;
+}
 .greentext {
     color: var(--greentext);
     display:inline-block;
@@ -775,35 +804,7 @@ s:hover {
 }
 
 
-.shake-1 {
-    animation: shake-1 0.12s infinite;
-}
 
-.shake1 {
-    animation: shake-1 0.12s infinite;
-    display: block;
-}
-
-.shake2 {
-    animation: shake-2 0.12s infinite;
-    font-weight: bold;
-    display: block;
-}
-
-.shake3 {
-    animation: shake-1 0.12s infinite;
-    font-weight: bolder;
-    font-size: 2rem;
-    display: block;
-
-}
-.shake3a {
-    animation: shake-1 0.12s infinite;
-    font-weight:bolder;
-    font-size: 2rem;
-    position: absolute;
-    display: block;
-}
 
 
 .vert {
