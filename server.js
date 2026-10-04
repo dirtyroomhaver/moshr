@@ -359,6 +359,9 @@ app.get('/', async (req, res) => {
     return res.status(404).send('No threads found, make one?')
   }
   const moshpit = 'moshpit'
+  console.log('threads:', threads)
+console.log('user:', user)
+
   res.render('index', { threads, moshpit, trending: results.trending, recent: results.recent, popular: results.popular, user, settings })
 })
 
