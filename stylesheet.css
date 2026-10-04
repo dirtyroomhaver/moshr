@@ -94,11 +94,7 @@ td {
     border: 1px solid black;
 }
 
-span {
-    display:block;
-    line-height: 1; 
-  margin: 0;  
-}
+
 
 .signature {
     white-space: nowrap;
@@ -783,17 +779,20 @@ s:hover {
 
 .shake1 {
     animation: shake-1 0.12s infinite;
+    display: block;
 }
 
 .shake2 {
     animation: shake-2 0.12s infinite;
     font-weight: bold;
+    display: block;
 }
 
 .shake3 {
     animation: shake-1 0.12s infinite;
     font-weight: bolder;
     font-size: 2rem;
+    display: block;
 
 }
 .shake3a {
@@ -801,6 +800,7 @@ s:hover {
     font-weight:bolder;
     font-size: 2rem;
     position: absolute;
+    display: block;
 }
 
 
@@ -865,6 +865,11 @@ s:hover {
 .schizoa {
     animation: skew-x-shaking 0.5s infinite;
 
+}
+span {
+    display:inline-block;
+    line-height: 1; 
+  margin: 0;  
 }
 @-webkit-keyframes glow {
     from {
