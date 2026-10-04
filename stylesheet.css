@@ -760,7 +760,7 @@ s {
     color: transparent;
 
     animation: rainbow_animation 0.5s infinite;
-display:inherit;
+display:inline-block
     background-size: 400% 100%;
 }
 
