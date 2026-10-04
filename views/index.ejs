@@ -203,6 +203,12 @@
      if (window.dayjs_plugin_relativeTime) {
     dayjs.extend(window.dayjs_plugin_relativeTime)
 }
+function spanify(text) {
+    comment = text.replaceAll('\<a', '\<span')
+    comment = comment.replaceAll('\</a', '\</span')
+
+    return comment
+  }
     document.addEventListener('click', e => {
       console.log('click')
       if (e.target.closest('.pitquote') || e.target.closest('.quote')) {
@@ -246,7 +252,7 @@ searchbars.forEach(bar => {
         const newhtml = thread.html;
 
         all_threads_html.forEach(t => {
-          if (t.querySelector('.thread-index-text').innerHTML == thread.html) {
+          if (t.querySelector('.thread-index-text').innerHTML == spanify(thread.html)) {
             const newthread = t
             newthread.querySelector('.thread').style.border = '1px solid var(--rage)'
             //newthread.querySelector('.thread').classList.add('shake2')     
