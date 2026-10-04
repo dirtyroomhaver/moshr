@@ -328,7 +328,7 @@ searchbars.forEach(bar => {
 
     const threadForm = document.getElementById('modal-form')
     const textarea = document.getElementById('thread-text')
- <% if (user.is_owner || user.is_admin || user.is_mod) { %>
+ <% if (user?.is_owner || user?.is_admin || user?.is_mod) { %>
    document.addEventListener('click', async (e) => {
      const d = e.target.closest('.delete')
      const db = e.target.closest('.deleteban')
