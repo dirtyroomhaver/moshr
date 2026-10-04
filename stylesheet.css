@@ -848,19 +848,19 @@ s:hover {
 }
 .italic1 {
     font-style: italic;
-   display:inherit;
+
 }
 
 .italic2 {
 
     font-style: italic;
-display:inherit;
+
     font-weight: bold;
 }
 
 .italic3 {
     font-style: italic;
-display:inherit;
+
     font-weight: bold;
     font-size: 2rem;
 }
@@ -868,7 +868,7 @@ display:inherit;
 .glow {
     animation: glow 0.3s ease-in-out infinite alternate;
     /* color: var(--text); */
-   display:inherit;
+   display:inline-block;
 }
 
 .schizo {
