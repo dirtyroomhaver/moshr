@@ -709,6 +709,7 @@ s {
 }
 .shake-1 {
     animation: shake-1 0.12s infinite;
+    display: block;
 }
 
 .shake1 {
