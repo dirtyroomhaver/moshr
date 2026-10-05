@@ -709,25 +709,25 @@ s {
 }
 .shake-1 {
     animation: shake-1 0.12s infinite;
-    display: block;
+    display: inline-block;
 }
 
 .shake1 {
     animation: shake-1 0.12s infinite;
-    display: block;
+    display: inline-block;
 }
 
 .shake2 {
     animation: shake-2 0.12s infinite;
     font-weight: bold;
-    display: block;
+    display: inline-block;
 }
 
 .shake3 {
     animation: shake-1 0.12s infinite;
     font-weight: bolder;
     font-size: 2rem;
-    display: block;
+    display: inline-block;
 
 }
 .shake3a {
