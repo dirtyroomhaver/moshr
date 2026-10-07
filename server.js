@@ -127,7 +127,13 @@ app.use(express.static(__dirname))
 app.get('/api', (req, res) => {
   res.redirect('/')
 })
+app.get('/othersites', async (req, res) => {
+      const results = await getCachedResults()
 
+  const settings = await getSettings()
+
+  res.render('othersites', {trending: results.trending, recent: results.recent, settings})
+})
 app.get('/login-page', async (req, res) => {
   const user = await getUser(req.sessionId)
   if (!user ) {
@@ -183,6 +189,7 @@ app.post('/api/settings', async (req, res) => {
     })
   }
 })
+
 app.post('/api/login', async (req, res) => {
   const code = req.body.username
   const pin = req.body.password
@@ -379,13 +386,7 @@ app.get('/faq', async (req, res) => {
 
   res.render('faq', {trending: results.trending, recent: results.recent, settings})
 })
-app.get('/othersites', async (req, res) => {
-      const results = await getCachedResults()
 
-  const settings = await getSettings()
-
-  res.render('othersites', {trending: results.trending, recent: results.recent, settings})
-})
 
 app.get('/rules', async (req, res) => {
    const results = await getCachedResults()
