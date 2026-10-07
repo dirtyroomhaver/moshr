@@ -738,7 +738,6 @@ s {
     animation: shake-1 0.12s infinite;
     font-weight:bolder;
     font-size: 2rem;
-    position: absolute;
     display: inline-block;
 }
 .greentext {
@@ -848,7 +847,6 @@ s:hover {
     animation: horizontal-shaking 0.25s infinite;
     font-weight: bold;
     font-size: 2rem;
-    position: absolute;
     display:inline-block;
 }
 .italic1 {
