@@ -591,7 +591,8 @@ CREATE INDEX IF NOT EXISTS idx_mod_actions_created
     ON moderation_actions(created_at);
 CREATE INDEX IF NOT EXISTS idx_posts_board_created
 ON posts(board_id, created_at);
-
+CREATE INDEX IF NOT EXISTS idx_threads_board_bumped
+ON threads(board_id, bumped_at DESC);
 CREATE INDEX IF NOT EXISTS idx_threads_board_created
 ON threads(board_id, created_at);
 CREATE TRIGGER IF NOT EXISTS trg_posts_after_delete

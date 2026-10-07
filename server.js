@@ -45,7 +45,8 @@ report,
   updateReport,
   deletePORT,
   deleteAllReports,
-  getThreadsThread
+  getThreadsThread,
+  getAllThreads
 
  } = require('./db-queries')
 const { Reader } = require('@maxmind/geoip2-node')
@@ -357,19 +358,50 @@ app.get('/quirks', async (req, res) => {
 
   res.render('quirks', {trending: results.trending, recent: results.recent, settings})
 })
-
 app.get('/', async (req, res) => {
-  const threads = await getThreads('moshpit')
+  const offset = 0
+  const threads = await getAllThreads()
     const user = await getUser(req.sessionId)
   const results = await getCachedResults()
   const settings = await getSettings()
   if (!threads || !results ) {
     return res.status(404).send('No threads found, make one?')
   }
-  const moshpit = 'moshpit'
+  const moshpit = 'all'
 
 
-  res.render('index', { threads, moshpit, trending: results.trending, recent: results.recent, popular: results.popular, user, settings })
+  res.render('all', { threads, offset, moshpit, trending: results.trending, recent: results.recent, popular: results.popular, user, settings })
+})
+app.get('/all', async (req, res) => {
+  const offset = 0
+  const threads = await getAllThreads(offset)
+    const user = await getUser(req.sessionId)
+  const results = await getCachedResults()
+  const settings = await getSettings()
+  if (!threads || !results ) {
+    return res.status(404).send('No threads found, make one?')
+  }
+  const moshpit = 'all'
+
+
+  res.render('all', { threads, offset, moshpit, trending: results.trending, recent: results.recent, popular: results.popular, user, settings })
+})
+app.get('/all/:offset', async (req, res) => {
+  let { offset } = req.params
+  if (!offset) {
+    offset = 0
+  }
+  const threads = await getAllThreads(offset)
+    const user = await getUser(req.sessionId)
+  const results = await getCachedResults()
+  const settings = await getSettings()
+  if (!threads || !results ) {
+    return res.status(404).send('No threads found, make one?')
+  }
+  const moshpit = 'all'
+
+
+  res.render('all', { threads, offset, moshpit, trending: results.trending, recent: results.recent, popular: results.popular, user, settings })
 })
 
 app.get('/quirks', async (req, res) => {
@@ -1093,7 +1125,7 @@ app.post('/api/ban', async (req, res) => {
         error: 'Missing permissions'
       })
 })
-let banned_words = ['admin', 'recent', 'popular', 'vip', 'faq', 'rules', 'moshpits', 'login', 'quirks', 'nigger', 'rape', 'rapist', 'spic', 'spics', 'faggy', 'fag', 'niggers', 'rapists', 'honky', 'chink', 'chinks', 'kike', 'faggot', 'loli', 'shota', 'cp', 'csam', '1488', '14', '88', 'HH', 'hitler', 'adolf', 'tnd', 'tkd', 'tranny', 'troon', 'nazi']
+let banned_words = ['admin', 'recent', 'all', 'popular', 'vip', 'faq', 'rules', 'moshpits', 'login', 'quirks', 'nigger', 'rape', 'rapist', 'spic', 'spics', 'faggy', 'fag', 'niggers', 'rapists', 'honky', 'chink', 'chinks', 'kike', 'faggot', 'loli', 'shota', 'cp', 'csam', '1488', '14', '88', 'HH', 'hitler', 'adolf', 'tnd', 'tkd', 'tranny', 'troon', 'nazi']
 app.post('/api/create/post', async (req, res) => {
   try {
     const text = req.body.text

@@ -320,7 +320,11 @@ flex-direction: column;
     align-content: start;
     
 }
-
+.thread-header {
+    padding: 7px 0px 7px 7px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text);
+    background-image: linear-gradient(var(--panel), var(--gradient)); }
 .thread-index-text {
     padding: 7px;
     overflow: hidden;

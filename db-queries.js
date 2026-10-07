@@ -408,7 +408,7 @@ function deleteOldThreads () {
   return db
     .prepare(`
       DELETE FROM threads
-      WHERE created_at < unixepoch() - (60*60*24*7)
+      WHERE created_at < unixepoch() - (60*60*24*7) AND sticky = 0
     `)
     .run()
 }
@@ -1830,6 +1830,31 @@ function deletePORT(threadid, postid) {
 function deleteAllReports(userid) {
 db.prepare(`DELETE FROM reports WHERE reporter_id = ?`).run(userid)
 }
+
+function getAllThreads(offset = 0) {
+ return db.prepare(`SELECT
+    t.*,
+    m.title AS moshpit_title
+FROM threads t
+JOIN moshpits m
+    ON m.id = t.board_id
+WHERE
+    m.hid = 0
+    AND m.is_disabled = 0
+    AND t.hid = 0
+    AND t.deleted_at IS NULL
+    AND m.id IN (
+        SELECT id
+        FROM moshpits
+        WHERE hid = 0
+          AND is_disabled = 0
+        ORDER BY thread_count DESC
+        LIMIT 100
+    )
+ORDER BY t.bumped_at DESC
+LIMIT 100
+OFFSET ?;`).all(offset)
+}
 module.exports = {
   getUser,
   createUser,
@@ -1873,5 +1898,6 @@ module.exports = {
   updateReport,
   deletePORT,
   deleteAllReports,
-  getThreadsThread
+  getThreadsThread,
+  getAllThreads
 }
