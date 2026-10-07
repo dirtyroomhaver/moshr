@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="stylesheet.css" />
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <title>moshpits - moshr</title>
+  <link rel="preload" href="../RobotoJAA.woff2" as="font" type="font/woff2" crossorigin>
+
+</head>
+
+<body>
+  <div class="navbar" id="navbar">
+    <div class="navbar-left">
+      <ul class="nav-list">
+        <li><a href="/">home</a></li>
+        <p>|</p>
+        <li><a href="/rules">rules</a></li>
+        <p>|</p>
+        <li><a href="/faq">faq</a></li>
+        <p>|</p>
+        <li><a href="/quirks">quirks</a></li>
+        <p>|</p>
+        <li><a href="/moshpits">moshpits</a></li><p>|</p>
+          <li><a href="/othersites">other sites</a></li>
+      </ul>
+    </div>
+    <div class="navbar-middle">
+      <div class="title" onclick="window.location.href='/'">
+        <h2>[ moshr.net ]</h2>
+      </div>
+    </div>
+    <div class="navbar-right">
+
+    </div>
+  </div>
+  <div class="navbar" id="navbar2">
+    <div class="navbar-left">
+      <select name="pages" id="pages" onchange="
+    if (this.value.startsWith('/')) {
+      window.location = this.value
+    }
+  ">
+
+        <option value="" selected disabled hidden>pages</option>
+        <option value="/">home</option>
+        <option value="/rules">rules</option>
+        <option value="/faq">faq</option>
+        <option value="/quirks">quirks</option>
+        <option value="/popular">popular</option>
+            <option value="/trending">trending</option>
+            <option value="/recent">recent</option>
+            <option value="/othersites">other sites</option>
+
+      </select>
+    </div>
+    <div class="navbar-middle">
+      <div class="title">
+        <h2 onclick="window.location.href='/moshpit/'">
+          [ moshr.net ]
+        </h2>
+      </div>
+    </div>
+    <div class="navbar-right">
+
+    </div>
+  </div>
+
+  <% if (settings.announcement_status) {  %>
+  <div class="announcement">
+    <p id="announcement-text"><%- settings.announcement %></p>
+  </div> <% } %>
+
+  <div class="body">
+    <!-- <h2 style="margin-left: 7px;margin-top: 2px;color: #d2d6dc">faq</h2> -->
+    <div class="body-right2" >
+      <div class="moshpit-info">
+        <div class="tab-nav-div">
+          <ul class="tab-nav">
+            <li><B>popular</B></li>
+          </ul>
+        </div>
+        <div>
+          <ul class="info-list">
+            <% recent.forEach(moshpit => { if (!moshpit.hid) { %>
+            <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.post_count + moshpit.thread_count %> <%= moshpit.post_count + moshpit.thread_count === 1 ? 'post' : 'posts' %></a></li>
+            <% }}) %>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  </div>
+  
+
+
+</body>
+
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+   
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="stylesheet.css" />
+<link rel="icon" type="image/png" href="/favicon.png">
+    <title>faq - moshr</title>
+    <link rel="preload" href="../RobotoJAA.woff2" as="font" type="font/woff2" crossorigin>
+
+  </head>
+
+  <body>
+    <div class="navbar" id="navbar">
+      <div class="navbar-left">
+        <ul class="nav-list">
+          <li><a href="/">home</a></li>
+          <p>|</p>
+          <li><a href="/rules">rules</a></li>
+          <p>|</p>
+          <li><a href="/faq">faq</a></li>
+          <p>|</p>
+          <li><a href="/quirks">quirks</a></li>
+          <p>|</p>
+          <li><a href="/moshpits">moshpits</a></li>
+          <p>|</p>
+          <li><a href="/othersites">other sites</a></li>
+        </ul>
+      </div>
+      <div class="navbar-middle">
+        <div class="title" onclick="window.location.href='/'">
+          <h2>[ moshr.net ]</h2>
+        </div>
+      </div>
+      <div class="navbar-right">
+         
+      </div>
+    </div>
+    <div class="navbar" id="navbar2">
+      <div class="navbar-left">
+        <select name="pages" id="pages" onchange="
+    if (this.value.startsWith('/')) {
+      window.location = this.value
+    }
+  ">
+         
+            <option value="" selected disabled hidden>pages</option>
+            <option value="/">home</option>
+            <option value="/rules">rules</option>
+            <option value="/faq">faq</option>
+            <option value="/quirks">quirks</option>
+            <option value="/popular">popular</option>
+            <option value="/trending">trending</option>
+            <option value="/recent">recent</option>
+            <option value="/othersites">other sites</option>
+          
+        </select>
+      </div>
+      <div class="navbar-middle">
+        <div class="title">
+          <h2 onclick="window.location.href='/moshpit/'">
+            [  moshr.net ]
+          </h2>
+        </div>
+      </div>
+      <div class="navbar-right">
+        
+      </div>
+    </div>
+   <% if (settings.announcement_status) {  %>
+    <div class="announcement">
+      <p id="announcement-text"><%- settings.announcement %></p>
+    </div> <% } %>
+
+    <div class="body">
+      <div class="body-right1">
+        <div class="moshpit-info">
+          <div class="tab-nav-div">
+            <ul class="tab-nav">
+              <li><B>recently created</B></li>
+            </ul>
+          </div>
+          <div>
+            <ul class="info-list">
+              <% recent.forEach(moshpit => { if (!moshpit.hid) { %>
+              <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.post_count + moshpit.thread_count%> <%= moshpit.post_count+ moshpit.thread_count === 1 ? 'post' : 'posts' %></a></li>
+              <% }}) %>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="body-left">
+        Here are some cool websites you might enjoy:
+        <p><a href="https://mindcafe.space/">mindcafe (textboard)</a></p>
+        
+        </div>
+       
+      </div>
+     <div class="body-right">
+        <div class="moshpit-info">
+          <div class="tab-nav-div">
+            <ul class="tab-nav">
+              <li><B>trending</B></li>
+            </ul>
+          </div>
+          <div>
+            <ul class="info-list">
+              <% trending.forEach(moshpit => { if (!moshpit.hid) { %>
+              <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.recent_count %> <%= moshpit.recent_count === 1 ? 'post in the last hour' : 'posts in the last hour' %></a></li>
+              <% }}) %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+   
+  </body>
+</html>

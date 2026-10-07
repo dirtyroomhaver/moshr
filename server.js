@@ -379,6 +379,13 @@ app.get('/faq', async (req, res) => {
 
   res.render('faq', {trending: results.trending, recent: results.recent, settings})
 })
+app.get('/othersites', async (req, res) => {
+      const results = await getCachedResults()
+
+  const settings = await getSettings()
+
+  res.render('othersites', {trending: results.trending, recent: results.recent, settings})
+})
 
 app.get('/rules', async (req, res) => {
    const results = await getCachedResults()
@@ -394,7 +401,27 @@ app.get('/moshpits', async (req, res) => {
 
   res.render('moshpits', {trending: results.trending, settings, popular: results.popular, recent: results.recent})
 })
+app.get('/popular', async (req, res) => {
+  const results = await getCachedResults()
 
+  const settings = await getSettings()
+
+  res.render('popular', {trending: results.trending, settings, popular: results.popular, recent: results.recent})
+})
+app.get('/trending', async (req, res) => {
+  const results = await getCachedResults()
+
+  const settings = await getSettings()
+
+  res.render('trending', {trending: results.trending, settings, popular: results.popular, recent: results.recent})
+})
+app.get('/recent', async (req, res) => {
+  const results = await getCachedResults()
+
+  const settings = await getSettings()
+
+  res.render('recent', {trending: results.trending, settings, popular: results.popular, recent: results.recent})
+})
 app.get('/:moshpit', async (req, res) => {
   const results = await getCachedResults()
   const { moshpit } = req.params
