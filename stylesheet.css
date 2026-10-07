@@ -27,7 +27,7 @@
     box-sizing: border-box;
 }
 
-@font-face {
+/* @font-face {
     font-family: 'IPAMonaPGothic';
     src: local(IPAMonaPGothic),url('IPAMonaPGothic.woff2') format('woff2'),
         url('IPAMonaPGothic.woff') format('woff');
@@ -43,7 +43,7 @@
     font-weight: normal;
     font-style: normal;
     font-display: swap;
-}
+} */
 
 @font-face {
     font-family: 'Mona';
@@ -54,12 +54,12 @@
     font-display: swap;
 }
 
-@font-face {
+/* @font-face {
   font-family: "RobotoJAA";
   src: url("RobotoJAA.woff2") format("woff2"),
     url("RobotoJAA.woff") format("woff");
   font-display: swap;
-}
+} */
 
 .RobotoJAA {
   font-family: "RobotoJAA";
@@ -74,7 +74,7 @@ body {
     background-size: 100vw 100vh;
     background-color: var(--bg-color);
     position: relative;
-    font-family: RobotoJAA, Monapo,Mona,IPAMonaPGothic,"MS Pgothic", "ＭＳ Ｐゴシック", sans-serif;
+    font-family: Mona, "MS Pgothic", "ＭＳ Ｐゴシック", sans-serif;
     /* font-family: Arial, sans-serif; */
 }
 
