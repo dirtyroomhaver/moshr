@@ -408,7 +408,7 @@ function deleteOldThreads () {
   return db
     .prepare(`
       DELETE FROM threads
-      WHERE created_at < unixepoch() - (60*60*24*7) AND sticky = 0
+      WHERE created_at < unixepoch() - (2419200) AND sticky = 0
     `)
     .run()
 }
