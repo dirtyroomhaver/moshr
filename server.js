@@ -1093,7 +1093,7 @@ app.post('/api/ban', async (req, res) => {
         error: 'Missing permissions'
       })
 })
-let banned_words = ['admin', 'vip', 'faq', 'rules', 'moshpits', 'login', 'quirks', 'nigger', 'rape', 'rapist', 'spic', 'spics', 'faggy', 'fag', 'niggers', 'rapists', 'honky', 'chink', 'chinks', 'kike', 'faggot', 'loli', 'shota', 'cp', 'csam', '1488', '14', '88', 'HH', 'hitler', 'adolf', 'tnd', 'tkd', 'tranny', 'troon', 'nazi']
+let banned_words = ['admin', 'recent', 'popular', 'vip', 'faq', 'rules', 'moshpits', 'login', 'quirks', 'nigger', 'rape', 'rapist', 'spic', 'spics', 'faggy', 'fag', 'niggers', 'rapists', 'honky', 'chink', 'chinks', 'kike', 'faggot', 'loli', 'shota', 'cp', 'csam', '1488', '14', '88', 'HH', 'hitler', 'adolf', 'tnd', 'tkd', 'tranny', 'troon', 'nazi']
 app.post('/api/create/post', async (req, res) => {
   try {
     const text = req.body.text
