@@ -1385,7 +1385,7 @@ comment = comment.replaceAll(/kikes/ig, 'k!#@$')
 comment = comment.replaceAll(/kike/ig, 'k!#@')
       
 
-        const regex = /@([0-9\s+]+|[OP\s+]+)/g
+        const regex = /@([0-9]+|OP)\b/g;
         const regex2 = /#(?!quirks(?=$|[^A-Za-z0-9])|faq(?=$|[^A-Za-z0-9])|rules(?=$|[^A-Za-z0-9])|moshpits(?=$|[^A-Za-z0-9])|vip(?=$|[^A-Za-z0-9])|login(?=$|[^A-Za-z0-9])|admin(?=$|[^A-Za-z0-9]))([A-Za-z0-9]{1,7})(?![A-Za-z0-9])/gi;
 
         comment = comment.replaceAll(regex2, `<a href="/$1" class="pitquote" style="color: var(--rage);">#$1</a>`)
