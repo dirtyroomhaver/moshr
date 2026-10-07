@@ -1848,12 +1848,12 @@ WHERE
         FROM moshpits
         WHERE hid = 0
           AND is_disabled = 0
-        ORDER BY thread_count DESC
+        ORDER BY thread_count DESC, id DESC
         LIMIT 100
     )
-ORDER BY t.bumped_at DESC
+ORDER BY t.bumped_at DESC, t.id DESC
 LIMIT 100
-OFFSET ?;`).all(offset)
+OFFSET ? * 100;`).all(offset)
 }
 module.exports = {
   getUser,
