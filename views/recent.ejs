@@ -85,8 +85,8 @@
         <div>
           <ul class="info-list">
             <% recent.forEach(moshpit => { if (!moshpit.hid) { %>
-            <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.post_count + moshpit.thread_count %> <%= moshpit.post_count + moshpit.thread_count === 1 ? 'post' : 'posts' %></a></li>
-            <% }}) %>
+              <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.post_count + moshpit.thread_count%> <%= moshpit.post_count+ moshpit.thread_count === 1 ? 'post' : 'posts' %></a></li>
+              <% }}) %>
           </ul>
         </div>
       </div>

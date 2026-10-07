@@ -84,9 +84,9 @@
         </div>
         <div>
           <ul class="info-list">
-            <% trending.forEach(moshpit => { if (!moshpit.hid) { %>
-            <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.post_count + moshpit.thread_count %> <%= moshpit.post_count + moshpit.thread_count === 1 ? 'post' : 'posts' %></a></li>
-            <% }}) %>
+           <% trending.forEach(moshpit => { if (!moshpit.hid) { %>
+              <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.recent_count %> <%= moshpit.recent_count === 1 ? 'post in the last hour' : 'posts in the last hour' %></a></li>
+              <% }}) %>
           </ul>
         </div>
       </div>
