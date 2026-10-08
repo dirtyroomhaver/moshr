@@ -278,7 +278,7 @@ https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
         <div>
           <ul class="info-list">
             <% trending.forEach(moshpit => { if (!moshpit.hid) { %>
-            <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.recent_count %> <%= moshpit.recent_count === 1 ? 'post in the last hour' : 'posts in the last hour' %></a></li>
+            <li><a href="/<%= moshpit.title %>/">/<%= moshpit.title %>/ - <%= moshpit.recent_count %> <%= moshpit.recent_count === 1 ? 'recent post' : 'recent posts' %></a></li>
             <% }}) %>
           </ul>
         </div>

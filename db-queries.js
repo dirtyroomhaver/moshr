@@ -432,7 +432,7 @@ SELECT
         SELECT COUNT(*)
         FROM threads t
         WHERE t.moshpit = m.title
-          AND t.created_at >= unixepoch() - 3600
+          AND t.created_at >= unixepoch() - 14400
     )
     +
     (
@@ -440,7 +440,7 @@ SELECT
         FROM posts p
         JOIN threads t2 ON t2.id = p.thread_id
         WHERE t2.moshpit = m.title
-          AND p.created_at >= unixepoch() - 3600
+          AND p.created_at >= unixepoch() - 14400
     ) AS recent_count
 
 FROM moshpits m
@@ -449,14 +449,14 @@ WHERE EXISTS (
     SELECT 1
     FROM threads t
     WHERE t.moshpit = m.title
-      AND t.created_at >= unixepoch() - 3600
+      AND t.created_at >= unixepoch() - 14400
 )
 OR EXISTS (
     SELECT 1
     FROM posts p
     JOIN threads t2 ON t2.id = p.thread_id
     WHERE t2.moshpit = m.title
-      AND p.created_at >= unixepoch() - 3600
+      AND p.created_at >= unixepoch() - 14400
 )
 
 ORDER BY recent_count DESC
