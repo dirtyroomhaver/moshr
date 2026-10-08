@@ -118,6 +118,8 @@ https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
                 <div style="display: flex">
                   <% if(posts) { %>
                   <p>OP |&nbsp</p>
+                  <% } %> <% if(thread.is_owner) { %>
+                  <p style="color: var(--rage)">lil mr. bigman&nbsp</p>|&nbsp
                   <% } %>
                   <p><% if (moshpit.flags){ %> <%=  thread.country %> |&nbsp<%}%></p>
                 <p itemprop="" class="timer" title="<%= new Date(thread.created_at * 1000).toLocaleString('en-US', {
@@ -180,6 +182,9 @@ https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
               <div style="display: flex; justify-content: space-between; align-items: center">
                 <div style="display: flex">
                   <p><%= post.post_number %> |&nbsp</p>
+                  <% if (post.is_owner) { %>
+                  <p style="color: var(--rage)">lil mr. bigman&nbsp</p>|&nbsp
+                  <% } %>
                   <p><% if (moshpit.flags){ %> <%=  post.country %> |&nbsp<%}%> </p>
                     <p itemprop="" class="timer" title="<%= new Date(thread.created_at * 1000).toLocaleString('en-US', {
                       month: 'short',

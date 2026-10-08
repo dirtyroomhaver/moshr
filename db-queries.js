@@ -55,13 +55,14 @@ function createPost (
   country,
   updated_at,
   html,
-  sig
+  sig,
+  owner
 ) {
   return db
     .prepare(
       `
-        INSERT INTO posts (author_id, ip, thread_id, board_id, comment, post_number, country, updated_at, html, sig)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO posts (author_id, ip, thread_id, board_id, comment, post_number, country, updated_at, html, sig, is_owner)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         RETURNING *
     `
     )
@@ -75,13 +76,14 @@ function createPost (
       country,
       updated_at,
       html,
-      sig
+      sig,
+      owner
     )
 }
 
 function getPosts(thread_id) {
   return db.prepare(`
-    SELECT author_id, sig, id, thread_id, board_id, post_number, created_at, updated_at, comment, hid, html, shot, slapped, country FROM posts WHERE thread_id = ? ORDER BY post_number ASC
+    SELECT is_owner, author_id, sig, id, thread_id, board_id, post_number, created_at, updated_at, comment, hid, html, shot, slapped, country FROM posts WHERE thread_id = ? ORDER BY post_number ASC
     `).all(thread_id)
 }
 function getPostAdmin(post_id) {
@@ -92,7 +94,7 @@ function getPostAdmin(post_id) {
 
 function getLastPost(thread_id) {
   return db.prepare(`
-    SELECT author_id, sig, id, thread_id, board_id, post_number, created_at, updated_at, comment, hid, html, shot, slapped, country FROM posts WHERE thread_id = ? ORDER BY post_number DESC LIMIT 1
+    SELECT is_owner, author_id, sig, id, thread_id, board_id, post_number, created_at, updated_at, comment, hid, html, shot, slapped, country FROM posts WHERE thread_id = ? ORDER BY post_number DESC LIMIT 1
     `).get(thread_id)
 }
 
@@ -218,19 +220,19 @@ function updatePostCount(thread_id, moshpit) {
   transaction()
 
 }
-function createThread (a, b, c, d, e, board_id, html, ip, country, sig) {
+function createThread (a, b, c, d, e, board_id, html, ip, country, sig, owner) {
   db.prepare(`UPDATE moshpits SET thread_count = thread_count + 1 WHERE title = ?`).run(b)
   return db
     .prepare(
       `
         INSERT INTO threads (author_id, 
         moshpit, comment, 
-        updated_at, bumped_at, board_id, html, ip, country, sig)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        updated_at, bumped_at, board_id, html, ip, country, sig, is_owner)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         RETURNING *
     `
     )
-    .get(a, b, c, d, e, board_id, html, ip, country, sig)
+    .get(a, b, c, d, e, board_id, html, ip, country, sig, owner)
 }
 function bumpThread (bumped_at, thread_id) {
 
@@ -371,7 +373,7 @@ function getThread (id) {
   return db
     .prepare(
       `
-    SELECT author_id, id, post_count, comment, created_at, updated_at, bumped_at, board_id, moshpit, html, sig, country, hid, locked, sticky FROM threads WHERE id = ?
+    SELECT is_owner, author_id, id, post_count, comment, created_at, updated_at, bumped_at, board_id, moshpit, html, sig, country, hid, locked, sticky FROM threads WHERE id = ?
     `
     )
     .get(id)
@@ -1855,6 +1857,16 @@ ORDER BY t.bumped_at DESC, t.id DESC
 LIMIT 100
 OFFSET ? * 100;`).all(offset)
 }
+
+function addColumnIfNotExists(table, column, definition) {
+  const columns = db.prepare(`PRAGMA table_info(${table})`).all();
+
+  const exists = columns.some(col => col.name === column);
+
+  if (!exists) {
+    db.prepare(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`).run();
+  }
+}
 module.exports = {
   getUser,
   createUser,
@@ -1899,5 +1911,6 @@ module.exports = {
   deletePORT,
   deleteAllReports,
   getThreadsThread,
-  getAllThreads
+  getAllThreads,
+  addColumnIfNotExists
 }

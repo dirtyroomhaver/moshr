@@ -46,7 +46,8 @@ report,
   deletePORT,
   deleteAllReports,
   getThreadsThread,
-  getAllThreads
+  getAllThreads,
+  addColumnIfNotExists
 
  } = require('./db-queries')
 const { Reader } = require('@maxmind/geoip2-node')
@@ -1126,7 +1127,7 @@ app.post('/api/ban', async (req, res) => {
       })
 })
 let banned_words = ['admin', 'recent', 'all', 'popular', 'vip', 'faq', 'rules', 'moshpits', 'login', 'quirks', 'nigger', 'rape', 'rapist', 'spic', 'spics', 'faggy', 'fag', 'niggers', 'rapists', 'honky', 'chink', 'chinks', 'kike', 'faggot', 'loli', 'shota', 'cp', 'csam', '1488', '14', '88', 'HH', 'hitler', 'adolf', 'tnd', 'tkd', 'tranny', 'troon', 'nazi']
-app.post('/api/create/post', async (req, res) => {
+app.post('/api/create/post', async (req, res, next) => {
   try {
     const text = req.body.text
     const thread_id = req.body.thread_id
@@ -1216,7 +1217,8 @@ if (sig) {
       country,
       now,
       formatText(html),
-      sig
+      sig,
+      user.is_owner
     )
     post.ip = ''
     // 
@@ -1320,7 +1322,8 @@ if (sig) {
       formatText(html),
       req.headers['x-forwarded-for'],
       country,
-      sig
+      sig,
+      user.is_owner
     )
     // res.json(thread)
     return res.json({
@@ -1541,7 +1544,8 @@ app.use((err, req, res, next) => {
 // Start server
 // -------------------------
 
-
+addColumnIfNotExists('threads', 'is_owner', 'INT NOT NULL DEFAULT 0');
+addColumnIfNotExists('posts', 'is_owner', 'INT NOT NULL DEFAULT 0');
 deleteOldThreads()
 refreshCache()
 deleteLowThreads()
