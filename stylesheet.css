@@ -851,19 +851,19 @@ s:hover {
 }
 .italic1 {
     font-style: italic;
-
+display:inline-block;
 }
 
 .italic2 {
 
     font-style: italic;
-
+display:inline-block;
     font-weight: bold;
 }
 
 .italic3 {
     font-style: italic;
-
+display:inline-block;
     font-weight: bold;
     font-size: 2rem;
 }
