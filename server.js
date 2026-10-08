@@ -1404,6 +1404,8 @@ comment = comment.replaceAll(/kike/ig, 'k!#@')
         const array1 = comment.split("\n")
    
         let comment1 = ''
+         const jis = /\[jis\]([\s\S]*?)\[\/jis\]/g
+         const aa = /\[aa\]([\s\S]*?)\[\/aa\]/g
         const shake1 = /\[s1\]([\s\S]*?)\[\/s1\]/g
         const shake2 = /\[s2\]([\s\S]*?)\[\/s2\]/g
         const shake3 = /\[s3\]([\s\S]*?)\[\/s3\]/g
@@ -1499,6 +1501,8 @@ comment = comment.replaceAll(/kike/ig, 'k!#@')
            
         }
         comment1 = comment1 + pre + c + end + "\n"
+        comment1 = comment1.replace(jis, '<pre class="jis">$1</pre>')
+         comment1 = comment1.replace(aa, '<pre class="aa">$1</pre>')
         comment1 = comment1.replace(shake3a, '<span class="shake3a">$1</span>')
         comment1 = comment1.replace(shake3, '<span class="shake3">$1</span>')
         comment1 = comment1.replace(shake2, '<span class="shake2">$1</span>')
