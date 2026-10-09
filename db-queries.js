@@ -1841,7 +1841,6 @@ function getAllThreads(offset = 0) {
     t.created_at,
     t.updated_at,
     t.bumped_at,
-    t.author_id,
     t.board_id,
     t.moshpit,
     t.html,
