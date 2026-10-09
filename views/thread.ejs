@@ -939,10 +939,10 @@ if (hide) {
       if (reply) {
         e.preventDefault()
         if (reply.dataset.threadId) {
-          areatext.value += `@${reply.dataset.threadId} \n`
+          areatext.value += window.getSelection().toString() ? `@${reply.dataset.threadId} \n${'>'+window.getSelection().toString()}` : `@${reply.dataset.threadId} \n`
 
         } else {
-          areatext.value = ``
+          areatext.value = window.getSelection().toString() ? `${'>'+window.getSelection().toString()}` : ``
         }
         popup.classList.remove('hidden')
         areatext.focus()
