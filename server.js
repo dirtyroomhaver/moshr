@@ -1539,7 +1539,7 @@ comment = comment.replaceAll(/kike/ig, 'k!#@')
         }
         comment1 = comment1 + pre + c + end + "\n"
         const wrapTrimmed = (className, tag = "span") => (match, group1) =>
-    `<${tag} class="${className}">${group1.trim()}</${tag}>`;
+    `<${tag} class="${className}">${group1.trimEnd()}</${tag}>`;
 
 comment1 = comment1.replace(jis, wrapTrimmed("jis", "pre"));
 comment1 = comment1.replace(aa, wrapTrimmed("aa", "pre"));
