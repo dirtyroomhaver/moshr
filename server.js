@@ -759,7 +759,11 @@ app.post('/api/slap', async (req, res) => {
       req.body.action,
       0,
       ''
-    )
+    ) 
+    } else {
+      return res.status(422).json({
+        error: 'hahahahahahahahahahahahahah got you'
+      })
     }
     
 
@@ -847,6 +851,10 @@ let result
       0,
       ''
     )
+   } else {
+    return res.status(422).json({
+        error: 'hahahahahahahahahahahahahah got you'
+      })
    }
 
     if (!result.success) {
