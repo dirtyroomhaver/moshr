@@ -730,7 +730,13 @@ app.post('/api/slap', async (req, res) => {
         error: 'Post author not found'
       })
     }
-
+    const thread = await getThreadAdmin(post.thread_id)
+    if (!thread) {
+      return res.status(404).json({
+        error: 'thread not found'
+      })
+    }
+    
     const status = await getModerationStatus(
       user,
       post.thread_id
@@ -743,9 +749,9 @@ app.post('/api/slap', async (req, res) => {
       message: 'USER WAS SLAPPED'
     })
     }
-
-   
-    const result = await moderationAction(
+    let result
+   if (thread.author_id == perp.id) {
+      result = await moderationAction(
       user,
       perp,
       post,
@@ -754,6 +760,8 @@ app.post('/api/slap', async (req, res) => {
       0,
       ''
     )
+    }
+    
 
     if (!result.success) {
 
@@ -811,7 +819,12 @@ app.post('/api/shoot', async (req, res) => {
         error: 'Post author not found'
       })
     }
-
+const thread = await getThreadAdmin(post.thread_id)
+    if (!thread) {
+      return res.status(404).json({
+        error: 'thread not found'
+      })
+    }
     const status = await getModerationStatus(
       user,
       post.thread_id
@@ -823,9 +836,9 @@ app.post('/api/shoot', async (req, res) => {
       message: 'USER WAS SHOT'
     })
     }
-
-    
-    const result = await moderationAction(
+let result
+   if (thread.author_id == perp.id) {
+    result = await moderationAction(
       user,
       perp,
       post,
@@ -834,6 +847,7 @@ app.post('/api/shoot', async (req, res) => {
       0,
       ''
     )
+   }
 
     if (!result.success) {
    

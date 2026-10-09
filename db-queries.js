@@ -1835,21 +1835,7 @@ db.prepare(`DELETE FROM reports WHERE reporter_id = ?`).run(userid)
 
 function getAllThreads(offset = 0) {
  return db.prepare(`SELECT
-    t.id,
-    t.post_count,
-    t.comment,
-    t.created_at,
-    t.updated_at,
-    t.bumped_at,
-    t.author_id,
-    t.board_id,
-    t.moshpit,
-    t.html,
-    t.hid,
-    t.locked,
-    t.sticky,
-    t.bump_limit_enabled,
-    t.sig,
+    t.,
     m.title AS moshpit_title
 FROM threads t
 JOIN moshpits m
