@@ -925,8 +925,9 @@ app.post('/api/hide', async (req, res) => {
         error: 'Post author not found'
       })
     }
-
+let flag
   if (post && !thread) {
+    flag = 0
       if (post.hid) {
       return res.json({
       success: true,
@@ -936,6 +937,7 @@ app.post('/api/hide', async (req, res) => {
       
       }
     if (!post && thread) {
+      flag = 1
        if (thread.hid) {
       return res.json({
       success: true,
@@ -953,7 +955,20 @@ app.post('/api/hide', async (req, res) => {
         error: 'You must be logged in'
       })
     }
-
+    if (flag) {
+      if (thread.author_id != perp.id) {
+          return res.status(422).json({
+        error: 'hahahahahahahahahahahahahah got you'
+      })
+      }
+    } else {
+      const man = await getThreadAdmin(post.thread_id)
+      if (man.id != perp.id) {
+          return res.status(422).json({
+        error: 'hahahahahahahahahahahahahah got you'
+      })
+      }
+    }
     const result = await moderationAction(
       user,
       perp,
