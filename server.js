@@ -1538,30 +1538,34 @@ comment = comment.replaceAll(/kike/ig, 'k!#@')
            
         }
         comment1 = comment1 + pre + c + end + "\n"
-        comment1 = comment1.replace(jis, '<pre class="jis">$1</pre>')
-         comment1 = comment1.replace(aa, '<pre class="aa">$1</pre>')
-        comment1 = comment1.replace(shake3a, '<span class="shake3a">$1</span>')
-        comment1 = comment1.replace(shake3, '<span class="shake3">$1</span>')
-        comment1 = comment1.replace(shake2, '<span class="shake2">$1</span>')
-        comment1 = comment1.replace(shake1, '<span class="shake1">$1</span>')
+        const wrapTrimmed = (className, tag = "span") => (match, group1) =>
+    `<${tag} class="${className}">${group1.trim()}</${tag}>`;
 
-        comment1 = comment1.replace(hori3a, '<span class="hori3a">$1</span>')
-        comment1 = comment1.replace(hori3, '<span class="hori3">$1</span>')
-        comment1 = comment1.replace(hori2, '<span class="hori2">$1</span>')
-        comment1 = comment1.replace(hori1, '<span class="hori1">$1</span>')
-        
-        comment1 = comment1.replace(glow, '<span class="glow">$1</span>')
-        comment1 = comment1.replace(gay, '<span class="gay">$1</span>')
-        comment1 = comment1.replace(trans, '<span class="trans">$1</span>')
-        comment1 = comment1.replace(schizo, '<span class="schizo">$1</span>')
-        comment1 = comment1.replace(schizoa, '<span class="schizoa">$1</span>')
-        comment1 = comment1.replace(yay, '<span class="vert">$1</span>')
-        comment1 = comment1.replace(yaya, '<span class="verta">$1</span>')
-        comment1 = comment1.replace(police, '<span class="police">$1</span>')
-        comment1 = comment1.replace(rage, '<span class="rage">$1</span>')
-        comment1 = comment1.replace(big, '<span class="big">$1</span>')
-        comment1 = comment1.replace(bold, '<span class="bold">$1</span>')
-        comment1 = comment1.replace(italic, '<span class="italic">$1</span>')
+comment1 = comment1.replace(jis, wrapTrimmed("jis", "pre"));
+comment1 = comment1.replace(aa, wrapTrimmed("aa", "pre"));
+
+comment1 = comment1.replace(shake3a, wrapTrimmed("shake3a"));
+comment1 = comment1.replace(shake3, wrapTrimmed("shake3"));
+comment1 = comment1.replace(shake2, wrapTrimmed("shake2"));
+comment1 = comment1.replace(shake1, wrapTrimmed("shake1"));
+
+comment1 = comment1.replace(hori3a, wrapTrimmed("hori3a"));
+comment1 = comment1.replace(hori3, wrapTrimmed("hori3"));
+comment1 = comment1.replace(hori2, wrapTrimmed("hori2"));
+comment1 = comment1.replace(hori1, wrapTrimmed("hori1"));
+
+comment1 = comment1.replace(glow, wrapTrimmed("glow"));
+comment1 = comment1.replace(gay, wrapTrimmed("gay"));
+comment1 = comment1.replace(trans, wrapTrimmed("trans"));
+comment1 = comment1.replace(schizo, wrapTrimmed("schizo"));
+comment1 = comment1.replace(schizoa, wrapTrimmed("schizoa"));
+comment1 = comment1.replace(yay, wrapTrimmed("vert"));
+comment1 = comment1.replace(yaya, wrapTrimmed("verta"));
+comment1 = comment1.replace(police, wrapTrimmed("police"));
+comment1 = comment1.replace(rage, wrapTrimmed("rage"));
+comment1 = comment1.replace(big, wrapTrimmed("big"));
+comment1 = comment1.replace(bold, wrapTrimmed("bold"));
+comment1 = comment1.replace(italic, wrapTrimmed("italic"));
 
 
     
