@@ -13,6 +13,15 @@
 https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
 "></script>
   <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
+  <script>
+(function () {
+    try {
+        if (localStorage.getItem('disableAnimations') === 'true') {
+            document.documentElement.classList.add('disable-animations');
+        }
+    } catch (e) {}
+})();
+</script>
 </head>
 
 <body>
@@ -377,6 +386,32 @@ https://cdn.jsdelivr.net/npm/dayjs@1.11.23/dayjs.min.js
     if (window.dayjs_plugin_relativeTime) {
     dayjs.extend(window.dayjs_plugin_relativeTime)
 }
+(function () {
+    const checkbox = document.getElementById('disableAnimations');
+
+    if (!checkbox) return;
+
+    try {
+        checkbox.checked =
+            localStorage.getItem('disableAnimations') === 'true';
+    } catch (e) {}
+
+    checkbox.addEventListener('change', function () {
+        const enabled = checkbox.checked;
+
+        document.documentElement.classList.toggle(
+            'disable-animations',
+            enabled
+        );
+
+        try {
+            localStorage.setItem(
+                'disableAnimations',
+                String(enabled)
+            );
+        } catch (e) {}
+    });
+})();
     let timers = document.querySelectorAll('.timer')
     timers.forEach((t) => {
       t.textContent = dayjs.unix(Number(t.dataset.time)).fromNow()

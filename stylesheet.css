@@ -20,7 +20,11 @@
     --mt: light-dark(#232323, #d7d7d7);
 }
 
-
+html.disable-animations *,
+html.disable-animations *::before,
+html.disable-animations *::after {
+    animation: none !important;
+}
 
 * {
     margin: 0;
