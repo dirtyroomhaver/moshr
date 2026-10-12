@@ -1460,6 +1460,9 @@ comment = comment.replaceAll(/kike/ig, 'k!#@')
         const police = /\[p\]([\s\S]*?)\[\/p\]/g
         const bold = /\[b\]([\s\S]*?)\[\/b\]/g
         const italic = /\[i\]([\s\S]*?)\[\/i\]/g
+        const italic1 = /\[i1\]([\s\S]*?)\[\/i1\]/g
+        const italic2 = /\[i2\]([\s\S]*?)\[\/i2\]/g
+        const italic3 = /\[i3\]([\s\S]*?)\[\/i3\]/g
         const big = /\[big\]([\s\S]*?)\[\/big\]/g
         const rage = /\[red\]([\s\S]*?)\[\/red\]/g
 
@@ -1566,6 +1569,9 @@ comment1 = comment1.replace(rage, wrapTrimmed("rage"));
 comment1 = comment1.replace(big, wrapTrimmed("big"));
 comment1 = comment1.replace(bold, wrapTrimmed("bold"));
 comment1 = comment1.replace(italic, wrapTrimmed("italic"));
+comment1 = comment1.replace(italic1, wrapTrimmed("italic1"));
+comment1 = comment1.replace(italic2, wrapTrimmed("italic2"));
+comment1 = comment1.replace(italic3, wrapTrimmed("italic3"));
 
 
     
