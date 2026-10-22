@@ -1,5 +1,5 @@
 THIS IS MOSHR'S TEXTBOARD SOFTWARE
-![hippo](https://imgur.com/a/sUPE7MV)
+![hippo](https://i.imgur.com/bAFGoaS.gif)
 
 IT FEATURES A VARIETY OF COOL TEXT EFFECTS TO MAKE POSTING FUN!!!
 YOU CAN CREATE YOUR OWN BOARDS!!!
