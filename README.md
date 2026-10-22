@@ -1,5 +1,5 @@
 THIS IS MOSHR'S TEXTBOARD SOFTWARE
-![bAFGoaS](https://i.imgur.com/bAFGoaS.gif)
+![bAFGoaS](https://github.com/dirtyroomhaver/moshr/blob/main/chrome-capture-2026-10-22.gif)
 
 IT FEATURES A VARIETY OF COOL TEXT EFFECTS TO MAKE POSTING FUN!!!
 YOU CAN CREATE YOUR OWN BOARDS!!!
